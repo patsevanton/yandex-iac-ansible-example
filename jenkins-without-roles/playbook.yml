@@ -1,0 +1,333 @@
+- name: "Deploy java, jenkins, letsencrypt, nginx"
+  hosts: jenkins
+  become: true
+  vars:
+    jenkins_package_state: present
+    jenkins_prefer_lts: true
+    jenkins_connection_delay: 5
+    jenkins_connection_retries: 60
+    jenkins_home: /var/lib/jenkins
+    jenkins_http_port: 8080
+    jenkins_jar_location: /opt/jenkins-cli.jar
+    jenkins_url_prefix: ""
+    jenkins_plugins_state: present
+    jenkins_plugin_updates_expiration: 86400
+    jenkins_plugin_timeout: 30
+    jenkins_plugins_install_dependencies: true
+    jenkins_updates_url: "https://updates.jenkins.io"
+    jenkins_admin_username: admin
+    jenkins_admin_password_file: ""
+    jenkins_process_user: jenkins
+    jenkins_process_group: "{{ jenkins_process_user }}"
+
+  pre_tasks:
+    - name: Wait for cloud-init / user-data to finish
+      command: cloud-init status --wait
+      changed_when: false
+    - name: Install OpenJDK
+      apt:
+        name:
+          - openjdk-11-jre=11.0.16+8-1~deb11u1
+          - openjdk-11-jre-headless=11.0.16+8-1~deb11u1
+        state: present
+        update_cache: true
+
+
+    - name: Define jenkins_repo_url
+      set_fact:
+        jenkins_repo_url: "deb https://pkg.jenkins.io/debian-stable binary/"
+      when: jenkins_repo_url is not defined
+
+    - name: Define jenkins_repo_key_url
+      set_fact:
+        jenkins_repo_key_url: "https://pkg.jenkins.io/debian-stable/jenkins.io.key"
+      when: jenkins_repo_key_url is not defined
+
+    - name: Define jenkins_pkg_url
+      set_fact:
+        jenkins_pkg_url: "https://pkg.jenkins.io/debian/binary"
+      when: jenkins_pkg_url is not defined
+
+    - name: Ensure dependencies are installed.
+      apt:
+        name:
+          - curl
+          - apt-transport-https
+          - gnupg
+        state: present
+
+    - name: Add Jenkins apt repository key.
+      apt_key:
+        url: "{{ jenkins_repo_key_url }}"
+        state: present
+
+    - name: Add Jenkins apt repository.
+      apt_repository:
+        repo: "{{ jenkins_repo_url }}"
+        state: present
+        update_cache: true
+      when: jenkins_repo_url | default(false)
+
+    - name: Ensure Jenkins is installed.
+      apt:
+        name: jenkins
+        state: "present"
+
+    # - name: Check if jenkins_init_folder exists.
+    #   stat:
+    #     path: "/etc/systemd/system/jenkins.service.d"
+    #   register: jenkins_init_folder_stat
+
+    - name: Ensure jenkins_init_folder exists.
+      file:
+        path: "/etc/systemd/system/jenkins.service.d"
+        state: directory
+        mode: 0644
+      # when: not jenkins_init_folder_stat.stat.exists
+
+    # - name: Check if jenkins_init_file exists.
+    #   stat:
+    #     path: "/etc/systemd/system/jenkins.service.d/override.conf"
+    #   register: jenkins_init_file_stat
+
+    # - name: Ensure jenkins_init_file exists.
+    #   file:
+    #     path: "/etc/systemd/system/jenkins.service.d/override.conf"
+    #     state: touch
+    #     mode: 0644
+    #   when: not jenkins_init_file_stat.stat.exists
+
+
+    - name: Copy override.conf
+      ansible.builtin.copy:
+        src: override.conf
+        dest: /etc/systemd/system/jenkins.service.d/override.conf
+        owner: jenkins
+        group: jenkins
+        mode: '0644'
+      register: jenkins_init_prefix
+
+    - name: Immediately restart Jenkins on init config changes.
+      service: name=jenkins state=restarted
+      when: jenkins_init_prefix.changed
+
+    - name: Create custom init scripts directory.
+      file:
+        path: "/var/lib/jenkins/init.groovy.d"
+        state: directory
+        owner: "jenkins"
+        group: "jenkins"
+        mode: 0775
+
+    - name: restart jenkins
+      service: name=jenkins state=restarted
+
+    - name: configure default users
+      template:
+        src: basic-security.groovy.j2
+        dest: "/var/lib/jenkins/init.groovy.d/basic-security.groovy"
+        owner: "jenkins"
+        group: "jenkins"
+        mode: 0775
+      register: jenkins_users_config
+
+    - name: Immediately restart Jenkins on http or user changes.
+      service: name=jenkins state=restarted
+
+
+    - name: Wait for Jenkins to start up before proceeding.
+      uri:
+        url: "http://localhost:8080/cli/"
+        method: GET
+        return_content: "yes"
+        timeout: 5
+        body_format: raw
+        follow_redirects: "no"
+        status_code: 200,403
+      register: result
+      until: (result.status == 403 or result.status == 200) and (result.content.find("Please wait while") == -1)
+      retries: "{{ jenkins_connection_retries }}"
+      delay: "{{ jenkins_connection_delay }}"
+      changed_when: false
+      check_mode: false
+
+
+    - name: Get the jenkins-cli jarfile from the Jenkins server.
+      get_url:
+        url: "http://localhost:8080/jnlpJars/jenkins-cli.jar"
+        dest: "/opt/jenkins-cli.jar"
+      register: jarfile_get
+      until: "'OK' in jarfile_get.msg or '304' in jarfile_get.msg or 'file already exists' in jarfile_get.msg"
+      retries: 5
+      delay: 10
+      check_mode: false
+
+    - name: Remove Jenkins security init scripts after first startup.
+      file:
+        path: "/var/lib/jenkins/init.groovy.d/basic-security.groovy"
+        state: absent
+
+
+  roles:
+    # - role: ansible-role-jenkins
+    - role: systemli.letsencrypt
+    - role: geerlingguy.nginx
+  post_tasks:
+    - name: Create directory /var/lib/jenkins/jcasc
+      ansible.builtin.file:
+        path: /var/lib/jenkins/jcasc
+        state: directory
+        owner: jenkins
+        group: jenkins
+
+    - name: Copy jcasc.yaml
+      ansible.builtin.copy:
+        src: jcasc_local_auth.yaml
+        dest: /var/lib/jenkins/jcasc/jcasc.yaml
+        owner: jenkins
+        group: jenkins
+        mode: '0644'
+      register: jcasc_local_auth_yaml
+
+    - name: Restart service jenkins, also issue daemon-reload to pick up config changes
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jenkins
+      when: jcasc_local_auth_yaml.changed
+
+    - name: download the latest release
+      get_url:
+        url: "https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.12.8/jenkins-plugin-manager-2.12.8.jar"
+        dest: "/var/lib/jenkins"
+        mode: '0755'
+        owner: jenkins
+        group: jenkins
+
+    - name: Copy plugins.txt
+      ansible.builtin.copy:
+        src: plugins.txt
+        dest: /var/lib/jenkins/plugins.txt
+        owner: jenkins
+        group: jenkins
+        mode: '0644'
+
+    - name: Run plugin installation manager tool
+      shell: "java -jar /var/lib/jenkins/jenkins-plugin-manager-2.12.8.jar --war /usr/share/java/jenkins.war --plugin-download-directory /var/lib/jenkins/plugins --plugin-file /var/lib/jenkins/plugins.txt"
+      register: run_plugin_installation_manager_tool
+
+    - name: Restart service jenkins
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jenkins
+      when: run_plugin_installation_manager_tool.changed
+
+- name: Create token
+  hosts: jenkins
+  become: true
+  tasks:
+    - name: Install jq, jenkins-job-builder
+      apt:
+        pkg:
+          - jq
+          - jenkins-job-builder
+        state: present
+
+    - name: Generate generate-jenkins-api-token.sh from template
+      template:
+        src: generate-jenkins-api-token.sh.j2
+        dest: /var/lib/jenkins/generate-jenkins-api-token.sh
+        owner: jenkins
+        group: jenkins
+        mode: 0755
+
+    - name: Create API token from script
+      shell: "/var/lib/jenkins/generate-jenkins-api-token.sh"
+      register: script_api_token_output
+      args:
+        creates: /var/lib/jenkins/api_token.txt
+
+    - name: Read api_token from /var/lib/jenkins/api_token.txt
+      slurp:
+        src: /var/lib/jenkins/api_token.txt
+      register: api_token
+
+    - name: Set fact api_token
+      set_fact:
+        api_token: "{{ api_token.content | b64decode }}"
+
+    - name: Print API token
+      debug: var=api_token
+
+    - name: Generate jenkins-jobs-config from template
+      template:
+        src: jenkins-jobs-config.j2
+        dest: /var/lib/jenkins/jenkins-jobs-config
+        owner: jenkins
+        group: jenkins
+        mode: 0644
+
+    - name: Create directory /var/lib/jenkins/jobs
+      ansible.builtin.file:
+        path: /var/lib/jenkins/jobs
+        state: directory
+        owner: jenkins
+        group: jenkins
+        mode: '0755'
+
+    - name: Copy job-template.yaml
+      ansible.builtin.copy:
+        src: job-template.yaml
+        dest: /var/lib/jenkins/jobs/job-template.yaml
+        owner: jenkins
+        group: jenkins
+
+    - name: Copy defaults.yaml
+      ansible.builtin.copy:
+        src: defaults.yaml
+        dest: /var/lib/jenkins/jobs/defaults.yaml
+        owner: jenkins
+        group: jenkins
+
+    - name: Copy projects.yaml
+      ansible.builtin.copy:
+        src: projects.yaml
+        dest: /var/lib/jenkins/jobs/projects.yaml
+        owner: jenkins
+        group: jenkins
+
+    - name: Create Jenkins jobs using Jenkins job builder
+      shell: "jenkins-jobs --conf=jenkins-jobs-config update jobs"
+      register: jenkins_job_builder_output
+      args:
+        chdir: /var/lib/jenkins
+
+########
+    - name: Print ansible_host var
+      debug:
+        var: jenkins_job_builder_output
+
+    - name: Print ansible_host var
+      debug:
+        var: ansible_host
+
+- name: Enable googleOAuth2
+  hosts: jenkins
+  become: true
+  tasks:
+    - name: Generate jcasc.yaml from template
+      template:
+        src: jcasc_googleoauth2.yaml.j2
+        dest: /var/lib/jenkins/jcasc/jcasc.yaml
+        owner: jenkins
+        group: jenkins
+        mode: 0644
+      register: jcasc_googleoauth2_yaml
+
+    - name: Restart service jenkins
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jenkins
+      when: jcasc_googleoauth2_yaml.changed

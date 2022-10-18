@@ -1,0 +1,65 @@
+---
+- hosts: elasticsearch_cluster
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Setting nodes IPs (instead 'ansible_host' you can use the folloving variables as well ansible_fqdn, ec2_private_ip_address or ansible_nodename)
+      set_fact:
+        join_list: "{{ groups['elasticsearch_cluster'] | map('extract', hostvars, ['ansible_host']) | list }}"
+  roles:
+    - role: buluma.java
+    - role: elastic.elasticsearch
+  vars:
+    oss_version: true
+    es_version: 7.10.0
+    es_enable_xpack: false
+    es_data_dirs:
+      - "/data/elasticsearch/data"
+    es_log_dir: "/data/elasticsearch/logs"
+    es_java_install: true
+    es_heap_size: "1g"
+    es_config:
+      cluster.name: "elk-cluster"
+      cluster.initial_master_nodes: "{{ join_list | join(',') }}"
+      discovery.seed_hosts: "{{ join_list | join(',') }}"
+      http.port: 9200
+      node.data: false
+      node.master: true
+      bootstrap.memory_lock: false
+      network.host: '0.0.0.0'
+    es_plugins:
+     - plugin: ingest-attachment
+
+- hosts: elasticsearch_cluster
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Setting nodes IPs (instead 'ansible_host' you can use the folloving variables as well ansible_fqdn, ec2_private_ip_address or ansible_nodename)
+      set_fact:
+        join_list: "{{ groups['elasticsearch_cluster'] | map('extract', hostvars, ['ansible_host']) | list }}"
+  roles:
+    - role: buluma.java
+    - role: elastic.elasticsearch
+  vars:
+    oss_version: true
+    es_version: 7.10.0
+    es_enable_xpack: false
+    es_data_dirs:
+      - "/data/elasticsearch/data"
+    es_log_dir: "/data/elasticsearch/logs"
+    es_java_install: true
+    es_config:
+      cluster.name: "elk-cluster"
+      cluster.initial_master_nodes: "{{ join_list | join(',') }}"
+      discovery.seed_hosts: "{{ join_list | join(',') }}"
+      http.port: 9200
+      node.data: true
+      node.master: false
+      bootstrap.memory_lock: false
+      network.host: '0.0.0.0'
+    es_plugins:
+      - plugin: ingest-attachment

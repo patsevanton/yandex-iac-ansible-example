@@ -1,0 +1,27 @@
+- hosts: docker
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: install pip3
+      apt: name=python3-pip state=present
+    - name: Install multi python packages with version specifiers
+      pip:
+        name:
+          - docker
+          - docker-compose
+  roles:
+    - role: geerlingguy.docker
+  post_tasks:
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: Install packages git
+      become: true
+      package:
+        name:
+          - git
+        state: present

@@ -1,0 +1,60 @@
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+  securityRealm:
+    # googleOAuth2:
+    #   # https://stackoverflow.com/questions/17699656/how-to-configure-jenkins-login-with-google-apps
+    #   # The Client ID from the https://console.developers.google.com/
+    #   clientId: "xxx-xxx.apps.googleusercontent.com"
+    #   # The Client Secret from the Google Developer Console.
+    #   clientSecret: "xxx-xxx"
+    #   # Optional. If present, access to Jenkins will be restricted to users in the provided Google Apps Domain.
+    #   #           A comma separated list can be used to specify multiple domains.
+    #   domain: ""
+    local:
+      allowsSignup: false
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "View/Delete:authenticated"
+        - "View/Read:authenticated"
+        - "Job/Read:authenticated"
+        - "Job/Build:authenticated"
+        - "Job/Discover:authenticated"
+        - "Job/Workspace:authenticated"
+        - "Job/Cancel:authenticated"
+        - "Overall/Read:authenticated"
+        - "Overall/Administer:admin"
+
+#   globalNodeProperties:
+#   - envVars:
+#       env:
+#       - key: VARIABLE1
+#         value: foo
+#       - key: VARIABLE2
+#         value: bar
+
+#   nodes:
+#     - permanent:
+#         name: "static-agent"
+#         remoteFS: "/home/jenkins"
+#         launcher:
+#           jnlp:
+#             workDirSettings:
+#               disabled: true
+#               failIfWorkDirIsMissing: false
+#               internalDir: "remoting"
+#               workDirPath: "/tmp"
+
+#   slaveAgentPort: 50000
+#   agentProtocols:
+#     - "jnlp2"
+
+# credentials:
+#   system:
+#     domainCredentials:
+#       - credentials:
+#           - usernamePassword:
+#               id: "github-credentials"
+#               password: "password"
+#               scope: GLOBAL
+#               username: "USERNAME"

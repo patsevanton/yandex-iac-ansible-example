@@ -1,0 +1,91 @@
+- hosts: jenkins
+  become: true
+  roles:
+    - role: robertdebock.java
+    - role: robertdebock.jenkins
+    - role: geerlingguy.nginx
+  post_tasks:
+    - name: get initialAdminPassword
+      shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: adminpwd
+
+    - name: unlock and add admin user
+      jenkins_script:
+        script: |
+          import jenkins.model.*
+          import hudson.security.*
+          def instance = Jenkins.getInstance()
+          def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+          hudsonRealm.createAccount('jenkins', '${user_pwd}')
+          instance.setSecurityRealm(hudsonRealm)
+          def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+          strategy.setAllowAnonymousRead(false)
+          instance.setAuthorizationStrategy(strategy)
+          instance.save()
+        args:
+          user_pwd: "{{ adminpwd }}"
+        user: admin
+        password: "{{ adminpwd.stdout }}"
+
+    - name: complete setup wizard
+      jenkins_script:
+        script: |
+          import static jenkins.model.Jenkins.instance as jenkins
+          import jenkins.install.InstallState
+          if (!jenkins.installState.isSetupComplete()) {
+            InstallState.INITIAL_SETUP_COMPLETED.initializeState()
+          }
+        user: admin
+        password: "{{ adminpwd.stdout }}"
+
+    - name: Install default plugins when choice 'install suggested plugins'
+      jenkins_plugin:
+        name: "{{ item }}"
+        url: http://localhost:8080
+        url_username: "admin"
+        url_password: "{{ adminpwd['stdout'] }}"
+      register: plugin_result
+      until: plugin_result is success
+      loop:
+        - cloudbees-folder
+        - antisamy-markup-formatter
+        - build-timeout
+        - credentials-binding
+        - timestamper
+        - ws-cleanup
+        - ant
+        - gradle
+        - workflow-aggregator
+        - github-branch-source
+        - pipeline-github-lib
+        - pipeline-stage-view
+        - git
+        - ssh-slaves
+        - matrix-auth
+        - pam-auth
+        - ldap
+        - email-ext
+        - mailer
+
+    - name: Restart Jenkins
+      ansible.builtin.service:
+        name: jenkins
+        state: restarted
+
+    - name: Check Jenkins work (Get Jenkins Crumb).
+      ansible.builtin.uri:
+        force_basic_auth: yes
+        url_username:     "admin"
+        url_password:     "{{ adminpwd.stdout }}"
+        url:              http://localhost:8080/crumbIssuer/api/json
+        return_content:   yes
+      retries:            10
+      delay:              5
+
+    - name: Print adminpwd var
+      debug:
+        var: adminpwd['stdout']
+
+    - name: Print ansible_host var
+      debug:
+        var: ansible_host

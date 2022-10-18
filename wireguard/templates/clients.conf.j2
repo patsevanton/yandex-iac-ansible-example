@@ -1,0 +1,8 @@
+[Interface]
+PrivateKey = {{ client_privatekey.stdout }}
+Address = 10.27.123.10/32
+
+[Peer]
+PublicKey = {{ wireguard__fact_public_key }}
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = {{ ansible_host }}:{{ wireguard_port }}

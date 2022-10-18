@@ -1,0 +1,1 @@
+### Install squid by arocketchat

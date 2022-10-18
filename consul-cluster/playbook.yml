@@ -1,0 +1,19 @@
+---
+- hosts: consul_instances
+  any_errors_fatal: true
+  become: true
+  gather_facts: true
+  gather_facts: true
+  debugger: on_failed
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Set consul_version
+      set_fact:
+        consul_version: 1.12.0
+  roles:
+    - role: ansible-consul
+  vars:
+    consul_checksum_file_url: "https://hc-mirror.express42.net/consul/{{ consul_version }}/consul_{{ consul_version}}_SHA256SUMS"
+    consul_zip_url: "https://hc-mirror.express42.net/consul/{{ consul_version }}/consul_{{ consul_version }}_{{ consul_os }}_{{ consul_architecture }}.zip"

@@ -1,0 +1,44 @@
+---
+- hosts: clickhouse_cluster
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Remove 127.0.1.1 from /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        state: absent
+        regexp: '^127.0.1.1'
+  roles:
+    - role: buluma.java
+    - role: idealista.zookeeper_role
+  post_tasks:
+    - name: Check zookeepers cluster status
+      shell: echo stat | nc 127.0.0.1 2181 | grep Mode | grep -E -w  "leader|follower"
+      retries: 10
+      delay: 10
+      register: result
+      until: result.rc == 0
+
+
+- hosts: clickhouse_cluster
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Remove 127.0.1.1 from /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        state: absent
+        regexp: '^127.0.1.1'
+  roles:
+    - ansible-clickhouse
+  post_tasks:
+    - name: Check clickhouse cluster status
+      shell: >
+        for node in `echo "select distinct host_address from system.clusters where host_name !='localhost'" | curl 'http://localhost:8123/' --silent --data-binary @-`; do curl "http://$node:8123/" --silent ; done | sort -u
+      register: check_connection_to_node_cluster
+    - name: Check connection to node cluster
+      debug: msg={{ check_connection_to_node_cluster.stdout }}

@@ -1,0 +1,59 @@
+- hosts: docker
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: install pip3
+      apt: name=python3-pip state=present
+    - name: Install multi python packages with version specifiers
+      pip:
+        name:
+          - docker
+          - docker-compose
+  roles:
+    - role: geerlingguy.docker
+  post_tasks:
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: Install packages git
+      become: true
+      package:
+        name:
+          - git
+        state: present
+    - name: git clone repo letsencrypt-docker-compose
+      ansible.builtin.git:
+        repo: 'https://github.com/evgeniy-khist/letsencrypt-docker-compose'
+        dest: /letsencrypt-docker-compose
+    - name: Create config.env
+      template:
+        src: "config.env.j2"
+        dest: /letsencrypt-docker-compose/config.env
+        mode: 0644
+    - name: Remove file vhosts/test1.evgeniy-khyst.com.conf
+      ansible.builtin.file:
+        path: /letsencrypt-docker-compose/vhosts/test1.evgeniy-khyst.com.conf
+        state: absent
+    - name: Remove file vhosts/test2.evgeniy-khyst.com.conf
+      ansible.builtin.file:
+        path: /letsencrypt-docker-compose/vhosts/test2.evgeniy-khyst.com.conf
+        state: absent
+    - name: Create vhosts/{{docker_external_url}}.conf
+      template:
+        src: "vhosts_jenkins.conf.j2"
+        dest: /letsencrypt-docker-compose/vhosts/{{docker_external_url}}.conf
+        mode: 0644
+    - name: Create volume nginx_conf
+      docker_volume:
+        name: nginx_conf
+    - name: Create volume letsencrypt_certs
+      docker_volume:
+        name: letsencrypt_certs
+    - name: Run `docker-compose up` 
+      community.docker.docker_compose:
+        project_src: /letsencrypt-docker-compose
+        build: yes

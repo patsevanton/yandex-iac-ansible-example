@@ -1,0 +1,4 @@
+  - hosts: vector
+    become: true
+    roles:
+      - ansible-role-vector

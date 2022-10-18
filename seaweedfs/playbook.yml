@@ -1,0 +1,6 @@
+---
+- hosts: seaweedfs
+  become: true
+  roles:
+    - role: ansible-role-seaweedfs
+      weed_version: 2.74

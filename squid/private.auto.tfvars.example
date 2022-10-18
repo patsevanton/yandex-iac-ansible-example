@@ -1,0 +1,6 @@
+yc_token            = ""
+yc_cloud_id         = ""
+yc_folder_id        = ""
+yc_zone             = "ru-central1-b"
+family_images_linux = "ubuntu-2004-lts"
+ssh_user            = "ubuntu"

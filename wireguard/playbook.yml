@@ -1,0 +1,74 @@
+- hosts: wireguard
+  become: true
+  pre_tasks:
+    - name: Install a qrencode, openresolv
+      apt:
+        pkg:
+        - qrencode
+        - openresolv
+  roles:
+    - githubixx.ansible_role_wireguard
+  post_tasks:
+    - name: Show wireguard__fact_public_key
+      debug: var=wireguard__fact_public_key
+
+    - name: Generate Wireguard client keypair
+      shell: wg genkey | tee /etc/wireguard/client_privatekey | wg pubkey | tee /etc/wireguard/client_publickey
+      args:
+        creates: /etc/wireguard/client_privatekey
+      become: yes
+
+    - name: Register client private key
+      shell: cat /etc/wireguard/client_privatekey
+      register: client_privatekey
+      changed_when: false
+      become: yes
+
+    - name: Register client public key
+      shell: cat /etc/wireguard/client_publickey
+      register: client_publickey
+      changed_when: false
+      become: yes
+
+    - name: Add [Peer] to /etc/wireguard/wg0.conf
+      lineinfile:
+        dest: /etc/wireguard/wg0.conf
+        line: "\n[Peer]"
+        insertafter: EOF
+      register: create_clients_configs
+
+    - name: Add client publickey to /etc/wireguard/wg0.conf
+      lineinfile:
+        dest: /etc/wireguard/wg0.conf
+        line: "PublicKey = {{ client_publickey.stdout }}"
+        insertafter: EOF
+      register: create_clients_configs
+
+    - name: Add client AllowedIPs to /etc/wireguard/wg0.conf
+      lineinfile:
+        dest: /etc/wireguard/wg0.conf
+        line: "AllowedIPs = 10.27.123.10/32"
+        insertafter: EOF
+      register: create_clients_configs
+
+    - name: Create clients configs
+      template:
+        src: "clients.conf.j2"
+        dest: "/etc/wireguard/client.conf"
+        mode: 0644
+      register: create_clients_configs
+
+    - name: restart service wg-quick@wg0
+      service:
+        name: wg-quick@wg0
+        state: restarted
+      when: create_clients_configs.changed
+
+    - name: Generate QR code
+      shell: qrencode -t ansiutf8 < "/etc/wireguard/client.conf"
+      changed_when: false
+      register: qrcode
+
+    - name: Show QR code
+      debug:
+        msg: "{{ qrcode.stdout_lines }}"

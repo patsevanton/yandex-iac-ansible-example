@@ -1,0 +1,76 @@
+locals {
+  jenkins_jobs = {
+    seed_job = {
+      script = <<-EOT
+        import javaposse.jobdsl.dsl.helpers.BuildParametersContext
+        class Params {
+          protected static Closure context(@DelegatesTo(BuildParametersContext) Closure params) {
+            params.resolveStrategy = Closure.DELEGATE_FIRST
+            return params
+          }
+
+          static Closure extend(Closure params) {
+            return context(params)
+          }
+        }
+
+        def git_branch = "origin/main"
+        def credential_id = "awesomerepocreds"
+        def jobs = [
+                [
+                        name: "myjob",
+                        params: [
+                                {
+                                  stringParam('ADDITIONAL_PARAM1', '', '')
+                                }
+                        ],
+                        repo: "https://github.com/patsevanton/Jenkinsfile_example.git",
+                        directory: "Jenkinsfiles",
+        //                credential_id: "awesomerepocreds"
+                ],
+                [
+                        name: "myjob1",
+                        params: [
+                                {
+                                  stringParam('ADDITIONAL_PARAM2', 'default', 'description')
+                                }
+                        ],
+                        repo: "https://github.com/patsevanton/Jenkinsfile_example.git",
+                        directory: "Jenkinsfiles",
+                ],
+        ]
+
+        jobs.each { item ->
+          pipelineJob(item.name) {
+            authenticationToken('secret')
+            item.params.each { p ->
+              parameters Params.extend(p)
+            }
+            definition {
+              cps {
+                script("""\
+                  pipeline {
+                    agent any
+                    options {
+                      timestamps()
+                      ansiColor('xterm')
+                      timeout(time: 10, unit: 'MINUTES')
+                    }
+                    stages {
+                      stage ('build') {
+                        steps {
+                          cleanWs()
+                          echo Hello_world
+                        }
+                      }
+                    }
+                  }""".stripIndent())
+                sandbox()
+              }
+            }
+          }
+        }
+      EOT
+    }
+  }
+}

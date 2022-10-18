@@ -1,0 +1,4 @@
+#cloud-config
+runcmd:
+ - [ apt-get, install, -y, mc ]
+ - [ touch, /test.txt ]

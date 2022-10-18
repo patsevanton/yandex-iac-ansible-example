@@ -1,0 +1,83 @@
+---
+controller:
+  componentName: "jenkins-controller"
+  image: "jenkins/jenkins"
+  tag: "2.346.2-jdk11"
+  imagePullPolicy: "IfNotPresent"
+  numExecutors: 1
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "2000m"
+      memory: "4096Mi"
+
+  # List of plugins to install in addition to those listed in controller.installPlugins
+  additionalPlugins:
+    - google-login:1.6
+
+  # Used to approve a list of groovy functions in pipelines used the script-security plugin. Can be viewed under /scriptApproval
+  scriptApproval: []
+  #  - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
+  #  - "new groovy.json.JsonSlurperClassic"
+
+  JCasC:
+    defaultConfig: true
+    configScripts: {}
+    #  welcome-message: |
+    #    jenkins:
+    #      systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+    # Ignored if securityRealm is defined in controller.JCasC.configScripts and
+    securityRealm: |-
+      local:
+        allowsSignup: false
+        enableCaptcha: false
+        users:
+        - id: "${chart-admin-username}"
+          name: "Jenkins Admin"
+          password: "${chart-admin-password}"
+      # googleOAuth2:
+      #   # https://stackoverflow.com/questions/17699656/how-to-configure-jenkins-login-with-google-apps
+      #   # The Client ID from the https://console.developers.google.com/
+      #   clientId: "xxx-xxx.apps.googleusercontent.com"
+      #   # The Client Secret from the Google Developer Console.
+      #   clientSecret: "xxx-xxx"
+      #   # Optional. If present, access to Jenkins will be restricted to users in the provided Google Apps Domain.
+      #   #           A comma separated list can be used to specify multiple domains.
+      #   domain: ""
+    authorizationStrategy:
+      globalMatrix:
+        permissions:
+          - "View/Read:authenticated"
+          - "Job/Read:authenticated"
+          - "Job/Build:authenticated"
+          - "Job/Discover:authenticated"
+          - "Job/Workspace:authenticated"
+          - "Job/Cancel:authenticated"
+          - "Overall/Read:authenticated"
+          - "Overall/Administer:admin"
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    paths: []
+    apiVersion: "extensions/v1beta1"
+
+# agent:
+#   enabled: true
+#   image: "jenkins/inbound-agent"
+#   tag: "4.11-1"
+#   workingDir: "/home/jenkins/agent"
+#   componentName: "jenkins-agent"
+#   resources:
+#     requests:
+#       cpu: "512m"
+#       memory: "512Mi"
+#     limits:
+#       cpu: "512m"
+#       memory: "512Mi"
+
+#   connectTimeout: 300
+#   # Pod name
+#   podName: "jenkins-agent"

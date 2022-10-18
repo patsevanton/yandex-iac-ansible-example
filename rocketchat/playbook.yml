@@ -1,0 +1,4 @@
+  - hosts: rocketchat
+    become: true
+    roles:
+      - Rocket.Chat.Ansible

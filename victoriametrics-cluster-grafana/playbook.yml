@@ -1,0 +1,17 @@
+# ---
+# - hosts: vmstorage,vminsert,vmselect
+#   become: true
+
+#   roles:
+#     - role: buluma.victoriametrics_cluster
+#       victoriametrics_version: v1.58.0
+
+
+---
+- hosts: victoria_cluster
+  collections:
+    - victoriametrics.cluster
+  become: true
+  roles:
+    - geerlingguy.docker
+    - victoriametrics.cluster.cluster

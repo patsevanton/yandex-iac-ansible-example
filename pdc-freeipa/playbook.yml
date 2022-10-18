@@ -1,0 +1,23 @@
+- hosts: primarydomaincontroller
+  roles:
+    - role: justin_p.posh5
+    - role: justin_p.wincom
+    - role: justin_p.pdc
+  post_tasks:
+    - name: Ensure user freeipa_ldap_sync is present
+      community.windows.win_domain_user:
+        name: freeipa_ldap_sync
+        password: "{{ pswd_freeipa_ldap_sync }}"
+        state: present
+        path: cn=Users,dc=domain,dc=test
+    - name: Ensure OU freeipa Users is present
+      community.windows.win_domain_ou:
+        name: FreeipaUsers
+        path: dc=domain,dc=test
+        state: present
+    - name: Ensure user test_user_in_pdc is present
+      community.windows.win_domain_user:
+        name: test_user_in_pdc
+        password: "{{ pswd_test_user_in_pdc }}"
+        state: present
+        path: ou=FreeipaUsers,dc=domain,dc=test

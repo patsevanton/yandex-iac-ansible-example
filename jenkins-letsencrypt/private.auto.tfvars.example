@@ -1,0 +1,14 @@
+yc_token            = ""
+yc_cloud_id         = ""
+yc_folder_id        = ""
+jenkins_admin_password = ""
+
+yc_zone             = "ru-central1-b"
+family_images_linux = "ubuntu-2004-lts"
+ssh_user            = "ubuntu"
+cores               = "2"           # Examples: 2, 4, 6, 8 and more
+memory              = "4"           # Examples: 2, 4, 6, 8 and more
+disk_size           = "20"          # Min 50 for Windows
+disk_type           = "network-ssd" # Examples: network-ssd, network-hdd, network-ssd-nonreplicated
+hostname            = "jenkins"
+domain              = "sslip.io"

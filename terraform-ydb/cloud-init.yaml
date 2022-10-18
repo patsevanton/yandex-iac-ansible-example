@@ -1,0 +1,5 @@
+#cloud-config
+runcmd:
+ - apt-get update
+ - sudo apt install python3-pip git -y
+ - sudo pip3 install iso8601 ydb yandexcloud 

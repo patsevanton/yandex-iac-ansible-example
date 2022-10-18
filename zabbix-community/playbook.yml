@@ -1,0 +1,41 @@
+---
+- hosts: zabbix_database
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Remove 127.0.1.1 from /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        state: absent
+        regexp: '^127.0.1.1'
+    - name: Ensure `acl` is available.
+      package:
+        name: acl
+        state: present
+  roles:
+    - role: ansible-postgresql
+      vars:
+        ansible_python_interpreter: "/usr/bin/python3" 
+
+- name: Installing Zabbix
+  hosts: zabbix_server
+  become: true
+  collections:
+    - community.zabbix
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Remove 127.0.1.1 from /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        state: absent
+        regexp: '^127.0.1.1'
+  roles:
+    - role: zabbix_server
+    - role: geerlingguy.apache
+    - role: geerlingguy.php
+    - role: geerlingguy.apache-php-fpm
+    - role: zabbix_web

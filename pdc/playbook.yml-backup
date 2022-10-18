@@ -1,0 +1,64 @@
+- hosts: pdc
+  roles:
+    - role: justin_p.posh5
+    - role: justin_p.wincom
+    - role: justin_p.pdc
+  post_tasks:
+    - name: Install ADCS-Cert-Authority with sub features and management tools
+      win_feature:
+        name: ADCS-Cert-Authority
+        state: present
+        include_management_tools: yes
+      register: win_feature
+
+    - name: Install ADCS-Enroll-Web-Pol with sub features and management tools
+      win_feature:
+        name: ADCS-Enroll-Web-Pol
+        state: present
+        include_management_tools: yes
+      register: win_feature
+
+    - name: Install ADCS-Web-Enrollment with sub features and management tools
+      win_feature:
+        name: ADCS-Web-Enrollment
+        state: present
+        include_management_tools: yes
+      register: win_feature
+
+    - name: reboot if installing Adcs-Cert-Authority feature requires it
+      win_reboot:
+      when: win_feature.reboot_required
+
+    - name: Configure AD CS certification authority
+      win_shell: Install-AdcsCertificationAuthority -CACommonName "RootCA" -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -ValidityPeriod Years -ValidityPeriodUnits 99 -Force
+      async: 1000
+      poll: 5
+      register: pri_adcs_enrollment_config
+      changed_when: pri_adcs_enrollment_config.rc == 0
+      failed_when:
+        - pri_adcs_enrollment_config.rc != 0
+        - '"The Certification Authority is already installed" not in (pri_adcs_enrollment_config.stderr|regex_replace("\r\n", ""))'
+
+    # - name: Export the Root CA certificate
+    #   win_command: certutil -ca.cert "C:\RootCA.cer"
+
+    # - name: Install module PSPKI
+    #   win_shell: Install-Module -Name PSPKI
+
+    # - name: Copy reqconfig.inf file
+    #   ansible.windows.win_copy:
+    #     src: reqconfig.inf
+    #     dest: C:\reqconfig.inf
+
+    - name: Create reqconfig.inf file from template
+      win_template:
+        src: cert_req_inf.j2
+        dest: C:\reqconfig.inf
+
+    # - name: 'Generate Certificate Signing Request (CSR)'
+    #   win_command: 'certreq -new -f C:\reqconfig.inf C:\cert_csr.txt
+    #   register: cmdout
+    #   creates: C:\cert_csr.txt
+
+
+

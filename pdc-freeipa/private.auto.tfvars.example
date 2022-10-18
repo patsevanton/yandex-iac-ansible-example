@@ -1,0 +1,18 @@
+yc_token     = "" # required
+yc_cloud_id  = "" # required
+yc_folder_id = "" # required
+yc_zone      = "ru-central1-b"
+
+family_images_windows = "windows-2019-dc-gvlk"
+family_images_linux   = "ubuntu-2004-lts"
+ssh_user              = "ubuntu"
+
+pdc_admin_password    = "" # required
+pdc_hostname          = "pdc"
+pdc_domain            = "domain.test"
+pdc_domain_path       = "dc=domain,dc=test"
+pswd_freeipa_ldap_sync = "" # required
+pswd_test_user_in_pdc = "" # required
+
+freeipa_hostname    = "freeipa"
+letsencrypt_domain = "sslip.io"

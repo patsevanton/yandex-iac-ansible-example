@@ -1,0 +1,27 @@
+- name: "Deploy java, jenkins, letsencrypt, nginx"
+  hosts: jenkins
+  become: true
+  roles:
+    - role: robertdebock.java
+    - role: geerlingguy.jenkins
+    - role: systemli.letsencrypt
+    - role: geerlingguy.nginx
+  post_tasks:
+    - name: Jenkins Skip startUp for MI. below works for 2.332.1 or latest
+      lineinfile:
+        dest=/usr/lib/systemd/system/jenkins.service
+        regexp='^Environment="JAVA_OPTS=-Djava.awt.headless=true'
+        line='Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
+      when: jenkins_version is not defined
+      register: jenkins_service
+    
+    - name: Restart service jenkins, also issue daemon-reload to pick up config changes
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jenkins
+      when: jenkins_service.changed
+
+    - name: Print ansible_host var
+      debug:
+        var: ansible_host

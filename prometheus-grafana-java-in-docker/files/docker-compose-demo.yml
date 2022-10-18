@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  admin-ui:
+    image: drill4j/admin-ui-root-config:0.1.0-62
+    restart: always
+    ports:
+      - 8091:8080
+    environment:
+      WAIT_HOSTS: drill-admin:8090
+      UI_PLUGINS_URLS: test2code#https://cdn.jsdelivr.net/npm/@drill4j/test2code-ui@0.1.0-59/dist/Drill4J-test-to-code.js
+
+
+  drill-admin:
+    image: drill4j/admin:0.8.0-33
+    environment:
+      - analytic.disable=true
+      - TEST2CODE_PLUGIN_VERSION=0.8.0-27
+      - JAVA_TOOL_OPTIONS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=65322 -javaagent:/mnt/jmx_prometheus_javaagent.jar=5556:/mnt/jmx_prometheus_javaagent_config.yaml
+      - LOG_LEVEL=INFO
+      - DRILL_AGENTS_SOCKET_TIMEOUT=300
+    ports:
+      - 8090:8090
+      - 5556:5556
+    volumes:
+      - drill-data:/work
+      - /usr/local/jmx_prometheus_javaagent.jar:/mnt/jmx_prometheus_javaagent.jar
+      - /usr/local/jmx_prometheus_javaagent_config.yaml:/mnt/jmx_prometheus_javaagent_config.yaml
+
+
+volumes:
+  drill-data:

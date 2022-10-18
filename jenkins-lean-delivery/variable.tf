@@ -1,0 +1,80 @@
+variable "yc_token" {
+  type        = string
+  description = "Yandex Cloud API key"
+}
+
+variable "yc_cloud_id" {
+  type        = string
+  description = "Yandex Cloud id"
+}
+
+variable "yc_folder_id" {
+  type        = string
+  description = "Yandex Cloud folder id"
+}
+
+variable "yc_zone" {
+  type        = string
+  description = "Yandex Cloud compute default zone"
+  default     = "ru-central1-b"
+}
+
+variable "family_images_linux" {
+  type        = string
+  description = "Family of images jenkins in Yandex Cloud. Example: ubuntu-2004-lts"
+}
+
+variable "ssh_user" {
+  type        = string
+  description = "ssh_user"
+}
+
+variable "cores" {
+  type        = string
+  description = "Cores CPU. Examples: 2, 4, 6, 8 and more"
+}
+
+variable "memory" {
+  type        = string
+  description = "Memory GB. Examples: 2, 4, 6, 8 and more"
+}
+
+variable "disk_size" {
+  type        = string
+  description = "Disk size GB. Min 50 for Windows."
+}
+
+variable "disk_type" {
+  type        = string
+  description = "Disk type. Examples: network-ssd, network-hdd, network-ssd-nonreplicated"
+}
+
+variable "hostname" {
+  type        = string
+  description = "hostname"
+}
+
+variable "domain" {
+  type        = string
+  description = "domain"
+}
+
+variable "jenkins_admin_password" {
+  type        = string
+  description = "jenkins_admin_password"
+}
+
+variable "googleoauth2_clientid" {
+  type        = string
+  description = "googleoauth2_clientid"
+}
+
+variable "googleoauth2_clientsecret" {
+  type        = string
+  description = "googleoauth2_clientsecret"
+}
+
+variable "googleoauth2_domain" {
+  type        = string
+  description = "googleoauth2_domain"
+}

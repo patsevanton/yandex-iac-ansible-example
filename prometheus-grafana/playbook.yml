@@ -1,0 +1,54 @@
+---
+- hosts: javaindocker
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: install pip3
+      apt: name=python3-pip state=present
+    - name: Install multi python packages with version specifiers
+      pip:
+        name:
+          - docker
+          - docker-compose
+  roles:
+    - role: geerlingguy.docker
+    - role: cloudalchemy.node_exporter
+      vars:
+        node_exporter_version: 1.3.1
+    - role: andrewrothstein.prometheus_jmx_exporter
+    - role: ansible-role-cadvisor
+    - role: buluma.java
+      vars:
+        java_type: jdk
+        java_version: "8"
+  post_tasks:
+    - name: install maven
+      apt: name=maven state=present
+    - name: Copy docker-compose-demo.yml
+      copy:
+        src: docker-compose-demo.yml
+        dest: /home/ubuntu/docker-compose-demo.yml
+    - name: Copy jmx_prometheus_javaagent_config.yaml
+      copy:
+        src: jmx_prometheus_javaagent_config.yaml
+        dest: /usr/local/jmx_prometheus_javaagent_config.yaml
+    - name: add user to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: reset ssh connection to allow user changes to affect ansible user
+      ansible.builtin.meta:
+        reset_connection
+
+- name: Install prometheus and Grafana
+  become: true
+  hosts: prometheus
+  roles:
+    - role: cloudalchemy.prometheus
+    - role: buluma.grafana
+
+
+# https://github.com/stadtulm/a13-ansible/blob/master/main.yml

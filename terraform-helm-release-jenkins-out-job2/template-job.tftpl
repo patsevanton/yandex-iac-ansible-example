@@ -1,0 +1,51 @@
+        pipelineJob("${name}") {
+          description("${job_description}")
+          logRotator(120, -1, 1, -1)
+          authenticationToken("${authenticationToken}")
+          parameters {
+             stringParam('PARAMETER', 'Default value', 'Description')
+          }
+          definition {
+            cps {
+              script("""\
+                pipeline {
+                  agent any
+                  options {
+                    timestamps()
+                    ansiColor('xterm')
+                    timeout(time: 10, unit: 'MINUTES')
+                  }
+                  stages {
+                    stage ('build') {
+                      steps {
+                        cleanWs()
+                        googleStorageDownload \
+                            bucketUri: "gs://foo.\$env.PARAMETER.tar.gz", // \$PARAMETER
+                            credentialsId: 'fff',
+                            localDirectory: '.'
+                        sh '''#!/bin/bash
+                              set +x
+                              pwd
+                              ls "ci-tests-results/allure-results.\$PARAMETER.tar.gz" |xargs -n1 tar -xvzf
+                              # check directory
+                              if [[ -d './allure-report/history' && "\$(ls -A ./allure-report/history)" ]]; then
+                                mv allure-report/history/* target
+                              fi
+                        '''
+                      }
+                    }
+                  }
+                  post {
+                    always {
+                      allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+                      sh '''
+                      echo "\^$${JOB_NAME}"
+                      echo "\^$${BUILD_NUMBER}"                
+                      '''
+                      }
+                    }
+                }""".stripIndent())
+              sandbox()
+            }
+          }
+        }

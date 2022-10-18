@@ -1,0 +1,18 @@
+yc_token     = "" # required
+yc_cloud_id  = "" # required
+yc_folder_id = "" # required
+yc_zone      = "ru-central1-b"
+
+family_freeipa_linux = "centos-7"
+ssh_freeipa_user     = "centos"
+family_images_linux  = "ubuntu-2004-lts"
+ssh_user             = "ubuntu"
+
+freeipa_hostname          = "freeipa"
+freeipa_domain            = "domain.test"
+freeipa_domain_path       = "dc=domain,dc=test"
+pswd_gitlab_ldap_sync     = "" # required
+pswd_test_user_in_freeipa = "" # required
+
+gitlab_hostname    = "gitlab"
+letsencrypt_domain = "sslip.io"

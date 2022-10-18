@@ -1,0 +1,29 @@
+---
+controller:
+  componentName: "jenkins-controller"
+  image: "jenkins/jenkins"
+  tag: "2.346.2-jdk11"
+  imagePullPolicy: "IfNotPresent"
+  numExecutors: 1
+
+  JCasC:
+    securityRealm: |-
+      local:
+        allowsSignup: false
+        enableCaptcha: false
+        users:
+        - id: "${chart-admin-username}"
+          name: "Jenkins Admin"
+          password: "password"
+    authorizationStrategy: |-
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    apiVersion: networking.k8s.io/v1
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    tls:
+      - secretName: jenkins-tls

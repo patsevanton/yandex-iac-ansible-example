@@ -1,0 +1,172 @@
+- name: "Deploy java, jenkins, letsencrypt, nginx"
+  hosts: jenkins
+  become: true
+  pre_tasks:
+    - name: Wait for cloud-init / user-data to finish
+      command: cloud-init status --wait
+      changed_when: false
+  roles:
+    - role: robertdebock.java
+    # - role: geerlingguy.jenkins
+    - role: ansible-role-jenkins
+    - role: systemli.letsencrypt
+    - role: geerlingguy.nginx
+  post_tasks:
+    - name: Create directory /var/lib/jenkins/jcasc
+      ansible.builtin.file:
+        path: /var/lib/jenkins/jcasc
+        state: directory
+        owner: jenkins
+        group: jenkins
+
+    - name: Copy jcasc.yaml
+      ansible.builtin.copy:
+        src: jcasc_local_auth.yaml
+        dest: /var/lib/jenkins/jcasc/jcasc.yaml
+        owner: jenkins
+        group: jenkins
+        mode: '0644'
+      register: jcasc_local_auth_yaml
+
+    - name: Restart service jenkins, also issue daemon-reload to pick up config changes
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jenkins
+      when: jcasc_local_auth_yaml.changed
+
+    - name: download the latest release
+      get_url:
+        url: "https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.12.8/jenkins-plugin-manager-2.12.8.jar"
+        dest: "/var/lib/jenkins"
+        mode: '0755'
+        owner: jenkins
+        group: jenkins
+
+    - name: Copy plugins.txt
+      ansible.builtin.copy:
+        src: plugins.txt
+        dest: /var/lib/jenkins/plugins.txt
+        owner: jenkins
+        group: jenkins
+        mode: '0644'
+
+    - name: Run plugin installation manager tool
+      shell: "java -jar /var/lib/jenkins/jenkins-plugin-manager-2.12.8.jar --war /usr/share/java/jenkins.war --plugin-download-directory /var/lib/jenkins/plugins --plugin-file /var/lib/jenkins/plugins.txt"
+      register: run_plugin_installation_manager_tool
+
+    - name: Restart service jenkins
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jenkins
+      when: run_plugin_installation_manager_tool.changed
+
+- name: Create token
+  hosts: jenkins
+  become: true
+  tasks:
+    - name: Install jq, jenkins-job-builder
+      apt:
+        pkg:
+          - jq
+          - jenkins-job-builder
+        state: present
+
+    - name: Generate generate-jenkins-api-token.sh from template
+      template:
+        src: generate-jenkins-api-token.sh.j2
+        dest: /var/lib/jenkins/generate-jenkins-api-token.sh
+        owner: jenkins
+        group: jenkins
+        mode: 0755
+
+    - name: Create API token from script
+      shell: "/var/lib/jenkins/generate-jenkins-api-token.sh"
+      register: script_api_token_output
+      args:
+        creates: /var/lib/jenkins/api_token.txt
+
+    - name: Read api_token from /var/lib/jenkins/api_token.txt
+      slurp:
+        src: /var/lib/jenkins/api_token.txt
+      register: api_token
+
+    - name: Set fact api_token
+      set_fact:
+        api_token: "{{ api_token.content | b64decode }}"
+
+    - name: Print API token
+      debug: var=api_token
+
+    - name: Generate jenkins-jobs-config from template
+      template:
+        src: jenkins-jobs-config.j2
+        dest: /var/lib/jenkins/jenkins-jobs-config
+        owner: jenkins
+        group: jenkins
+        mode: 0644
+
+    - name: Create directory /var/lib/jenkins/jobs
+      ansible.builtin.file:
+        path: /var/lib/jenkins/jobs
+        state: directory
+        owner: jenkins
+        group: jenkins
+        mode: '0755'
+
+    - name: Copy job-template.yaml
+      ansible.builtin.copy:
+        src: job-template.yaml
+        dest: /var/lib/jenkins/jobs/job-template.yaml
+        owner: jenkins
+        group: jenkins
+
+    - name: Copy defaults.yaml
+      ansible.builtin.copy:
+        src: defaults.yaml
+        dest: /var/lib/jenkins/jobs/defaults.yaml
+        owner: jenkins
+        group: jenkins
+
+    - name: Copy projects.yaml
+      ansible.builtin.copy:
+        src: projects.yaml
+        dest: /var/lib/jenkins/jobs/projects.yaml
+        owner: jenkins
+        group: jenkins
+
+    - name: Create Jenkins jobs using Jenkins job builder
+      shell: "jenkins-jobs --conf=jenkins-jobs-config update jobs"
+      register: jenkins_job_builder_output
+      args:
+        chdir: /var/lib/jenkins
+
+########
+    - name: Print ansible_host var
+      debug:
+        var: jenkins_job_builder_output
+
+    - name: Print ansible_host var
+      debug:
+        var: ansible_host
+
+- name: Enable googleOAuth2
+  hosts: jenkins
+  become: true
+  tasks:
+    - name: Generate jcasc.yaml from template
+      template:
+        src: jcasc_googleoauth2.yaml.j2
+        dest: /var/lib/jenkins/jcasc/jcasc.yaml
+        owner: jenkins
+        group: jenkins
+        mode: 0644
+      register: jcasc_googleoauth2_yaml
+
+    - name: Restart service jenkins
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: jenkins
+      when: jcasc_googleoauth2_yaml.changed

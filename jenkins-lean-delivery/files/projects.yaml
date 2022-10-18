@@ -1,0 +1,9 @@
+- project:
+    name: project-example
+    jobs:
+      - '{name}_job':
+          name: getspace
+          command: df -h
+      - '{name}_job':
+          name: listEtc
+          command: ls /etc

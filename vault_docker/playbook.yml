@@ -1,0 +1,114 @@
+---
+- hosts: vault_instances
+  become: yes
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: Install python3-pip, unzip, jq
+      apt:
+        pkg:
+          - python3-pip
+          - unzip
+          - jq
+    - name: Install docker, docker-compose python packages
+      pip:
+        name:
+          - docker
+          - docker-compose
+  roles:
+    - role: geerlingguy.docker
+  post_tasks:
+    - name: install hashicorp vault manually
+      ansible.builtin.unarchive:
+        src: "{{ vault_zip_url }}"
+        dest: /usr/bin
+        mode: "0755"
+        remote_src: yes
+      vars:
+        vault_zip_url: "https://hc-mirror.express42.net/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip"
+        vault_version: "1.10.1"
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: reset ssh connection to allow user changes to affect ansible user
+      ansible.builtin.meta:
+        reset_connection
+    - name: ensure group vault exists
+      ansible.builtin.group:
+        name: vault
+        state: present
+    - name: ensure user vault exist
+      ansible.builtin.user:
+        name: vault
+        home: /home/vault
+        shell: /bin/bash
+        group: vault
+        system: yes
+    - name: Create a directory /etc/vault.d
+      file:
+        path: /etc/vault.d
+        state: directory
+        owner: vault
+        group: vault
+        mode: '0755'
+    - name: Creating an empty file vault.env
+      ansible.builtin.file:
+        path: /etc/vault.d/vault.env
+        state: touch
+        owner: vault
+        group: vault
+        mode: '0644'
+    - name: Create a directory /opt/vault/
+      file:
+        path: /opt/vault/
+        state: directory
+        owner: vault
+        group: vault
+        mode: '0755'
+    - name: Create a directory /opt/vault/data
+      file:
+        path: /opt/vault/data
+        state: directory
+        owner: vault
+        group: vault
+        mode: '0755'
+    - name: Copy file vault.service
+      ansible.builtin.copy:
+        src: vault.service
+        dest: /usr/lib/systemd/system/vault.service
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Copy file vault.hcl
+      ansible.builtin.copy:
+        src: vault.hcl
+        dest: /etc/vault.d/vault.hcl
+        owner: vault
+        group: vault
+        mode: '0644'
+    - name: Copy file vault_transit.hcl
+      ansible.builtin.copy:
+        src: vault_transit.hcl
+        dest: /etc/vault.d/vault_transit.hcl
+        owner: vault
+        group: vault
+        mode: '0644'
+    - name: Copy file autounseal.hcl
+      ansible.builtin.copy:
+        src: autounseal.hcl
+        dest: /etc/vault.d/autounseal.hcl
+        owner: vault
+        group: vault
+        mode: '0644'
+    - name: safe VAULT_ADDR /etc/environment
+      ansible.builtin.lineinfile:
+        regexp: "^export VAULT_ADDR="
+        path: /etc/profile.d/vault.sh
+        create: yes
+        line: "export VAULT_ADDR='http://127.0.0.1:8200'"
+        mode: "0644"
+        owner: root
+        group: root

@@ -1,0 +1,25 @@
+- hosts: mongodb
+  become: true
+  roles:
+    - role: andrewrothstein.mongodb-cluster
+      # if you don't want to secure your install then use
+      mongodb_secure: False
+
+
+- hosts: mongodb
+  vars:
+    auth_db: ""
+    adminUser: ""
+    adminPass: ""
+    tgt_db: ""
+    userName: ""
+    userPass: ""
+    roles: ["readWrite", "userAdmin"]
+
+  roles:
+    - { role: pgkehle.mongodb, flags: ['install'] }
+    - { role: pgkehle.mongodb, flags: ['save_config'] }
+    - { role: pgkehle.mongodb, flags: ['reset_storage'] }
+    - { role: pgkehle.mongodb, flags: ['init_replica_set'] }
+    - { role: pgkehle.mongodb, flags: ['add_shard_to_cluster'] }
+    - { role: pgkehle.mongodb, flags: ['create_database'] }

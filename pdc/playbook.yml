@@ -1,0 +1,130 @@
+- hosts: pdc
+  roles:
+    - role: justin_p.posh5
+    - role: justin_p.wincom
+    - role: justin_p.pdc
+  post_tasks:
+    - name: Install ADCS-Cert-Authority with sub features and management tools
+      win_feature:
+        name: ADCS-Cert-Authority
+        state: present
+        include_management_tools: yes
+      register: win_feature
+
+    - name: Install ADCS-Enroll-Web-Pol with sub features and management tools
+      win_feature:
+        name: ADCS-Enroll-Web-Pol
+        state: present
+        include_management_tools: yes
+      register: win_feature
+
+    - name: Install ADCS-Web-Enrollment with sub features and management tools
+      win_feature:
+        name: ADCS-Web-Enrollment
+        state: present
+        include_management_tools: yes
+      register: win_feature
+
+    - name: reboot if installing Adcs-Cert-Authority feature requires it
+      win_reboot:
+      when: win_feature.reboot_required
+
+    - name: Configure AD CS certification authority
+      win_shell: Install-AdcsCertificationAuthority -CACommonName "RootCA" -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -ValidityPeriod Years -ValidityPeriodUnits 99 -Force
+      async: 1000
+      poll: 5
+      register: pri_adcs_enrollment_config
+      changed_when: pri_adcs_enrollment_config.rc == 0
+      failed_when:
+        - pri_adcs_enrollment_config.rc != 0
+        - '"The Certification Authority is already installed" not in (pri_adcs_enrollment_config.stderr|regex_replace("\r\n", ""))'
+
+    - name: Export the Root CA certificate
+      win_command: certutil -ca.cert C:\RootCA.cer
+      args:
+        creates: C:\RootCA.cer
+
+    - name: Install module PSPKI
+      win_shell: Install-Module -Name PSPKI
+
+    - name: Create reqconfig.inf file from template
+      win_template:
+        src: cert_req_inf.j2
+        dest: C:\reqconfig.inf
+
+    - name: 'Generate Certificate Signing Request (CSR)'
+      win_command: 'certreq -new -f C:\reqconfig.inf C:\cert_csr.txt'
+      register: cmdout
+      args:
+        creates: C:\cert_csr.txt
+
+    - name: Issue a cert for the CSR
+      win_shell: |
+          $j = Start-Job {
+            certreq.exe `
+              -config "{{ cert_ca_config_name }}" `
+              -attrib "CertificateTemplate:{{ certificate_template_name }}" `
+              -submit `
+              "C:\cert_csr.txt" `
+              "C:\freeipa.cer" `
+              "C:\full-chain-cert-freeipa.p7b" `
+              "C:\full-response.rsp"
+          }
+          $done = Wait-Job -Job $j -Timeout 30
+          if (-not $done) {
+              echo "Killing proc"
+              Get-Process -Name certreq | ? StartTime -GE $j.PSBeginTime | Stop-Process -Force
+              Receive-Job -Job $j -Wait
+              Exit 1
+          }
+          Receive-Job -Job $j -Wait
+      args:
+        creates: C:\freeipa.cer
+      register: cert_submit_out
+      failed_when: >
+        cert_submit_out.rc != 0 or
+        'Certificate retrieved(Issued) Issued' not in cert_submit_out.stdout
+
+    - name: Output Issue a cert for the CSR
+      debug: var=cert_submit_out
+
+    - name: Import certificate to Local Computer
+      win_shell: |
+          Import-Certificate -FilePath C:\freeipa.cer -CertStoreLocation cert:\LocalMachine\MY
+      register: import_certificate_to_local_computer
+
+    - name: Output Import certificate to Local Computer
+      debug: var=import_certificate_to_local_computer
+
+    - name: Get thumbprint from cer file 
+      win_shell: |
+          $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 'C:\freeipa.cer'
+          $cert.Thumbprint
+      register: thumbprint_freeipa_array
+
+    - name: Set new variable thumbprint_freeipa_certificate
+      set_fact:
+        thumbprint_freeipa_certificate: '{{ thumbprint_freeipa_array.stdout_lines[0] }}'
+
+    - name: Output thumbprint freeipa certificate
+      debug: var=thumbprint_freeipa_certificate
+
+    - name: Export the Certificate to C:\freeipa.pfx
+      win_shell: |
+        $Password = ConvertTo-SecureString -String "{{pfx_password}}" -Force -AsPlainText
+        Get-ChildItem -Path cert:\localMachine\my\{{thumbprint_freeipa_certificate}} | Export-PfxCertificate -FilePath C:\freeipa.pfx -Password $Password
+      register: export_freeipa_certificate
+
+    - name: Output Export the Certificate to C:\freeipa.pfx
+      debug: var=export_freeipa_certificate
+
+# https://superuser.com/questions/1275538/how-can-i-pull-the-thumbprint-out-of-a-ssl-certificate-file-not-the-windows-cer
+
+# https://aventistech.com/2019/09/09/request-ssl-certificate-from-microsoft-ca-with-certreq/
+
+
+# https://social.technet.microsoft.com/Forums/windowsserver/en-US/9bc3cbb0-feca-4c54-8894-15603ac2012a/format-of-request-file-for-requesting-certificate-to-install-a-standalone-subordinate-ca?forum=winserversecurity
+# https://serverfault.com/questions/1088924/create-new-subca-certificate-fails-with-nte-prov-type-not-def
+# https://serverfault.com/questions/382032/unable-to-submit-certificate-request-to-2k8r2-ca
+# https://serverfault.com/questions/409241/child-domain-new-cert-request-certificate-template-permissions-do-not-allow-cu
+# https://serverfault.com/questions/463337/when-installing-a-windows-sub-ca-from-an-offline-root-how-do-i-recreate-it-w

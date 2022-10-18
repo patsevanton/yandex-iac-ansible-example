@@ -1,0 +1,4 @@
+- hosts: letsencrypt
+  become: true
+  roles:
+    - role: systemli.letsencrypt

@@ -1,0 +1,73 @@
+[vmstorage]
+vmstorage01 ansible_host="${public_ip_vmstorage01}"
+vmstorage02 ansible_host="${public_ip_vmstorage02}"
+vmstorage03 ansible_host="${public_ip_vmstorage03}"
+vmstorage04 ansible_host="${public_ip_vmstorage04}"
+
+[vminsert]
+vminsert01 ansible_host="${public_ip_vminsert01}"
+vminsert02 ansible_host="${public_ip_vminsert02}"
+
+[vmselect]
+vmselect01 ansible_host="${public_ip_vmselect01}"
+vmselect02 ansible_host="${public_ip_vmselect02}"
+
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+
+############################
+# This is example inventory file!
+# Please specify the ip addresses and connection settings for your environment
+# The specified ip addresses will be used to listen by the cluster components.
+
+# "postgresql_exists='true'" if PostgreSQL is already exists and running
+# "hostname=" variable is optional (used to change the server name)
+
+# if dcs_exists: false and dcs_type: "etcd" (in vars/main.yml)
+[etcd_cluster]  # recommendation: 3 or 5-7 nodes
+10.128.64.140
+10.128.64.142
+10.128.64.143
+
+
+# if with_haproxy_load_balancing: true (in vars/main.yml)
+[balancers]
+10.128.64.140
+10.128.64.142
+10.128.64.143
+
+
+# PostgreSQL nodes
+[master]
+10.128.64.140 hostname=pgnode01 postgresql_exists='false'
+
+[replica]
+10.128.64.142 hostname=pgnode02 postgresql_exists='false'
+10.128.64.143 hostname=pgnode03 postgresql_exists='false'
+
+[postgres_cluster:children]
+master
+replica
+
+
+# In this example, all components will be installed on PostgreSQL nodes
+# You can deploy the etcd cluster and the haproxy balancers on other dedicated servers. 
+
+
+# if pgbackrest_install: true and "repo_host" is set (in vars/main.yml)
+[pgbackrest]  # optional (Dedicated Repository Host)
+
+
+# Connection settings
+[all:vars]
+ansible_connection='ssh'
+ansible_ssh_port='22'
+ansible_user='root'
+ansible_ssh_pass='secretpassword'  # "sshpass" package is required for use "ansible_ssh_pass"
+# ansible_ssh_private_key_file=
+# ansible_python_interpreter='/usr/bin/python3'  # is required for use python3
+
+[pgbackrest:vars]
+ansible_user='postgres'
+ansible_ssh_pass='secretpassword'

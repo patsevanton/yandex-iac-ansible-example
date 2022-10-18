@@ -1,0 +1,140 @@
+---
+controller:
+  tag: "2.346.2-jdk11"
+  imagePullPolicy: "IfNotPresent"
+  numExecutors: 0
+
+  additionalPlugins:
+    - google-login:1.6
+    - job-dsl:1.81
+    - allure-jenkins-plugin:2.30.2
+    - ws-cleanup:0.42
+    - build-timeout:1.21
+    - timestamper:1.18
+    - google-storage-plugin:1.5.6
+    - permissive-script-security:0.7
+    - ansicolor:1.0.2
+    - google-oauth-plugin:1.0.6
+
+  javaOpts: '-Dpermissive-script-security.enabled=true'
+
+  JCasC:
+    configScripts:
+      jenkins-configuration: |
+        jenkins:
+          systemMessage: This Jenkins is configured and managed 'as code' by Managed Cloud team.
+        security:
+          globaljobdslsecurityconfiguration:
+            useScriptSecurity: false
+      job-config: |
+        jobs:
+          - script: >
+              pipelineJob('job1') {
+                logRotator(120, -1, 1, -1)
+                authenticationToken('secret')
+                definition {
+                  cps {
+                    script("""\
+                      pipeline {
+                        agent any
+                        parameters {
+                            string(name: 'Variable', defaultValue: '', description: 'Variable', trim: true)
+                        }
+                        options {
+                          timestamps()
+                          ansiColor('xterm')  
+                          timeout(time: 10, unit: 'MINUTES')
+                        }
+                        stages {
+                          stage ('build') {
+                            steps {
+                              cleanWs()
+                              echo "hello job1"
+                            }
+                          }
+                        }
+                      }""".stripIndent())
+                    sandbox()
+                  }
+                }
+              }
+          - script: >
+              pipelineJob('job2') {
+                logRotator(120, -1, 1, -1)
+                authenticationToken('secret')
+                definition {
+                  cps {
+                    script("""\
+                      pipeline {
+                        agent any
+                        parameters {
+                            string(name: 'Variable', defaultValue: '', description: 'Variable', trim: true)
+                        }
+                        options {
+                          timestamps()
+                          ansiColor('xterm')  
+                          timeout(time: 10, unit: 'MINUTES')
+                        }
+                        stages {
+                          stage ('test') {
+                            steps {
+                              cleanWs()
+                              echo "hello job2"
+                            }
+                          }
+                        }
+                      }""".stripIndent())
+                    sandbox()
+                  }
+                }
+              }
+      views: |
+        jenkins:
+          views:
+            - all:
+                name: "all"
+            - list:
+                columns:
+                - "status"
+                - "weather"
+                - "jobName"
+                - "lastSuccess"
+                - "lastFailure"
+                - "lastDuration"
+                - "buildButton"
+                jobNames:
+                - "job1"
+                name: "stage"
+            - list:
+                columns:
+                - "status"
+                - "weather"
+                - "jobName"
+                - "lastSuccess"
+                - "lastFailure"
+                - "lastDuration"
+                - "buildButton"
+                jobNames:
+                - "job2"
+                name: "test"
+          viewsTabBar: "standard"
+    securityRealm: |-
+      googleOAuth2:
+        clientId: "xxx-xxx.apps.googleusercontent.com"
+        clientSecret: "xxx-xxx"
+        domain: ""
+    authorizationStrategy: |-
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    apiVersion: networking.k8s.io/v1
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    hostName: xxxx
+    tls:
+     - secretName: jenkins-tls
+       hosts:
+         - xxxx

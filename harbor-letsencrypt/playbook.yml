@@ -1,0 +1,21 @@
+- hosts: harbor
+  become: true
+  roles:
+    - role: systemli.letsencrypt
+
+- hosts: harbor
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: install pip3
+      apt: name=python3-pip state=present
+    - name: Install multi python packages
+      pip:
+        name:
+          - docker
+          - docker-compose
+  roles:
+    - role: geerlingguy.docker
+    - role: ansible-role-harbor

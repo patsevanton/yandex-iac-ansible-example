@@ -1,0 +1,11 @@
+- job-template:
+    name: '{name}_job'
+    description: 'Automatically generated test'
+    project-type: freestyle
+    parameters:
+      - string:
+          name: FOO
+          default: bar
+          description: "A parameter named FOO, defaults to 'bar'."
+    builders:
+      - shell: '{command}'

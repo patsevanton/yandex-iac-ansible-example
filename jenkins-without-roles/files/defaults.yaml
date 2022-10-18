@@ -1,0 +1,7 @@
+- defaults:
+    name: global
+    logrotate:
+      daysToKeep: 120
+      numToKeep: 10
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1

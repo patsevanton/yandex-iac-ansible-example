@@ -1,0 +1,13 @@
+- name: "Deploy java, jenkins, letsencrypt, nginx"
+  hosts: jenkins
+  become: true
+  pre_tasks:
+    - name: Wait for cloud-init / user-data to finish
+      command: cloud-init status --wait
+      changed_when: false
+  roles:
+    - role: lean_delivery.java
+      java_distribution: openjdk
+      java_major_version: 11
+      transport: repositories
+    - role: lean_delivery.jenkins

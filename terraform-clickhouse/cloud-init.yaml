@@ -1,0 +1,12 @@
+#cloud-config
+runcmd:
+ - apt-get install -y apt-transport-https ca-certificates dirmngr
+ - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 8919F6BD2B48D754
+ - echo "deb https://packages.clickhouse.com/deb stable main" | tee /etc/apt/sources.list.d/clickhouse.list
+ - apt-get update
+ - apt-get install -y clickhouse-client=22.3.10.22 clickhouse-common-static=22.3.10.22
+ - mkdir -p ~/.clickhouse-client /usr/local/share/ca-certificates/Yandex && \
+ - wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" -O /usr/local/share/ca-certificates/Yandex/YandexInternalRootCA.crt && \
+ - sudo -H -u ubuntu bash -c 'mkdir ~/.clickhouse-client' 
+ - sudo -H -u ubuntu bash -c 'wget "https://storage.yandexcloud.net/mdb/clickhouse-client.conf.example" -O ~/.clickhouse-client/config.xml' 
+

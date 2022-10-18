@@ -1,0 +1,41 @@
+- hosts: primarydomaincontroller
+  roles:
+    - role: justin_p.posh5
+    - role: justin_p.wincom
+    - role: justin_p.pdc
+  post_tasks:
+    - name: Ensure user gitlab_ldap_sync is present
+      community.windows.win_domain_user:
+        name: gitlab_ldap_sync
+        password: "{{ pswd_gitlab_ldap_sync }}"
+        state: present
+        path: cn=Users,dc=domain,dc=test
+    - name: Ensure OU Gitlab Users is present
+      community.windows.win_domain_ou:
+        name: GitlabUsers
+        path: dc=domain,dc=test
+        state: present
+    - name: Ensure user test_user_in_pdc is present
+      community.windows.win_domain_user:
+        name: test_user_in_pdc
+        password: "{{ pswd_test_user_in_pdc }}"
+        state: present
+        path: ou=GitlabUsers,dc=domain,dc=test
+
+- hosts: gitlab
+  become: true
+  roles:
+    - role: robertdebock.gitlab
+  post_tasks:
+    - name: Read initial_root_password file
+      slurp:
+        src: /etc/gitlab/initial_root_password
+      register: initial_root_password
+
+    - name: Extract Password from variable initial_root_password
+      set_fact:
+        gitlab_password: "{{ initial_root_password['content'] | b64decode | regex_search('Password: (.+)', '\\1') | first }}"
+
+    - name: Print gitlab password
+      debug:
+        var: gitlab_password

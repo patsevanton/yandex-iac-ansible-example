@@ -1,0 +1,12 @@
+yc_token            = ""
+yc_cloud_id         = ""
+yc_folder_id        = ""
+yc_zone             = "ru-central1-b"
+family_images_linux = "centos-7"
+ssh_user            = "centos"
+cores               = "2"           # Examples: 2, 4, 6, 8 and more
+memory              = "2"           # Examples: 2, 4, 6, 8 and more
+disk_size           = "10"          # Min 50 for Windows
+disk_type           = "network-ssd" # Examples: network-ssd, network-hdd, network-ssd-nonreplicated
+hostname            = "freeipa"
+letsencrypt_domain  = "sslip.io"

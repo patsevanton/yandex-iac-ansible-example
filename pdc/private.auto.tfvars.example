@@ -1,0 +1,12 @@
+yc_token              = ""
+yc_cloud_id           = ""
+yc_folder_id          = ""
+yc_zone               = "ru-central1-b"
+family_images_windows = "windows-2019-dc-gvlk"
+memory                = "4"           # Examples: 2, 4, 6, 8 and more
+disk_size             = "50"          # Min 50 for Windows
+pdc_admin_password    = ""
+hostname              = "pdc"
+pdc_domain            = "domain.test"
+pdc_domain_path       = "dc=domain,dc=test"
+pfx_password          = "P@ssw0rd"

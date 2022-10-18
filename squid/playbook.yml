@@ -1,0 +1,4 @@
+  - hosts: squid
+    become: true
+    roles:
+      - mrlesmithjr.squid

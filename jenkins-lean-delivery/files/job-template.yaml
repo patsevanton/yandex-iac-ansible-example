@@ -1,0 +1,6 @@
+- job-template:
+    name: '{name}_job'
+    description: 'Automatically generated test'
+    project-type: freestyle
+    builders:
+      - shell: '{command}'

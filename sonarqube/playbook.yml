@@ -1,0 +1,15 @@
+  - hosts: sonarqube
+    become: true
+    pre_tasks:
+      - name: Update apt cache.
+        apt: update_cache=true cache_valid_time=600
+        when: ansible_os_family == 'Debian'
+      - name: Install package dependencies.
+        package:
+          name: "{{ item }}"
+          state: "present"
+        with_items:
+          - unzip
+    roles:
+      - buluma.java
+      - lrk.sonarqube

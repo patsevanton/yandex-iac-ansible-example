@@ -1,0 +1,6 @@
+global:
+  postgresql:
+    auth:
+      username: "drone"
+      password: "drone"
+      database: "drone"

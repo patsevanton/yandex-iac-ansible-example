@@ -1,0 +1,36 @@
+---
+controller:
+  componentName: "jenkins-controller"
+  image: "jenkins/jenkins"
+  tag: "2.346.2-jdk11"
+  imagePullPolicy: "IfNotPresent"
+  numExecutors: 1
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "2000m"
+      memory: "4096Mi"
+
+  additionalPlugins:
+    - google-login:1.6
+
+  JCasC:
+    defaultConfig: true
+    configScripts: {}
+    securityRealm: |-
+      googleOAuth2:
+        clientId: "xxx-xxx.apps.googleusercontent.com"
+        clientSecret: "xxx-xxx"
+    authorizationStrategy: |-
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    paths: []
+    apiVersion: "extensions/v1beta1"
+    annotations:
+      kubernetes.io/tls-acme: "true"

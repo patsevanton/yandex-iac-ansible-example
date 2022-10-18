@@ -1,0 +1,13 @@
+---
+- name: Nexus
+  hosts: nexus
+  become: true
+  roles:
+    - role: geerlingguy.java
+      java_packages:
+        - openjdk-8-jdk
+    # Debian/Ubuntu only
+    - { role: geerlingguy.apache, apache_create_vhosts: no, apache_mods_enabled: ["proxy.load", "proxy_http.load", "headers.load"], apache_remove_default_vhost: true, tags: ["geerlingguy.apache"] }
+    # RedHat/CentOS only
+    # - { role: geerlingguy.apache, apache_create_vhosts: no, apache_remove_default_vhost: true, tags: ["geerlingguy.apache"] }
+    - { role: ansible-thoteam.nexus3-oss, tags: ['ansible-thoteam.nexus3-oss'] }
