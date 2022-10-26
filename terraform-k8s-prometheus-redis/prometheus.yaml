@@ -1,0 +1,13 @@
+grafana:
+  adminPassword: phaeleethe4zieJo
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts: ['grafana.158.160.9.66.sslip.io']
+    path: "/"
+
+prometheus:
+  prometheusSpec:
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
