@@ -1,10 +1,10 @@
 resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
   name        = "loki-cluster"
-  description = "loki-cluster description"
+  description = "loki-cluster"
   network_id  = data.yandex_vpc_network.default.id
 
   master {
-    version = "1.22"
+    version = "1.21"
     zonal {
       zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
       subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
@@ -27,11 +27,11 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
 
 # yandex_kubernetes_node_group
 
-resource "yandex_kubernetes_node_group" "k8s_node_group" {
+resource "yandex_kubernetes_node_group" "loki_k8s_node_group" {
   cluster_id  = yandex_kubernetes_cluster.loki_k8s_cluster.id
-  name        = "name"
-  description = "description"
-  version     = "1.22"
+  name        = "loki_k8s_node_group"
+  description = "loki_k8s_node_group"
+  version     = "1.21"
 
   labels = {
     "key" = "value"
