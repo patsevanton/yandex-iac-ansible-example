@@ -74,7 +74,7 @@ resource "yandex_kubernetes_node_group" "loki_k8s_node_group" {
 
   allocation_policy {
     location {
-      zone = "ru-central1-b"
+      zone = data.yandex_vpc_subnet.default-ru-central1-a.zone
     }
   }
 
