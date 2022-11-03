@@ -1,6 +1,6 @@
 resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
-  name        = "my-cluster"
-  description = "my-cluster description"
+  name        = "loki-cluster"
+  description = "loki-cluster description"
   network_id  = data.yandex_vpc_network.default.id
 
   master {
