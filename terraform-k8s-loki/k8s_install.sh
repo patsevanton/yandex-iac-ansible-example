@@ -33,12 +33,13 @@ mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
 sed '/EOT/d' -i /home/$USER/.kube/config
 
-# # Создаем  ingress
-# helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update
-# helm install --atomic nginx-ingress ingress-nginx/ingress-nginx --version 4.2.1 
+# Создаем  ingress
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update
+helm upgrade --install --atomic nginx-ingress ingress-nginx/ingress-nginx --version 4.2.1
 
-# # Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
-# export external_ip=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+# Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
+export external_ip=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo $external_ip
 
 end_time=`date +%s`
 date2=$(date +"%s")
