@@ -27,10 +27,10 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
 
 # yandex_kubernetes_node_group
 
-resource "yandex_kubernetes_node_group" "loki_k8s_node_group" {
+resource "yandex_kubernetes_node_group" "loki-k8s-node-group" {
   cluster_id  = yandex_kubernetes_cluster.loki_k8s_cluster.id
-  name        = "loki_k8s_node_group"
-  description = "loki_k8s_node_group"
+  name        = "loki-k8s-node-group"
+  description = "loki-k8s-node-group"
   version     = "1.21"
 
   labels = {
@@ -46,8 +46,8 @@ resource "yandex_kubernetes_node_group" "loki_k8s_node_group" {
     }
 
     resources {
-      memory        = 4
-      cores         = 16
+      cores         = 4
+      memory        = 16
       core_fraction = 50
     }
 
