@@ -41,8 +41,8 @@ resource "yandex_kubernetes_node_group" "k8s_node_group" {
     }
 
     resources {
-      memory        = 8
       cores         = 4
+      memory        = 8
       core_fraction = 50
     }
 
