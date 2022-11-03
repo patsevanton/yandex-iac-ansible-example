@@ -4,7 +4,7 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
   network_id  = data.yandex_vpc_network.default.id
 
   master {
-    version = "1.23"
+    version = "1.22"
     zonal {
       zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
       subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
@@ -14,7 +14,7 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
 
   service_account_id      = yandex_iam_service_account.loki-k8s-cluster.id
   node_service_account_id = yandex_iam_service_account.loki-k8s-node-group.id
-  release_channel         = "RAPID"
+  release_channel         = "STABLE"
   // to keep permissions of service account on destroy
   // until cluster will be destroyed
   depends_on = [
@@ -31,7 +31,7 @@ resource "yandex_kubernetes_node_group" "k8s_node_group" {
   cluster_id  = yandex_kubernetes_cluster.loki_k8s_cluster.id
   name        = "name"
   description = "description"
-  version     = "1.23"
+  version     = "1.22"
 
   labels = {
     "key" = "value"
