@@ -204,13 +204,13 @@ loki:
   # -- Check https://grafana.com/docs/loki/latest/configuration/#schema_config for more info on how to configure schemas
   schemaConfig:
     configs:
-      - from: 2020-09-07
-        store: boltdb-shipper
-        object_store: filesystem
-        schema: v11
-        index:
-          prefix: loki_index_
-          period: 24h
+    - from: 2020-09-07
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: loki_index_
+        period: 24h
 
   # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
   storageConfig:
@@ -221,11 +221,11 @@ loki:
       cache_ttl: 168h
     filesystem:
       directory: /var/loki/chunks
-  # -- Uncomment to configure each storage individually
-  #   azure: {}
-  #   gcs: {}
-  #   s3: {}
-  #   boltdb: {}
+# -- Uncomment to configure each storage individually
+#   azure: {}
+#   gcs: {}
+#   s3: {}
+#   boltdb: {}
 
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
   structuredConfig: {}
@@ -482,7 +482,7 @@ distributor:
   nodeSelector: {}
   # -- Tolerations for distributor pods
   tolerations: []
-  # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
+    # -- Adds the appProtocol field to the distributor service. This allows distributor to work with istio protocol selection.
   appProtocol:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: ""
@@ -773,13 +773,13 @@ tableManager:
 # You'll need to supply authn configuration for your ingress controller.
 ingress:
   enabled: false
-  #  ingressClassName: nginx
+#  ingressClassName: nginx
   annotations: {}
-  #    nginx.ingress.kubernetes.io/auth-type: basic
-  #    nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
-  #    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
-  #    nginx.ingress.kubernetes.io/configuration-snippet: |
-  #      proxy_set_header X-Scope-OrgID $remote_user;
+#    nginx.ingress.kubernetes.io/auth-type: basic
+#    nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
+#    nginx.ingress.kubernetes.io/auth-secret-type: auth-map
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      proxy_set_header X-Scope-OrgID $remote_user;
   paths:
     distributor:
       - /api/prom/push
@@ -1307,7 +1307,7 @@ ruler:
     #         rules:
     #         - alert: HighThroughputLogStreams
     #           expr: sum by(container) (rate({job=~"loki-dev/.*"}[1m])) > 1000
-  #           for: 2m
+    #           for: 2m
 
 # Configuration for the index-gateway
 indexGateway:
@@ -1727,3 +1727,4 @@ networkPolicy:
     podSelector: {}
     # -- Specifies the namespace the discovery Pods are running in
     namespaceSelector: {}
+

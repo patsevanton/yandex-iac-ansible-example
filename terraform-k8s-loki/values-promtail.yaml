@@ -37,7 +37,7 @@ initContainer: []
   #     - -c
   #     - sysctl -w fs.inotify.max_user_instances=128
   #   securityContext:
-#     privileged: true
+  #     privileged: true
 
 image:
   # -- The Docker registry
@@ -225,7 +225,7 @@ serviceMonitor:
 extraContainers: {}
   # promtail-proxy:
   #   image: nginx
-#   ...
+  #   ...
 
 # -- Configure additional ports and services. For each configured port, a corresponding service is created.
 # See values.yaml for details
@@ -454,4 +454,5 @@ extraObjects: []
   #     backendType: gcpSecretsManager
   #     data:
   #       - key: promtail-oauth2-creds
-#         name: client_secret
+  #         name: client_secret
+
