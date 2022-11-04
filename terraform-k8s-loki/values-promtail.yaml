@@ -277,7 +277,7 @@ config:
   # -- The log level of the Promtail server
   # Must be reference in `config.file` to configure `server.log_level`
   # See default config in `values.yaml`
-  logLevel: info
+  logLevel: error
   # -- The port of the Promtail server
   # Must be reference in `config.file` to configure `server.http_listen_port`
   # See default config in `values.yaml`
