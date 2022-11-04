@@ -808,10 +808,10 @@ gateway:
   # -- Number of replicas for the gateway
   replicas: 1
   # -- Enable logging of 2xx and 3xx HTTP requests
-  verboseLogging: true
+  verboseLogging: false
   autoscaling:
     # -- Enable autoscaling for the gateway
-    enabled: false
+    enabled: true
     # -- Minimum autoscaling replicas for the gateway
     minReplicas: 1
     # -- Maximum autoscaling replicas for the gateway
