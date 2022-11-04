@@ -5,7 +5,7 @@ set -eu pipefail
 # uninstall Kube-Prometheus-Stack
 echo ""
 echo "helm uninstall Kube-Prometheus-Stack"
-helm uninstall loki || true
+helm uninstall -n loki loki || true
 helm uninstall kube-prometheus-stack || true
 helm uninstall promtail || true
 kubectl delete crd alertmanagerconfigs.monitoring.coreos.com || true

@@ -836,7 +836,7 @@ grafana:
   additionalDataSources:
     - name: Loki
       type: loki
-      url: http://loki-loki-distributed-gateway/
+      url: http://loki-loki-distributed-gateway.loki/
       access: proxy
   # - name: prometheus-sample
   #   access: proxy

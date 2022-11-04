@@ -21,7 +21,8 @@ echo ""
 echo "Install Microservices deployment Loki"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
-helm upgrade --install loki grafana/loki-distributed -f value-loki-distributed.yaml
+kubectl create namespace loki || true
+helm upgrade --install loki grafana/loki-distributed -n loki -f value-loki-distributed.yaml
 
 # Install Promtail
 echo ""
