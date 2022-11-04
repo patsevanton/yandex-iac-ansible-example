@@ -9,9 +9,11 @@ helm uninstall -n loki loki || true
 helm uninstall kube-prometheus-stack || true
 helm uninstall -n promtail promtail || true
 helm uninstall -n loggenerator loggenerator || true
+helm uninstall -n cassandra cassandra || true
 kubectl delete namespace loki || true
 kubectl delete namespace promtail || true
 kubectl delete namespace loggenerator || true
+kubectl delete namespace cassandra || true
 kubectl delete crd alertmanagerconfigs.monitoring.coreos.com || true
 kubectl delete crd alertmanagers.monitoring.coreos.com || true
 kubectl delete crd podmonitors.monitoring.coreos.com || true

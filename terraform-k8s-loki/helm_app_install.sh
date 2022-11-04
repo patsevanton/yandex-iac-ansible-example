@@ -5,7 +5,6 @@ set -eu pipefail
 start_time=`date +%s`
 date1=$(date +"%s")
 
-# Install Kube-Prometheus-Stack
 echo ""
 echo "Install Kube-Prometheus-Stack"
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -16,7 +15,15 @@ helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheu
 echo "sleep 20"
 sleep 20
 
-# Install Microservices deployment Loki
+
+echo ""
+echo "Install cassandra"
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+kubectl create namespace cassandra || true
+helm upgrade --install cassandra bitnami/cassandra -n cassandra -f value-cassandra.yaml
+
+
 echo ""
 echo "Install Microservices deployment Loki"
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -24,7 +31,7 @@ helm repo update
 kubectl create namespace loki || true
 helm upgrade --install loki grafana/loki-distributed -n loki -f value-loki-distributed.yaml
 
-# Install Promtail
+
 echo ""
 echo "Install Promtail"
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -32,7 +39,6 @@ helm repo update
 kubectl create namespace promtail || true
 helm upgrade --install promtail grafana/promtail -n promtail --set "loki.serviceName=loki" -f values-promtail.yaml
 
-# Install loggenerator
 echo ""
 echo "Install loggenerator"
 kubectl create namespace loggenerator || true
