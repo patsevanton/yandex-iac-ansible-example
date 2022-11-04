@@ -7,7 +7,8 @@ echo ""
 echo "helm uninstall Kube-Prometheus-Stack"
 helm uninstall -n loki loki || true
 helm uninstall kube-prometheus-stack || true
-helm uninstall promtail || true
+helm uninstall -n promtail promtail || true
+helm uninstall -n loggenerator loggenerator || true
 kubectl delete crd alertmanagerconfigs.monitoring.coreos.com || true
 kubectl delete crd alertmanagers.monitoring.coreos.com || true
 kubectl delete crd podmonitors.monitoring.coreos.com || true
