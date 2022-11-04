@@ -26,8 +26,6 @@ else
 fi
 
 TF_IN_AUTOMATION=1 terraform init -upgrade
-export TF_LOG=trace
-export TF_LOG_PATH=./terraform.log
 TF_IN_AUTOMATION=1 terraform apply -auto-approve
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
