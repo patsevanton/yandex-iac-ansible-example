@@ -12,12 +12,16 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 helm upgrade --install promgrafana prometheus-community/kube-prometheus-stack -f values-kube-prometheus-stack.yaml
 
+# sleep 20
+echo "sleep 20"
+sleep 20
+
 # Install Microservices deployment Loki
 echo ""
 echo "Install Microservices deployment Loki"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
-helm upgrade --install loki grafana/loki-distributed
+helm upgrade --install loki grafana/loki-distributed -f value-loki-distributed.yaml
 
 # Install Promtail
 echo ""
