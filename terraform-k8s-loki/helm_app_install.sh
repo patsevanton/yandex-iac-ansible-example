@@ -10,7 +10,7 @@ echo ""
 echo "Install Kube-Prometheus-Stack"
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm upgrade --install promgrafana prometheus-community/kube-prometheus-stack -f values-kube-prometheus-stack.yaml
+helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack -f values-kube-prometheus-stack.yaml
 
 # sleep 20
 echo "sleep 20"
