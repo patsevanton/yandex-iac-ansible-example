@@ -24,7 +24,7 @@ echo ""
 echo "Install Promtail"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
-helm upgrade --install promtail grafana/promtail --set "loki.serviceName=loki"
+helm upgrade --install promtail grafana/promtail --set "loki.serviceName=loki" -f values-promtail.yaml
 
 end_time=`date +%s`
 date2=$(date +"%s")
