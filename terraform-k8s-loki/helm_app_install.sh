@@ -29,7 +29,14 @@ echo ""
 echo "Install Promtail"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
-helm upgrade --install promtail grafana/promtail --set "loki.serviceName=loki" -f values-promtail.yaml
+kubectl create namespace promtail || true
+helm upgrade --install promtail grafana/promtail -n promtail --set "loki.serviceName=loki" -f values-promtail.yaml
+
+# Install loggenerator
+echo ""
+echo "Install loggenerator"
+kubectl create namespace loggenerator || true
+helm upgrade --install loggenerator -n loggenerator ./loggenerator
 
 end_time=`date +%s`
 date2=$(date +"%s")
