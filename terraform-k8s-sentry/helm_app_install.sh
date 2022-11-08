@@ -5,8 +5,11 @@ set -eu pipefail
 start_time=`date +%s`
 date1=$(date +"%s")
 
-#echo ""
-#echo "Install Sentry"
+echo ""
+echo "Install Sentry"
+helm repo add sentry https://sentry-kubernetes.github.io/charts
+helm repo update
+helm install sentry sentry/sentry
 
 
 end_time=`date +%s`
