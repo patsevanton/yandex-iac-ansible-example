@@ -9,7 +9,7 @@ echo ""
 echo "Install Sentry"
 helm repo add sentry https://sentry-kubernetes.github.io/charts
 helm repo update
-helm install sentry sentry/sentry
+helm install sentry ../../sentry-charts/sentry
 
 
 end_time=`date +%s`
