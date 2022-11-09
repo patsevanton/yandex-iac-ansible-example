@@ -1,35 +1,35 @@
 # SA k8s-cluster
-resource "yandex_iam_service_account" "loki-k8s-cluster" {
+resource "yandex_iam_service_account" "sentry-k8s-cluster" {
   folder_id = var.yc_folder_id
   name      = "k8s-cluster"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "loki-k8s-cluster-agent-permissions" {
+resource "yandex_resourcemanager_folder_iam_member" "sentry-k8s-cluster-agent-permissions" {
   folder_id = var.yc_folder_id
   role      = "k8s.clusters.agent"
-  member    = "serviceAccount:${yandex_iam_service_account.loki-k8s-cluster.id}"
+  member    = "serviceAccount:${yandex_iam_service_account.sentry-k8s-cluster.id}"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "loki-vpc-publicAdmin-permissions" {
+resource "yandex_resourcemanager_folder_iam_member" "sentry-vpc-publicAdmin-permissions" {
   folder_id = var.yc_folder_id
   role      = "vpc.publicAdmin"
-  member    = "serviceAccount:${yandex_iam_service_account.loki-k8s-cluster.id}"
+  member    = "serviceAccount:${yandex_iam_service_account.sentry-k8s-cluster.id}"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "loki-load-balancer-admin-permissions" {
+resource "yandex_resourcemanager_folder_iam_member" "sentry-load-balancer-admin-permissions" {
   folder_id = var.yc_folder_id
   role      = "load-balancer.admin"
-  member    = "serviceAccount:${yandex_iam_service_account.loki-k8s-cluster.id}"
+  member    = "serviceAccount:${yandex_iam_service_account.sentry-k8s-cluster.id}"
 }
 
 # SA k8s-node-group
-resource "yandex_iam_service_account" "loki-k8s-node-group" {
+resource "yandex_iam_service_account" "sentry-k8s-node-group" {
   folder_id = var.yc_folder_id
   name      = "k8s-node-group"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "loki-k8s-node-group-permissions" {
+resource "yandex_resourcemanager_folder_iam_member" "sentry-k8s-node-group-permissions" {
   folder_id = var.yc_folder_id
   role      = "container-registry.images.puller"
-  member    = "serviceAccount:${yandex_iam_service_account.loki-k8s-node-group.id}"
+  member    = "serviceAccount:${yandex_iam_service_account.sentry-k8s-node-group.id}"
 }

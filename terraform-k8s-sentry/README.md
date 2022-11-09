@@ -1,9 +1,9 @@
-## View logs loki
+## View logs sentry
 ```
-stern -n loki .
+stern -n sentry .
 ```
 
-## View logs promtail
+## View logs sentry
 ```
-stern -n promtail .
+stern -n sentry .
 ```
