@@ -13,7 +13,11 @@ export fqdn_sentry_redis=$(terraform output --raw fqdn_sentry_redis)
 echo $fqdn_sentry_redis
 export sentry_redis_password=$(terraform output --raw sentry_redis_password)
 echo $sentry_redis_password
-#helm template sentry ../../sentry-charts/sentry
+#helm show values sentry ../../sentry-charts/sentry
+werf helm install --wait sentry ../../sentry-charts/sentry \
+     --set "redis.enabled=false" \
+     --set "externalRedis.host=$fqdn_sentry_redis" \
+     --set "externalRedis.password=$sentry_redis_password"
 
 
 end_time=`date +%s`
