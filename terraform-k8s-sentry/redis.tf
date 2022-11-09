@@ -4,7 +4,7 @@ resource "yandex_mdb_redis_cluster" "sentry_redis" {
   network_id          = data.yandex_vpc_network.default.id
 
   config {
-    password = var.redis_password
+    password = var.sentry_redis_password
     version  = "6.2"
   }
 
@@ -20,4 +20,13 @@ resource "yandex_mdb_redis_cluster" "sentry_redis" {
     assign_public_ip = false
     replica_priority = 50
   }
+}
+
+output fqdn_sentry_redis {
+  value = yandex_mdb_redis_cluster.sentry_redis.host[0].fqdn
+}
+
+output sentry_redis_password {
+  value = yandex_mdb_redis_cluster.sentry_redis.config[0].password
+  sensitive = true
 }

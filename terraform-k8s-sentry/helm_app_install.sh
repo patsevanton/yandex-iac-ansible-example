@@ -9,7 +9,11 @@ echo ""
 echo "Install Sentry"
 helm repo add sentry https://sentry-kubernetes.github.io/charts
 helm repo update
-helm install sentry ../../sentry-charts/sentry
+export fqdn_sentry_redis=$(terraform output --raw fqdn_sentry_redis)
+echo $fqdn_sentry_redis
+export sentry_redis_password=$(terraform output --raw sentry_redis_password)
+echo $sentry_redis_password
+#helm template sentry ../../sentry-charts/sentry
 
 
 end_time=`date +%s`
