@@ -29,7 +29,3 @@ variable "ssh_user" {
   description = "ssh_user"
 }
 
-variable "domain" {
-  type        = string
-  description = "domain"
-}

@@ -39,7 +39,6 @@ resource "local_file" "inventory_yml" {
       hostname_lokiindocker  = "lokiindocker"
       public_ip_prometheus   = module.prometheus.external_ip[0]
       public_ip_lokiindocker = module.lokiindocker.external_ip[0]
-      domain                 = var.domain
     }
   )
   filename = "inventory.yml"
