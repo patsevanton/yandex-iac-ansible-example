@@ -1,10 +1,10 @@
-module "javaindocker" {
+module "lokiindocker" {
   source             = "../terraform-yandex-compute"
   image_family       = var.family_images_linux
   subnet_id          = data.yandex_vpc_subnet.default-ru-central1-a.id
   zone               = var.yc_zone
-  name               = "javaindocker"
-  hostname           = "javaindocker"
+  name               = "lokiindocker"
+  hostname           = "lokiindocker"
   size               = 30
   is_nat             = true
   preemptible        = true
@@ -36,9 +36,9 @@ resource "local_file" "inventory_yml" {
     {
       ssh_user               = var.ssh_user
       hostname_prometheus    = "prometheus"
-      hostname_javaindocker  = "javaindocker"
+      hostname_lokiindocker  = "lokiindocker"
       public_ip_prometheus   = module.prometheus.external_ip[0]
-      public_ip_javaindocker = module.javaindocker.external_ip[0]
+      public_ip_lokiindocker = module.lokiindocker.external_ip[0]
       domain                 = var.domain
     }
   )

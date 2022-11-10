@@ -8,18 +8,7 @@ date1=$(date +"%s")
 unset HTTP_PROXY
 unset HTTPS_PROXY
 TF_IN_AUTOMATION=1 terraform apply -auto-approve
-ansible-galaxy install --force git+https://github.com/ome/ansible-role-cadvisor.git,master
-ansible-galaxy install --force git+https://github.com/virtUOS/ansible-loki.git,main
-ansible-galaxy install andrewrothstein.prometheus_jmx_exporter
-ansible-galaxy install buluma.grafana
-ansible-galaxy install buluma.java
-ansible-galaxy install cloudalchemy.node_exporter
-ansible-galaxy install cloudalchemy.prometheus
 ansible-galaxy install geerlingguy.docker
-ansible-galaxy install geerlingguy.nginx
-ansible-galaxy install patrickjahns.promtail
-ansible-galaxy install systemli.letsencrypt
-pip3 install -U --user Jinja2
 ansible-playbook -i inventory.yml playbook.yml
 end_time=`date +%s`
 date2=$(date +"%s")
