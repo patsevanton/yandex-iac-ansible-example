@@ -1,0 +1,41 @@
+version: "3"
+services:
+  loki:
+    image: grafana/loki:2.3.0
+    depends_on:
+      - cassandra
+    volumes:
+      - /etc/docker-compose/local-config.yaml:/etc/loki/local-config.yaml
+      - loki:/loki
+    ports:
+      - "3100:3100"
+    restart: always
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      loki:
+        aliases:
+          - loki
+
+  cassandra:
+    image: bitnami/cassandra:3.11.11
+    volumes:
+      - cassandra:/bitnami
+    restart: always
+    environment:
+      CASSANDRA_USER: cassandra
+      CASSANDRA_PASSWORD: cassandra
+      CASSANDRA_CLUSTER_NAME: loki
+      CASSANDRA_DATACENTER: dc1
+    networks:
+      loki:
+        aliases:
+          - cassandra
+
+volumes:
+  cassandra:
+  loki:
+
+networks:
+  loki:
+    driver: bridge
+
