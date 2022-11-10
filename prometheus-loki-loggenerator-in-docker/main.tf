@@ -2,7 +2,7 @@ module "lokiindocker" {
   source             = "../terraform-yandex-compute"
   image_family       = var.family_images_linux
   subnet_id          = data.yandex_vpc_subnet.default-ru-central1-a.id
-  zone               = var.yc_zone
+  zone               = data.yandex_vpc_subnet.default-ru-central1-a.zone
   name               = "lokiindocker"
   hostname           = "lokiindocker"
   size               = 30
@@ -19,7 +19,7 @@ module "prometheus" {
   source             = "../terraform-yandex-compute"
   image_family       = var.family_images_linux
   subnet_id          = data.yandex_vpc_subnet.default-ru-central1-a.id
-  zone               = var.yc_zone
+  zone               = data.yandex_vpc_subnet.default-ru-central1-a.zone
   name               = "prometheus"
   hostname           = "prometheus"
   is_nat             = true

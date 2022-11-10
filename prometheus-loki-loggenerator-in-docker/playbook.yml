@@ -19,12 +19,14 @@
       copy:
         src: docker-compose-loki.yml
         dest: /home/ubuntu/docker-compose-loki.yml
-    - name: copy html file
+    - name: Creates directory /home/ubuntu/config
+      file:
+        path: /home/ubuntu/config
+        state: directory
+    - name: Copy files of directory config to /home/ubuntu/config/
       copy:
-        src: config/
-        dest: /home/ubuntu/config
-        remote_src: yes
-        directory_mode: yes
+        src: config/    # note the '/' <-- !!!
+        dest: /home/ubuntu/config/
     - name: add user ubuntu to docker group
       ansible.builtin.user:
         name: ubuntu
