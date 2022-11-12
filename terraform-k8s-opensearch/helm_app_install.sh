@@ -9,7 +9,7 @@ echo ""
 echo "Install opensearch"
 helm repo add opensearch https://opensearch-project.github.io/helm-charts/
 helm repo update
-werf helm install --wait opensearch opensearch/opensearch --version 2.7.0 --set sysctlInit.enabled=true
+werf helm install --wait opensearch opensearch/opensearch --version 2.7.0 --set sysctlInit.enabled=true,replicas=1
 werf helm install --wait opensearch-dashboards opensearch/opensearch-dashboards --version 2.5.3
 
 

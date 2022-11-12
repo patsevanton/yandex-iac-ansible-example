@@ -47,7 +47,7 @@ resource "yandex_kubernetes_node_group" "opensearch-k8s-node-group" {
 
     resources {
       cores         = 2
-      memory        = 4
+      memory        = 8
       core_fraction = 50
     }
 
@@ -68,7 +68,7 @@ resource "yandex_kubernetes_node_group" "opensearch-k8s-node-group" {
 
   scale_policy {
     fixed_scale {
-      size = 3
+      size = 1
     }
   }
 
