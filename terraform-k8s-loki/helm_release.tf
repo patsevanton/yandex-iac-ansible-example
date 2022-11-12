@@ -22,7 +22,7 @@ resource "helm_release" "ingress_nginx" {
 
   set {
     name  = "controller.service.loadBalancerIP"
-    value = yandex_vpc_address.promgrafana_address.external_ipv4_address[0].address
+    value = yandex_vpc_address.loki_address.external_ipv4_address[0].address
   }
 
 }
