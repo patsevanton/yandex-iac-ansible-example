@@ -15,26 +15,32 @@
   roles:
     - role: geerlingguy.docker
   post_tasks:
+    - name: Create a new directory www at given path
+      ansible.builtin.file:
+        path: /etc/docker-compose
+        state: directory
+        mode: '0755'
+        owner: ubuntu
     - name: Copy local-config.yaml
       copy:
         src: local-config.yaml
-        dest: /home/ubuntu/local-config.yaml
+        dest: /etc/docker-compose/local-config.yaml
     - name: Copy docker-compose-230.yml
       copy:
         src: docker-compose-230.yml
-        dest: /home/ubuntu/docker-compose-230.yml
+        dest: /etc/docker-compose/docker-compose-230.yml
     - name: Copy docker-compose-261.yml
       copy:
         src: docker-compose-261.yml
-        dest: /home/ubuntu/docker-compose-261.yml
-    - name: Creates directory /home/ubuntu/config
+        dest: /etc/docker-compose/docker-compose-261.yml
+    - name: Creates directory /etc/docker-compose/config
       file:
         path: /home/ubuntu/config
         state: directory
-    - name: Copy files of directory config to /home/ubuntu/config/
+    - name: Copy files of directory config to /etc/docker-compose/config/
       copy:
         src: config/    # note the '/' <-- !!!
-        dest: /home/ubuntu/config/
+        dest: /etc/docker-compose/config/
     - name: add user ubuntu to docker group
       ansible.builtin.user:
         name: ubuntu
