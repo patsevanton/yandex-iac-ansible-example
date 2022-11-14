@@ -15,6 +15,10 @@
   roles:
     - role: geerlingguy.docker
   post_tasks:
+    - name: Copy local-config.yaml
+      copy:
+        src: local-config.yaml
+        dest: /home/ubuntu/local-config.yaml
     - name: Copy docker-compose-230.yml
       copy:
         src: docker-compose-230.yml
