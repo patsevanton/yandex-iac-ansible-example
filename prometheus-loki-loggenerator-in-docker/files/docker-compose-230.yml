@@ -51,10 +51,10 @@ services:
       - cassandra:/bitnami
     restart: always
     healthcheck:
-      test: [ "CMD", "/opt/bitnami/cassandra/bin/cqlsh", "-u cassandra", "-p cassandra" ,"-e \"describe keyspaces\"" ]
-      interval: 15s
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 30s
       timeout: 10s
-      retries: 10
+      retries: 5
     environment:
       CASSANDRA_USER: cassandra
       CASSANDRA_PASSWORD: cassandra
