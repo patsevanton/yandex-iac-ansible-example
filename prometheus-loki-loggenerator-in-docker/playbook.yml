@@ -15,10 +15,14 @@
   roles:
     - role: geerlingguy.docker
   post_tasks:
-    - name: Copy docker-compose-demo.yml
+    - name: Copy docker-compose-230.yml
       copy:
-        src: docker-compose-loki.yml
-        dest: /home/ubuntu/docker-compose-loki.yml
+        src: docker-compose-230.yml
+        dest: /home/ubuntu/docker-compose-230.yml
+    - name: Copy docker-compose-261.yml
+      copy:
+        src: docker-compose-261.yml
+        dest: /home/ubuntu/docker-compose-261.yml
     - name: Creates directory /home/ubuntu/config
       file:
         path: /home/ubuntu/config
