@@ -1,4 +1,4 @@
-version: "3"
+#version: "3.9"
 
 services:
   redis:
@@ -14,6 +14,11 @@ services:
       - '--maxmemory-policy allkeys-lru'
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
     ports:
       - "6379:6379"
     networks:
@@ -24,8 +29,10 @@ services:
   loki:
     image: grafana/loki:2.3.0
     depends_on:
-      - cassandra
-      - redis
+      cassandra:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - /etc/docker-compose/local-config.yaml:/etc/loki/local-config.yaml
       - loki:/loki
@@ -43,6 +50,11 @@ services:
     volumes:
       - cassandra:/bitnami
     restart: always
+    healthcheck:
+      test: [ "CMD", "/opt/bitnami/cassandra/bin/cqlsh", "-u cassandra", "-p cassandra" ,"-e \"describe keyspaces\"" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
     environment:
       CASSANDRA_USER: cassandra
       CASSANDRA_PASSWORD: cassandra
