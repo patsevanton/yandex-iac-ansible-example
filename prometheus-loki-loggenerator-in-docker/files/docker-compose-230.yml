@@ -65,6 +65,32 @@ services:
         aliases:
           - cassandra
 
+
+  # for testing purposes only, disable in production
+  log-generator:
+    image: mingrammer/flog
+    command:
+      - --loop
+      - --format=json
+      - --number=10 # number of log lines to generate per second
+      - --delay=100ms # delay between log lines
+      - --output=/var/log/generated-logs.txt
+      - --overwrite
+      - --type=log
+    volumes:
+      - ./loki/:/var/log/
+
+  promtail:
+    image: grafana/promtail:2.6.1
+    volumes:
+      - ./loki/:/var/log/
+      - ./config/promtail-old.yaml:/etc/promtail/promtail.yaml
+    ports:
+      - "9080:9080"
+    command: -config.file=/etc/promtail/promtail.yaml
+    networks:
+      - loki
+
 volumes:
   cassandra:
   loki:

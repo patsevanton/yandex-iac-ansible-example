@@ -33,6 +33,10 @@
       copy:
         src: docker-compose-261.yml
         dest: /etc/docker-compose/docker-compose-261.yml
+    - name: Copy promtail-old.yaml
+      copy:
+        src: config/promtail-old.yaml
+        dest: /etc/docker-compose/config/promtail-old.yaml
     - name: Creates directory /etc/docker-compose/config
       file:
         path: /home/ubuntu/config
