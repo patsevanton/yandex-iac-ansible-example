@@ -40,6 +40,11 @@ services:
       - "3100:3100"
     restart: always
     command: -config.file=/etc/loki/local-config.yaml
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/metrics"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
     networks:
       loki:
         aliases:
@@ -65,7 +70,6 @@ services:
         aliases:
           - cassandra
 
-
   # for testing purposes only, disable in production
   log-generator:
     image: mingrammer/flog
@@ -77,6 +81,9 @@ services:
       - --output=/var/log/generated-logs.txt
       - --overwrite
       - --type=log
+    depends_on:
+      promtail:
+        condition: service_started
     volumes:
       - ./loki/:/var/log/
 
@@ -88,6 +95,9 @@ services:
     ports:
       - "9080:9080"
     command: -config.file=/etc/promtail/promtail.yaml
+    depends_on:
+      loki:
+        condition: service_healthy
     networks:
       - loki
 
