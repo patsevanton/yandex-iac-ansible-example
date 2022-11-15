@@ -120,6 +120,7 @@ volumes:
   cassandra:
   loki:
   redis_data:
+  grafana:
 
 networks:
   loki:
