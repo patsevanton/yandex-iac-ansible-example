@@ -1,38 +1,12 @@
 #version: "3.9"
 
 services:
-  redis:
-    container_name: redis
-    image: redis:7.0.5-alpine
-    command:
-      - 'redis-server'
-      - '--databases 2'
-      - '--save 900 1'
-      - '--save 300 10'
-      - '--save 60 10000'
-      - '--maxmemory 2gb'
-      - '--maxmemory-policy allkeys-lru'
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      interval: 1s
-      timeout: 3s
-      retries: 5
-    ports:
-      - "6379:6379"
-    networks:
-      loki:
-        aliases:
-          - redis
 
   loki:
     image: grafana/loki:2.3.0
     depends_on:
       cassandra:
         condition: service_healthy
-      redis:
-        condition: service_started
     volumes:
       - /etc/docker-compose/local-config.yaml:/etc/loki/local-config.yaml
       - loki:/loki
@@ -118,7 +92,6 @@ services:
 volumes:
   cassandra:
   loki:
-  redis_data:
   grafana:
 
 networks:

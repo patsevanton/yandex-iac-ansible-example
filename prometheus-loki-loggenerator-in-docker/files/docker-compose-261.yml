@@ -1,31 +1,6 @@
 version: "3.8"
 
 services:
-  redis:
-    container_name: redis
-    image: redis:7.0.5-alpine
-    restart: always
-    command:
-      - 'redis-server'
-      - '--databases 2'
-      - '--save 900 1'
-      - '--save 300 10'
-      - '--save 60 10000'
-      - '--maxmemory 2gb'
-      - '--maxmemory-policy allkeys-lru'
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      interval: 1s
-      timeout: 3s
-      retries: 5
-    ports:
-      - "6379:6379"
-    networks:
-      loki:
-        aliases:
-          - redis
 
   init:
     image: grafana/loki:2.6.1
@@ -203,7 +178,6 @@ services:
 
 volumes:
   cassandra:
-  redis_data:
   grafana:
 
 networks:
