@@ -9,6 +9,7 @@ module "lokiindocker" {
   is_nat             = true
   preemptible        = true
   core_fraction      = 100
+  memory             = 8
   service_account_id = yandex_iam_service_account.sa-compute-admin.id
   depends_on = [
     yandex_iam_service_account.sa-compute-admin
