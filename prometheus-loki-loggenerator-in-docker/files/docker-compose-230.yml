@@ -10,7 +10,7 @@ services:
       - '--save 900 1'
       - '--save 300 10'
       - '--save 60 10000'
-      - '--maxmemory 6gb'
+      - '--maxmemory 2gb'
       - '--maxmemory-policy allkeys-lru'
     volumes:
       - redis_data:/data

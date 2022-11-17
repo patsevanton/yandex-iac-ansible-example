@@ -50,7 +50,9 @@ services:
         '--query.lookback-delta=30s'
       ]
     networks:
-      - loki
+      loki:
+        aliases:
+          - prometheus
 
   cassandra:
     image: bitnami/cassandra:3.11.11
@@ -69,6 +71,8 @@ services:
       CASSANDRA_DATACENTER: dc1
     networks:
       loki:
+        aliases:
+          - cassandra
 
   log-generator:
     image: mingrammer/flog
@@ -92,7 +96,9 @@ services:
       - "9080:9080"
     command: -config.file=/etc/promtail/promtail.yaml
     networks:
-      - loki
+      loki:
+        aliases:
+          - promtail
 
   minio:
     image: minio/minio
@@ -113,7 +119,9 @@ services:
     volumes:
       - ./.data/minio:/data
     networks:
-      - loki
+      loki:
+        aliases:
+          - minio
 
   loki-gateway:
     image: nginx:1.19
@@ -123,7 +131,9 @@ services:
       - "8080:80"
       - "3100"
     networks:
-      - loki
+      loki:
+        aliases:
+          - loki-gateway
 
   loki-frontend:
     image: grafana/loki:2.6.1
@@ -133,7 +143,9 @@ services:
       - "3100"
     command: "-config.file=/etc/loki/loki.yaml -target=query-frontend -frontend.downstream-url=http://loki-read:3100"
     networks:
-      - loki
+      loki:
+        aliases:
+          - loki-frontend
     deploy:
       mode: replicated
       replicas: 2
@@ -147,7 +159,9 @@ services:
       - "7946"
     command: "-config.file=/etc/loki/loki.yaml -target=read"
     networks:
-      - loki
+      loki:
+        aliases:
+          - loki-read
     restart: always
     deploy:
       mode: replicated
@@ -162,7 +176,9 @@ services:
       - "7946"
     command: "-config.file=/etc/loki/loki.yaml -target=write"
     networks:
-      - loki
+      loki:
+        aliases:
+          - loki-write
     restart: always
     deploy:
       mode: replicated
@@ -178,7 +194,10 @@ services:
       - alertmanager-data:/data
     command: --config.file=/config/alertmanager.yml --log.level=debug
     networks:
-      - loki
+      loki:
+        aliases:
+          - alertmanager
+
 
   grafana:
     image: grafana/grafana:9.1.6
@@ -192,7 +211,9 @@ services:
       - ./config/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yml
       - grafana:/var/lib/grafana
     networks:
-      - loki
+      loki:
+        aliases:
+          - grafana
 
 volumes:
   cassandra:
