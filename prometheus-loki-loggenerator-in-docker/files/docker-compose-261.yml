@@ -1,14 +1,5 @@
 version: "3.8"
 
-networks:
-  loki:
-
-
-volumes:
-  prometheus:
-  grafana:
-  alertmanager-data:
-
 services:
   init:
     image: grafana/loki:2.6.1
@@ -161,3 +152,11 @@ services:
     command: --config.file=/config/alertmanager.yml --log.level=debug
     networks:
       - loki
+
+volumes:
+  prometheus:
+  grafana:
+  alertmanager-data:
+
+networks:
+  loki:
