@@ -5,11 +5,12 @@ module "lokiindocker" {
   zone               = data.yandex_vpc_subnet.default-ru-central1-a.zone
   name               = "lokiindocker"
   hostname           = "lokiindocker"
-  size               = 30
+  size               = 50
   is_nat             = true
   preemptible        = true
   core_fraction      = 100
-  memory             = 8
+  cores              = 4
+  memory             = 16
   service_account_id = yandex_iam_service_account.sa-compute-admin.id
   depends_on = [
     yandex_iam_service_account.sa-compute-admin
