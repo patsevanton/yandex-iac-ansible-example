@@ -1,6 +1,29 @@
 version: "3.8"
 
 services:
+  redis:
+    container_name: redis
+    image: redis:7.0.5-alpine
+    command:
+      - 'redis-server'
+      - '--databases 2'
+      - '--save 900 1'
+      - '--save 300 10'
+      - '--save 60 10000'
+      - '--maxmemory 6gb'
+      - '--maxmemory-policy allkeys-lru'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    ports:
+      - "6379:6379"
+    networks:
+      loki:
+
   init:
     image: grafana/loki:2.6.1
     user: root
@@ -28,6 +51,24 @@ services:
       ]
     networks:
       - loki
+
+  cassandra:
+    image: bitnami/cassandra:3.11.11
+    volumes:
+      - cassandra:/bitnami
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    environment:
+      CASSANDRA_USER: cassandra
+      CASSANDRA_PASSWORD: cassandra
+      CASSANDRA_CLUSTER_NAME: loki
+      CASSANDRA_DATACENTER: dc1
+    networks:
+      loki:
 
   log-generator:
     image: mingrammer/flog
@@ -154,7 +195,9 @@ services:
       - loki
 
 volumes:
+  cassandra:
   prometheus:
+  redis_data:
   grafana:
   alertmanager-data:
 
