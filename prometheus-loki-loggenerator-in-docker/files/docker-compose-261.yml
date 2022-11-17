@@ -9,12 +9,7 @@ volumes:
   grafana:
   alertmanager-data:
 
-
 services:
-
-  # Since the Loki containers are running as user 10001 and the mounted data volume is owned by root,
-  # Loki would not have permissions to create the directories.
-  # Therefore the init container changes permissions of the mounted directory.
   init:
     image: grafana/loki:2.6.1
     user: root
@@ -57,14 +52,13 @@ services:
     networks:
       - loki
 
-  # for testing purposes only, disable in production
   log-generator:
     image: mingrammer/flog
     command:
       - --loop
       - --format=json
-      - --number=10 # number of log lines to generate per second
-      - --delay=100ms # delay between log lines
+      - --number=10
+      - --delay=100ms
       - --output=/var/log/generated-logs.txt
       - --overwrite
       - --type=log
@@ -133,12 +127,6 @@ services:
     ports:
       - "3100"
       - "7946"
-      # uncomment to use interactive debugging
-      # - "40000-40002:40000" # # makes the replicas available on ports 40000, 40001, 40002
-      #cap_add:
-      #  - SYS_PTRACE
-      #security_opt:
-      #  - apparmor=unconfined
     command: "-config.file=/etc/loki/loki.yaml -target=read"
     networks:
       - loki
@@ -146,7 +134,6 @@ services:
     deploy:
       mode: replicated
       replicas: 3
-    # only needed for interactive debugging with dlv
 
   loki-write:
     image: grafana/loki:2.6.1
@@ -155,12 +142,6 @@ services:
     ports:
       - "3100"
       - "7946"
-      # uncomment to use interactive debugging
-      # - "50000-50002:40000" # makes the replicas available on ports 50000, 50001, 50002
-      # cap_add:
-      #   - SYS_PTRACE
-      # security_opt:
-      #   - apparmor=unconfined
     command: "-config.file=/etc/loki/loki.yaml -target=write"
     networks:
       - loki
@@ -169,7 +150,6 @@ services:
       mode: replicated
       replicas: 3
 
-  # alertmanager to enable receiving alerts
   alertmanager:
     image: prom/alertmanager:v0.23.0
     restart: unless-stopped

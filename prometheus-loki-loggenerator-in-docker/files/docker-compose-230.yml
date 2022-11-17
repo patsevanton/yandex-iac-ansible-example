@@ -70,14 +70,13 @@ services:
         aliases:
           - cassandra
 
-  # for testing purposes only, disable in production
   log-generator:
     image: mingrammer/flog
     command:
       - --loop
       - --format=json
-      - --number=10 # number of log lines to generate per second
-      - --delay=100ms # delay between log lines
+      - --number=10
+      - --delay=100ms
       - --output=/var/log/generated-logs.txt
       - --overwrite
       - --type=log
