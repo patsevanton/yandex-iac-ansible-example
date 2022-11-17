@@ -13,11 +13,11 @@ ingester:
         store: inmemory
       replication_factor: 1
     final_sleep: 0s
-  chunk_idle_period: 1h       # Any chunk not receiving new logs in this time will be flushed
-  max_chunk_age: 1h           # All chunks will be flushed when they hit this age, default is 1h
-  chunk_target_size: 1048576  # Loki will attempt to build chunks up to 1.5MB, flushing first if chunk_idle_period or max_chunk_age is reached first
-  chunk_retain_period: 30s    # Must be greater than index read cache TTL if using an index cache (Default index read cache TTL is 5m)
-  max_transfer_retries: 0     # Chunk transfers disabled
+  chunk_idle_period: 1h
+  max_chunk_age: 1h
+  chunk_target_size: 1048576
+  chunk_retain_period: 30s
+  max_transfer_retries: 0
 
 schema_config:
   configs:
@@ -61,10 +61,8 @@ table_manager:
   retention_period: 720h
 
 query_range:
-  # make queries more cache-able by aligning them with their step intervals
   align_queries_with_step: true
   max_retries: 10
-  # parallelize queries in 15min intervals
   split_queries_by_interval: 60m
   cache_results: true
   parallelise_shardable_queries: true
@@ -81,8 +79,6 @@ frontend:
 
 querier:
   engine:
-    # Must be a multiple of schema_config index.period
-    # Default to 400 days retention.
     max_look_back_period: 720h
   query_ingesters_within: 2h
   query_timeout: 1200s

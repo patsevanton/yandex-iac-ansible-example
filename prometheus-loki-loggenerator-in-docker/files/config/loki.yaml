@@ -1,4 +1,4 @@
-auth_enabled: true
+auth_enabled: false
 
 http_prefix:
 
@@ -73,7 +73,6 @@ limits_config:
   reject_old_samples_max_age: 30m
   ingestion_rate_mb: 10
   ingestion_burst_size_mb: 20
-  # parallelize queries in 15min intervals
   split_queries_by_interval: 15m
 
 chunk_store_config:
@@ -84,7 +83,6 @@ table_manager:
   retention_period: 336h
 
 query_range:
-  # make queries more cache-able by aligning them with their step intervals
   align_queries_with_step: true
   max_retries: 5
   parallelise_shardable_queries: true
