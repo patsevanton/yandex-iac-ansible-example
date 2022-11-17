@@ -38,24 +38,6 @@ services:
     networks:
       - loki
 
-  prometheus:
-    image: prom/prometheus:v2.27.0
-    ports:
-      - 9090:9090
-    volumes:
-      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
-      - prometheus:/prometheus
-    command:
-      [
-        '--log.level=debug',
-        '--config.file=/etc/prometheus/prometheus.yml',
-        '--query.lookback-delta=30s'
-      ]
-    networks:
-      loki:
-        aliases:
-          - prometheus
-
   cassandra:
     image: bitnami/cassandra:3.11.11
     volumes:
@@ -198,21 +180,6 @@ services:
       mode: replicated
       replicas: 3
 
-  alertmanager:
-    image: prom/alertmanager:v0.23.0
-    restart: unless-stopped
-    ports:
-      - "9093:9093"
-    volumes:
-      - "./config:/config"
-      - alertmanager-data:/data
-    command: --config.file=/config/alertmanager.yml --log.level=debug
-    networks:
-      loki:
-        aliases:
-          - alertmanager
-
-
   grafana:
     image: grafana/grafana:9.1.6
     ports:
@@ -229,10 +196,8 @@ services:
 
 volumes:
   cassandra:
-  prometheus:
   redis_data:
   grafana:
-  alertmanager-data:
 
 networks:
   loki:
