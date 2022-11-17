@@ -8,7 +8,7 @@ module "lokiindocker" {
   size               = 30
   is_nat             = true
   preemptible        = true
-  core_fraction      = 50
+  core_fraction      = 100
   service_account_id = yandex_iam_service_account.sa-compute-admin.id
   depends_on = [
     yandex_iam_service_account.sa-compute-admin
