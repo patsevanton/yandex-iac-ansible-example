@@ -171,7 +171,7 @@ services:
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
     volumes:
-      - ./config/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./config/datasources-261.yaml:/etc/grafana/provisioning/datasources/datasources.yml
       - grafana:/var/lib/grafana
     networks:
       - loki
