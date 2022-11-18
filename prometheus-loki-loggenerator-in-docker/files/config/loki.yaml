@@ -1,7 +1,5 @@
 auth_enabled: false
 
-http_prefix:
-
 server:
   http_listen_address: 0.0.0.0
   grpc_listen_address: 0.0.0.0
