@@ -73,6 +73,7 @@ limits_config:
   max_cache_freshness_per_query: '10m'
   max_query_series: 100000
   max_query_parallelism: 16
+  split_queries_by_interval: 60m
 
 chunk_store_config:
   max_look_back_period: 720h
@@ -84,7 +85,6 @@ table_manager:
 query_range:
   align_queries_with_step: true
   max_retries: 10
-  split_queries_by_interval: 60m
   cache_results: true
   parallelise_shardable_queries: true
 
