@@ -4,7 +4,7 @@ set -eu pipefail
 
 start_time=`date +%s`
 date1=$(date +"%s")
-ansible-playbook -i inventory.yml docker_clean.yml
+ansible-playbook -i inventory.yml loki_230_start.yml
 end_time=`date +%s`
 date2=$(date +"%s")
 echo "###############"

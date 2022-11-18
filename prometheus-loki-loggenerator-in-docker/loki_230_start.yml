@@ -1,0 +1,9 @@
+---
+- hosts: lokiindocker
+  become: true
+  tasks:
+
+    - name: run docker-compose-230.yml
+      shell: docker-compose -f docker-compose-230.yml up -d
+      args:
+        chdir: /etc/docker-compose
