@@ -1,6 +1,8 @@
 auth_enabled: false
 
 server:
+  http_listen_address: 0.0.0.0
+  grpc_listen_address: 0.0.0.0
   http_listen_port: 3100
   http_server_read_timeout: 180s
   http_server_write_timeout: 180s
