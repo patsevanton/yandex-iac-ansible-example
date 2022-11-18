@@ -16,6 +16,9 @@ ingester:
       replication_factor: 1
     final_sleep: 0s
   chunk_idle_period: 1h
+  wal:
+    enabled: true
+    dir: /loki/wal
   max_chunk_age: 1h
   chunk_target_size: 1048576
   chunk_retain_period: 30s
