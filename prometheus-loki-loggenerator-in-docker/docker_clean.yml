@@ -12,3 +12,8 @@
       shell: "docker rm $(docker ps -a -q)"
       args:
         chdir: /etc/docker-compose
+
+    - name: docker volume prune
+      shell: "docker volume prune -f"
+      args:
+        chdir: /etc/docker-compose
