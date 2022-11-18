@@ -96,7 +96,10 @@ query_scheduler:
   max_outstanding_requests_per_tenant: 1024
 
 querier:
+  engine:
+    max_look_back_period: 720h
   query_ingesters_within: 2h
+  query_timeout: 1200s
 
 compactor:
   working_directory: /tmp/compactor
