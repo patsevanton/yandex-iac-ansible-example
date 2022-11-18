@@ -59,12 +59,3 @@
         name: ubuntu
         groups: docker
         append: yes
-
-    - name: reset ssh connection to allow user changes to affect ansible user
-      ansible.builtin.meta:
-        reset_connection
-
-    - name: run docker-compose
-      shell: docker-compose -f docker-compose-261.yml up -d
-      args:
-        chdir: /etc/docker-compose
