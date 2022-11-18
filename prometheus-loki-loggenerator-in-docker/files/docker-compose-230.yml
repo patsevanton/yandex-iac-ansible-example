@@ -26,9 +26,9 @@ services:
 
   cassandra:
     image: bitnami/cassandra:3.11.11
+    restart: always
     volumes:
       - cassandra:/bitnami
-    restart: always
     healthcheck:
       test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
       interval: 10s
@@ -46,6 +46,7 @@ services:
 
   log-generator:
     image: mingrammer/flog
+    restart: always
     command:
       - --loop
       - --format=json
@@ -62,6 +63,7 @@ services:
 
   promtail:
     image: grafana/promtail:2.6.1
+    restart: always
     volumes:
       - ./loki/:/var/log/
       - ./config/promtail-old.yaml:/etc/promtail/promtail.yaml
@@ -78,6 +80,7 @@ services:
 
   grafana:
     image: grafana/grafana:9.1.6
+    restart: always
     ports:
       - "3000:3000"
     environment:
