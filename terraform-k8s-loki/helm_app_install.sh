@@ -5,11 +5,17 @@ set -eu pipefail
 start_time=`date +%s`
 date1=$(date +"%s")
 
-#echo ""
-#echo "Install Kube-Prometheus-Stack"
-#helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-#helm repo update
-#werf helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack -f values-kube-prometheus-stack.yaml
+echo ""
+echo "refresh helm cache"
+rm -rf ~/.helm/cache/archive/*
+rm -rf ~/.helm/repository/cache/*
+
+echo ""
+echo "Install Kube-Prometheus-Stack"
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+werf helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack \
+     -f values-kube-prometheus-stack.yaml
 
 
 #echo ""
