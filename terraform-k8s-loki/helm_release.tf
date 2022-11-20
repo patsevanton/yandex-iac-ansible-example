@@ -14,7 +14,7 @@ resource "helm_release" "ingress_nginx" {
   name       = "ingress-nginx"
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
-  version    = "4.2.1"
+  version    = "4.4.0"
   wait       = true
   depends_on = [
     yandex_kubernetes_node_group.loki-k8s-node-group
