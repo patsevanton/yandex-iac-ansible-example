@@ -31,7 +31,7 @@ resource "yandex_kubernetes_node_group" "loki-k8s-node-group" {
   cluster_id  = yandex_kubernetes_cluster.loki_k8s_cluster.id
   name        = "loki-k8s-node-group"
   description = "loki-k8s-node-group"
-  version     = "1.21"
+  version     = "1.22"
 
   labels = {
     "key" = "value"
