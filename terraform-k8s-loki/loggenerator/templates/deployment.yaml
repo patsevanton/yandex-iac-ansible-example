@@ -35,9 +35,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: MAX
-              value: "9"
+              value: "99999"
             - name: SPEED
-              value: "9"
+              value: "99999"
           ports:
             - name: http
               containerPort: 80
