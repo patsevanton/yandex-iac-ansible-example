@@ -32,13 +32,13 @@ echo "Install Microservices deployment Loki"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 kubectl create namespace loki || true
-#export access_key_id=$(terraform output --raw access_key_sa_storage_admin_for_test_bucket)
-#export secret_access_key=$(terraform output --raw secret_key_sa_storage_admin_for_test_bucket)
-werf helm upgrade --install --wait loki grafana/loki-distributed -n loki --version 0.65.1
-
-#    --set "loki.storageConfig.aws.access_key_id=$access_key_id"  \
-#    --set "loki.storageConfig.aws.secret_access_key=$secret_access_key"  \
-#    -f value-loki-distributed.yaml \
+export access_key_id=$(terraform output --raw access_key_sa_storage_admin_for_test_bucket)
+export secret_access_key=$(terraform output --raw secret_key_sa_storage_admin_for_test_bucket)
+werf helm upgrade --install --wait loki grafana/loki-distributed -n loki \
+    --set "loki.storageConfig.aws.access_key_id=$access_key_id"  \
+    --set "loki.storageConfig.aws.secret_access_key=$secret_access_key"  \
+    -f value-loki-distributed.yaml
+    #    --set "loki.storageConfig.aws.s3=http://${access_key_id}:${secret_access_key}@storage.yandexcloud.net:443" \
 #    ../../grafana-helm-charts/charts/loki-distributed
 
 

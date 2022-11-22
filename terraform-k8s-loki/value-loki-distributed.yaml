@@ -110,7 +110,7 @@ loki:
       tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
 
     compactor:
-      shared_store: filesystem
+      shared_store: s3
 
     ruler:
       storage:
@@ -128,7 +128,7 @@ loki:
     configs:
     - from: "2022-02-01"
       store: boltdb-shipper
-      object_store: aws
+      object_store: s3
       schema: v11
       index:
         prefix: loki_index_
@@ -143,12 +143,13 @@ loki:
       index_gateway_client:
         server_address: dns:///loki-loki-index-gateway:9095
     aws:
-      s3: http://${access_key_id}:${secret_access_key}@storage.yandexcloud.net:443
-      bucketnames: loki
+#      s3: http://${access_key_id}:${secret_access_key}@storage.yandexcloud.net:443
+      s3: http://storage.yandexcloud.net
+      bucketnames: loki-anton-patsev
       s3forcepathstyle: true
 
 serviceMonitor:
   enabled: false
 
 tableManager:
-  enabled: true
+  enabled: false
