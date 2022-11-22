@@ -14,7 +14,7 @@ echo ""
 echo "Install Kube-Prometheus-Stack"
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-werf helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 41.8.0
+werf helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack
 #    -f values-kube-prometheus-stack.yaml
 
 
@@ -52,7 +52,7 @@ werf helm upgrade --install --wait promtail grafana/promtail -n promtail --set "
 echo ""
 echo "Install loggenerator"
 kubectl create namespace loggenerator || true
-werf helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator
+werf helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=5
 
 end_time=`date +%s`
 date2=$(date +"%s")
