@@ -5,7 +5,7 @@ module "lokiindocker" {
   zone               = data.yandex_vpc_subnet.default-ru-central1-a.zone
   name               = "lokiindocker"
   hostname           = "lokiindocker"
-  size               = 50
+  size               = 100
   is_nat             = true
   preemptible        = true
   core_fraction      = 100

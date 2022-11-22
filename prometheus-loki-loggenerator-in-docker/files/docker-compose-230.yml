@@ -1,4 +1,12 @@
-#version: "3.9"
+version: '3.8'
+
+x-logging:
+  &default-logging
+  driver: "json-file"
+  options:
+    max-size: "1m"
+    max-file: "1"
+    tag: "{{.Name}}"
 
 services:
 
@@ -23,6 +31,7 @@ services:
       loki:
         aliases:
           - loki
+    logging: *default-logging
 
   cassandra:
     image: bitnami/cassandra:3.11.11
@@ -43,6 +52,7 @@ services:
       loki:
         aliases:
           - cassandra
+    logging: *default-logging
 
   log-generator:
     image: mingrammer/flog
@@ -50,22 +60,21 @@ services:
     command:
       - --loop
       - --format=json
-      - --number=10
-      - --delay=100ms
-      - --output=/var/log/generated-logs.txt
-      - --overwrite
-      - --type=log
+      - --number=1000
+      - --delay=1ms
     depends_on:
       promtail:
         condition: service_started
-    volumes:
-      - ./loki/:/var/log/
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 20
 
   promtail:
     image: grafana/promtail:2.6.1
     restart: always
     volumes:
-      - ./loki/:/var/log/
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./config/promtail-old.yaml:/etc/promtail/promtail.yaml
     ports:
       - "9080:9080"
@@ -77,6 +86,7 @@ services:
       loki:
         aliases:
           - promtail
+    logging: *default-logging
 
   grafana:
     image: grafana/grafana:9.1.6
@@ -92,6 +102,7 @@ services:
       - grafana:/var/lib/grafana
     networks:
       - loki
+    logging: *default-logging
 
 volumes:
   cassandra:
