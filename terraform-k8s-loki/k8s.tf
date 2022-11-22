@@ -4,7 +4,7 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
   network_id  = data.yandex_vpc_network.default.id
 
   master {
-    version = "1.21"
+    version = "1.22"
     zonal {
       zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
       subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
@@ -48,12 +48,12 @@ resource "yandex_kubernetes_node_group" "loki-k8s-node-group" {
     resources {
       cores         = 4
       memory        = 16
-      core_fraction = 50
+      core_fraction = 100
     }
 
     boot_disk {
       type = "network-ssd"
-      size = 32
+      size = 100
     }
 
     scheduling_policy {

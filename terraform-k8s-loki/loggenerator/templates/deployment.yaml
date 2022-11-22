@@ -33,11 +33,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: MAX
-              value: "99999"
-            - name: SPEED
-              value: "99999"
+          command:
+            - flog
+            - --loop
+            - --format=json
+            - --number=10
+            - --delay=100ms
           ports:
             - name: http
               containerPort: 80
