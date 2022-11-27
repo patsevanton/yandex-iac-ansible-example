@@ -10,11 +10,11 @@ echo "refresh helm cache"
 rm -rf ~/.helm/cache/archive/*
 rm -rf ~/.helm/repository/cache/*
 
-echo ""
-echo "Install Kube-Prometheus-Stack"
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack
+#echo ""
+#echo "Install Kube-Prometheus-Stack"
+#helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#helm repo update
+#helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack
 #    -f values-kube-prometheus-stack.yaml
 
 
@@ -42,12 +42,12 @@ helm upgrade --install --wait loki grafana/loki-distributed -n loki \
     -f value-loki-distributed.yaml
 
 
-echo ""
-echo "Install Promtail"
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
-kubectl create namespace promtail || true
-helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
+#echo ""
+#echo "Install Promtail"
+#helm repo add grafana https://grafana.github.io/helm-charts
+#helm repo update
+#kubectl create namespace promtail || true
+#helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
 
 #echo ""
 #echo "Install loggenerator"
