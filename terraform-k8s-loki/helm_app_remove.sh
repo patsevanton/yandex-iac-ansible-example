@@ -6,6 +6,7 @@ set -eu pipefail
 echo ""
 echo "helm uninstall Kube-Prometheus-Stack"
 helm uninstall -n loki loki || true
+helm uninstall loki || true
 helm uninstall kube-prometheus-stack || true
 helm uninstall -n promtail promtail || true
 helm uninstall -n loggenerator loggenerator || true
