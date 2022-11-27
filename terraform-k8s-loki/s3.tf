@@ -12,14 +12,20 @@ resource "yandex_storage_bucket" "loki" {
   force_destroy = true
 }
 
-output "access_key_sa_storage_admin_for_test_bucket" {
-  description = "access_key sa-storage-admin for loki"
+output "yandex_storage_bucket_loki_access_key" {
+  description = "access_key yandex_storage_bucket of loki"
   value       = yandex_storage_bucket.loki.access_key
   sensitive   = true
 }
 
-output "secret_key_sa_storage_admin_for_test_bucket" {
-  description = "secret_key sa-storage-admin for loki"
+output "yandex_storage_bucket_loki_secret_key" {
+  description = "secret_key yandex_storage_bucket of loki"
   value       = yandex_storage_bucket.loki.secret_key
+  sensitive   = true
+}
+
+output "yandex_storage_bucket_loki_bucket" {
+  description = "name bucket of loki"
+  value       = yandex_storage_bucket.loki.bucket
   sensitive   = true
 }

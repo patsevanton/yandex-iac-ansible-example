@@ -14,7 +14,7 @@ echo ""
 echo "Install Kube-Prometheus-Stack"
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-werf helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack
+helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack
 #    -f values-kube-prometheus-stack.yaml
 
 
@@ -23,7 +23,7 @@ werf helm upgrade --install --wait kube-prometheus-stack prometheus-community/ku
 #helm repo add bitnami https://charts.bitnami.com/bitnami
 #helm repo update
 #kubectl create namespace cassandra || true
-#werf helm upgrade --install --wait cassandra bitnami/cassandra -n cassandra -f value-cassandra.yaml
+#helm upgrade --install --wait cassandra bitnami/cassandra -n cassandra -f value-cassandra.yaml
 
 # Set grafana datasource loki
 echo "http://loki-loki-distributed-gateway.loki"
@@ -32,12 +32,13 @@ echo "Install Microservices deployment Loki"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 kubectl create namespace loki || true
-export access_key_id=$(terraform output --raw access_key_sa_storage_admin_for_test_bucket)
-export secret_access_key=$(terraform output --raw secret_key_sa_storage_admin_for_test_bucket)
-werf helm upgrade --install --wait loki grafana/loki-distributed -n loki \
-    --set "loki.common.storage.s3.access_key_id=$access_key_id"  \
-    --set "loki.common.storage.s3.secret_access_key=$secret_access_key"  \
-    --set "loki.common.storage.s3.bucketnames=loki-anton-patsev"  \
+export access_key_id=$(terraform output --raw yandex_storage_bucket_loki_access_key)
+export secret_access_key=$(terraform output --raw yandex_storage_bucket_loki_secret_key)
+export bucket=$(terraform output --raw yandex_storage_bucket_loki_bucket)
+helm upgrade --install --wait loki grafana/loki-distributed -n loki \
+    --set "loki.storageConfig.aws.access_key_id=$access_key_id"  \
+    --set "loki.storageConfig.aws.secret_access_key=$secret_access_key"  \
+    --set "loki.storageConfig.aws.bucketnames=loki-anton-patsev"  \
     -f value-loki-distributed.yaml
 
 
@@ -46,12 +47,12 @@ echo "Install Promtail"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 kubectl create namespace promtail || true
-werf helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
+helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
 
-echo ""
-echo "Install loggenerator"
-kubectl create namespace loggenerator || true
-werf helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=5
+#echo ""
+#echo "Install loggenerator"
+#kubectl create namespace loggenerator || true
+#werf helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=5
 
 end_time=`date +%s`
 date2=$(date +"%s")
