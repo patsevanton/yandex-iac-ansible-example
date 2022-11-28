@@ -13,6 +13,5 @@ loki:
     boltdb_shipper:
       shared_store: s3
     aws:
-      bucketnames: loki-anton-patsev
       endpoint: storage.yandexcloud.net
       s3forcepathstyle: true

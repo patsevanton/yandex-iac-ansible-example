@@ -10,11 +10,12 @@ echo "refresh helm cache"
 rm -rf ~/.helm/cache/archive/*
 rm -rf ~/.helm/repository/cache/*
 
-#echo ""
-#echo "Install Kube-Prometheus-Stack"
-#helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-#helm repo update
-#helm upgrade --install --wait kube-prometheus-stack prometheus-community/kube-prometheus-stack
+echo ""
+echo "Install Kube-Prometheus-Stack"
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+kubectl create namespace kube-prometheus-stack || true
+helm upgrade --install --wait -n kube-prometheus-stack kube-prometheus-stack prometheus-community/kube-prometheus-stack
 #    -f values-kube-prometheus-stack.yaml
 
 
@@ -38,21 +39,21 @@ export bucket=$(terraform output --raw yandex_storage_bucket_loki_bucket)
 helm upgrade --install --wait loki grafana/loki-distributed -n loki \
     --set "loki.storageConfig.aws.access_key_id=$access_key_id"  \
     --set "loki.storageConfig.aws.secret_access_key=$secret_access_key"  \
-    --set "loki.storageConfig.aws.bucketnames=loki-anton-patsev"  \
+    --set "loki.storageConfig.aws.bucketnames=$bucket"  \
     -f value-loki-distributed.yaml
 
 
-#echo ""
-#echo "Install Promtail"
-#helm repo add grafana https://grafana.github.io/helm-charts
-#helm repo update
-#kubectl create namespace promtail || true
-#helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
+echo ""
+echo "Install Promtail"
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+kubectl create namespace promtail || true
+helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
 
-#echo ""
-#echo "Install loggenerator"
-#kubectl create namespace loggenerator || true
-#werf helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=5
+echo ""
+echo "Install loggenerator"
+kubectl create namespace loggenerator || true
+werf helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=5
 
 end_time=`date +%s`
 date2=$(date +"%s")
