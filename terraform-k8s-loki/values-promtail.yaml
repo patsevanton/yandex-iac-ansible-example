@@ -6,3 +6,26 @@ config:
       - cri: {}
       - labeldrop:
           - filename
+    extraScrapeConfigs: |
+      # Add an additional scrape config for syslog
+      - job_name: journal
+        journal:
+          path: /var/log/journal
+          max_age: 12h
+          labels:
+            job: systemd-journal
+        relabel_configs:
+          - source_labels:
+              - __journal__hostname
+            target_label: hostname
+
+          # example label values: kubelet.service, containerd.service
+          - source_labels:
+              - __journal__systemd_unit
+            target_label: unit
+
+          # example label values: debug, notice, info, warning, error
+          - source_labels:
+              - __journal_priority_keyword
+            target_label: level
+

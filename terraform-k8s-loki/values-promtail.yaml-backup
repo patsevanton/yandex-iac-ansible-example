@@ -1,0 +1,39 @@
+config:
+  clients:
+    - url: http://loki-loki-distributed-gateway.loki/loki/api/v1/push
+  snippets:
+    pipelineStages:
+      - cri: {}
+      - labeldrop:
+          - filename
+
+      - job_name: testjson
+        pipeline_stages:
+          - json:
+              expressions:
+                bytes: bytes
+                datetime: datetime
+                host: host
+                method: method
+                protocol: protocol
+                referer: referer
+                request: request
+                status: status
+                tsNs: tsNs
+                user-identifier: user-identifier
+          - labels:
+              method:
+              protocol:
+              status:
+          - template:
+              source: new_key
+              template: 'bytes={{ .bytes }} datetime={{ .datetime }} host={{ .host }} method={{ .method}} protocol={{ .protocol }} referer={{ .referer }} request={{ .request }} status={{ .status }} tsNs={{ .tsNs }} user-identifier={{ .user-identifier }}'
+          - output:
+              source: new_key
+        static_configs:
+          - targets:
+              - localhost
+            labels:
+              method:
+              protocol:
+              status:
