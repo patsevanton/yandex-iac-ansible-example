@@ -8,24 +8,17 @@ config:
           - filename
     extraScrapeConfigs: |
       # Add an additional scrape config for syslog
-      - job_name: journal
-        journal:
-          path: /var/log/journal
-          max_age: 12h
-          labels:
-            job: systemd-journal
+      - job_name: kubernetes-pods-name
+        pipeline_stages:
+          - docker: {}
+        kubernetes_sd_configs:
+          - role: pod
         relabel_configs:
-          - source_labels:
-              - __journal__hostname
-            target_label: hostname
-
-          # example label values: kubelet.service, containerd.service
-          - source_labels:
-              - __journal__systemd_unit
-            target_label: unit
-
-          # example label values: debug, notice, info, warning, error
-          - source_labels:
-              - __journal_priority_keyword
-            target_label: level
-
+          - source_labels: [__meta_kubernetes_namespace]
+            action: drop
+            regex: .+
+          - action: keep
+            regex: ambassador
+            source_labels:
+              - __meta_kubernetes_namespace
+              - __meta_kubernetes_pod_namespace
