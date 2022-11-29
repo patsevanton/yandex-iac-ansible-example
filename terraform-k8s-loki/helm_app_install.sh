@@ -45,7 +45,7 @@ helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.
 echo ""
 echo "Install loggenerator"
 kubectl create namespace loggenerator || true
-werf helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=5
+helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=5
 
 end_time=`date +%s`
 date2=$(date +"%s")
