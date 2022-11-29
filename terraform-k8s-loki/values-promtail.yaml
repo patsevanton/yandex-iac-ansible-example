@@ -1,6 +1,6 @@
 config:
   clients:
-    - url: http://loki-loki-distributed-gateway.loki/loki/api/v1/push
+    - url: http://loki.apatsev.org.ru/loki/api/v1/push
   snippets:
     pipelineStages:
       - cri: {}

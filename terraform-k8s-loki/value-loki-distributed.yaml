@@ -15,3 +15,37 @@ loki:
     aws:
       endpoint: storage.yandexcloud.net
       s3forcepathstyle: true
+
+serviceMonitor:
+  enabled: true
+
+ingester:
+  autoscaling:
+    enabled: true
+
+distributor:
+  autoscaling:
+    enabled: true
+
+querier:
+  autoscaling:
+    enabled: true
+
+queryFrontend:
+  autoscaling:
+    enabled: true
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+    - loki.apatsev.org.ru
+
+gateway:
+  enabled: false
+
+compactor:
+  enabled: true
+
+indexGateway:
+  enabled: true
