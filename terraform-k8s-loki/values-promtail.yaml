@@ -11,8 +11,10 @@ config:
           expressions:
             method: method
             protocol: protocol
+            status: status
       - labels:
           method:
           protocol:
+          status:
       - output:
           source: output
