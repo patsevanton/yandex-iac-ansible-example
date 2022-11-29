@@ -7,3 +7,12 @@ config:
       - labeldrop:
           - filename
           - pod
+      - json:
+          expressions:
+            method: method
+            protocol: protocol
+      - labels:
+          method:
+          protocol:
+      - output:
+          source: output
