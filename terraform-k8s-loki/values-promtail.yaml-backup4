@@ -1,0 +1,57 @@
+config:
+  clients:
+    - url: http://loki-loki-distributed-gateway.loki/loki/api/v1/push
+  snippets:
+    pipelineStages:
+      - cri: {}
+      - labeldrop:
+          - filename
+      - json:
+          expressions:
+            caller: caller
+            component: component
+            duration: duration
+            latency: latency
+            length: length
+            level: level
+            limit: limit
+            org_id: org_id
+            query: query
+            query_type: query_type
+            queue_time: queue_time
+            range_type: range_type
+            returned_lines: returned_lines
+            status: status
+            step: step
+            subqueries: subqueries
+            throughput: throughput
+            Time: Time
+            total_bytes: total_bytes
+            total_entries: total_entries
+            ts: ts
+            tsNs: tsNs
+      - labels:
+          caller: caller
+          component: component
+          duration: duration
+          latency: latency
+          length: length
+          level: level
+          limit: limit
+          org_id: org_id
+          query: query
+          query_type: query_type
+          queue_time: queue_time
+          range_type: range_type
+          returned_lines: returned_lines
+          status: status
+          step: step
+          subqueries: subqueries
+          throughput: throughput
+          Time: Time
+          total_bytes: total_bytes
+          total_entries: total_entries
+          ts: ts
+          tsNs: tsNs
+      - output:
+          source: output
