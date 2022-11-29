@@ -12,26 +12,18 @@ rm -rf ~/.helm/repository/cache/*
 
 echo ""
 echo "Install Kube-Prometheus-Stack"
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
+#helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#helm repo update
 kubectl create namespace kube-prometheus-stack || true
 helm upgrade --install --wait -n kube-prometheus-stack kube-prometheus-stack prometheus-community/kube-prometheus-stack
 #    -f values-kube-prometheus-stack.yaml
 
 
-#echo ""
-#echo "Install cassandra"
-#helm repo add bitnami https://charts.bitnami.com/bitnami
-#helm repo update
-#kubectl create namespace cassandra || true
-#helm upgrade --install --wait cassandra bitnami/cassandra -n cassandra -f value-cassandra.yaml
-
-# Set grafana datasource loki
 echo "http://loki-loki-distributed-gateway.loki"
 echo ""
 echo "Install Microservices deployment Loki"
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
+#helm repo add grafana https://grafana.github.io/helm-charts
+#helm repo update
 kubectl create namespace loki || true
 export access_key_id=$(terraform output --raw yandex_storage_bucket_loki_access_key)
 export secret_access_key=$(terraform output --raw yandex_storage_bucket_loki_secret_key)
@@ -45,8 +37,8 @@ helm upgrade --install --wait loki grafana/loki-distributed -n loki \
 
 echo ""
 echo "Install Promtail"
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
+#helm repo add grafana https://grafana.github.io/helm-charts
+#helm repo update
 kubectl create namespace promtail || true
 helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
 

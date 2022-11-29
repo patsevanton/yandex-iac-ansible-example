@@ -1,0 +1,28 @@
+config:
+  clients:
+    - url: http://loki-loki-distributed-gateway.loki/loki/api/v1/push
+  snippets:
+    pipelineStages:
+      - cri: {}
+      - labeldrop:
+          - filename
+    extraScrapeConfigs: |
+      - job_name: testjson
+        pipeline_stages:
+          - match:
+              selector: "{app=\"loggenerator\"}"
+              stages:
+                - json:
+                    expressions:
+                      method: method
+                      protocol: protocol
+                - labels:
+                    method:
+                    protocol:
+        static_configs:
+          - targets:
+              - localhost
+            labels:
+              method:
+              protocol:
+              status:
