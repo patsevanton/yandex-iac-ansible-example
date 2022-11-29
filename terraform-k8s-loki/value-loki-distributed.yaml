@@ -6,13 +6,10 @@ global:
   dnsService: "kube-dns"
   dnsNamespace: "kube-system"
 
-# -- Overrides the chart's name
 nameOverride: null
 
-# -- Overrides the chart's computed fullname
 fullnameOverride: null
 
-# -- Image pull secrets for Docker images
 imagePullSecrets: []
 
 loki:
@@ -198,7 +195,6 @@ loki:
 
   structuredConfig: {}
 
-# -- Provides a reloadable runtime configuration file for some specific configuration
 runtimeConfig: {}
 
 serviceAccount:
@@ -208,12 +204,10 @@ serviceAccount:
   annotations: {}
   automountServiceAccountToken: true
 
-# RBAC configuration
 rbac:
   pspEnabled: false
   sccEnabled: false
 
-# ServiceMonitor configuration
 serviceMonitor:
   enabled: false
   namespace: null
@@ -228,7 +222,6 @@ serviceMonitor:
   scheme: http
   tlsConfig: null
 
-# Rules for the Prometheus Operator
 prometheusRule:
   enabled: false
   namespace: null
@@ -236,7 +229,6 @@ prometheusRule:
   labels: {}
   groups: []
 
-# Configuration for the ingester
 ingester:
   kind: StatefulSet
   replicas: 1
@@ -298,7 +290,6 @@ ingester:
   appProtocol:
     grpc: ""
 
-# Configuration for the distributor
 distributor:
   replicas: 1
   autoscaling:
@@ -344,7 +335,6 @@ distributor:
   appProtocol:
     grpc: ""
 
-# Configuration for the querier
 querier:
   replicas: 1
   autoscaling:
@@ -390,7 +380,6 @@ querier:
   appProtocol:
     grpc: ""
 
-# Configuration for the query-frontend
 queryFrontend:
   replicas: 1
   autoscaling:
@@ -436,7 +425,6 @@ queryFrontend:
   appProtocol:
     grpc: ""
 
-# Configuration for the query-scheduler
 queryScheduler:
   enabled: false
   replicas: 2
@@ -474,7 +462,6 @@ queryScheduler:
   nodeSelector: {}
   tolerations: []
 
-# Configuration for the table-manager
 tableManager:
   enabled: false
   image:
@@ -511,9 +498,6 @@ tableManager:
   nodeSelector: {}
   tolerations: []
 
-# Use either this ingress or the gateway, but not both at once.
-# If you enable this, make sure to disable the gateway.
-# You'll need to supply authn configuration for your ingress controller.
 ingress:
   enabled: false
   annotations: {}
@@ -533,12 +517,7 @@ ingress:
       - /prometheus/api/v1/alerts
   hosts:
     - loki.example.com
-#  tls:
-#    - hosts:
-#       - loki.example.com
-#      secretName: loki-distributed-tls
 
-# Configuration for the gateway
 gateway:
   enabled: true
   replicas: 1
@@ -766,7 +745,6 @@ gateway:
         }
       }
 
-# Configuration for the compactor
 compactor:
   enabled: false
   image:
@@ -801,7 +779,6 @@ compactor:
     annotations: {}
     automountServiceAccountToken: true
 
-# Configuration for the ruler
 ruler:
   enabled: false
   kind: Deployment
@@ -848,7 +825,6 @@ ruler:
     storageClass: null
   directories: {}
 
-# Configuration for the index-gateway
 indexGateway:
   enabled: false
   replicas: 1
