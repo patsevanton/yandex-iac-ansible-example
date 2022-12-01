@@ -46,14 +46,14 @@ resource "yandex_kubernetes_node_group" "loki-k8s-node-group" {
     }
 
     resources {
-      cores         = 16
-      memory        = 16
+      cores         = 4
+      memory        = 8
       core_fraction = 100
     }
 
     boot_disk {
       type = "network-ssd"
-      size = 200
+      size = 100
     }
 
     scheduling_policy {
@@ -68,7 +68,7 @@ resource "yandex_kubernetes_node_group" "loki-k8s-node-group" {
 
   scale_policy {
     fixed_scale {
-      size = 5
+      size = 1
     }
   }
 
