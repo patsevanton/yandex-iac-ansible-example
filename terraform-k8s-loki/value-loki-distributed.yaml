@@ -22,6 +22,8 @@ serviceMonitor:
 ingester:
   autoscaling:
     enabled: true
+  persistence:
+    enabled: true
 
 distributor:
   autoscaling:
