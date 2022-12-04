@@ -12,8 +12,8 @@ rm -rf ~/.helm/repository/cache/*
 
 echo ""
 echo "Install postgresql"
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
+#helm repo add bitnami https://charts.bitnami.com/bitnami
+#helm repo update
 kubectl create namespace postgresql || true
 helm install postgresql bitnami/postgresql
 helm upgrade --install --wait -n postgresql postgresql bitnami/postgresql
