@@ -12,20 +12,20 @@ resource "yandex_storage_bucket" "velero" {
   force_destroy = true
 }
 
-output "yandex_storage_bucket_loki_access_key" {
+output "yandex_storage_bucket_velero_access_key" {
   description = "access_key yandex_storage_bucket of velero"
   value       = yandex_storage_bucket.velero.access_key
   sensitive   = true
 }
 
-output "yandex_storage_bucket_loki_secret_key" {
+output "yandex_storage_bucket_velero_secret_key" {
   description = "secret_key yandex_storage_bucket of velero"
   value       = yandex_storage_bucket.velero.secret_key
   sensitive   = true
 }
 
-output "yandex_storage_bucket_loki_bucket" {
-  description = "name bucket of loki"
+output "yandex_storage_bucket_velero_bucket" {
+  description = "name bucket of velero"
   value       = yandex_storage_bucket.velero.bucket
   sensitive   = true
 }

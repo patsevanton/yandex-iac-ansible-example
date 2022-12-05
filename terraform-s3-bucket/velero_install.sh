@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-export bucket=$(terraform output --raw yandex_storage_bucket_loki_bucket)
+export bucket=$(terraform output --raw yandex_storage_bucket_velero_bucket)
 
 kubectl label volumesnapshotclasses.snapshot.storage.k8s.io yc-csi-snapclass \
 velero.io/csi-volumesnapshot-class="true" && \
