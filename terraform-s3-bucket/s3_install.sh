@@ -27,8 +27,10 @@ fi
 
 TF_IN_AUTOMATION=1 terraform init -upgrade
 TF_IN_AUTOMATION=1 terraform apply -auto-approve
-terraform output yandex_storage_bucket_loki_access_key
-terraform output yandex_storage_bucket_loki_secret_key
+echo "[default]" > credentials
+terraform output --raw yandex_storage_bucket_loki_access_key >> credentials
+echo "" >> credentials
+terraform output --raw yandex_storage_bucket_loki_secret_key >> credentials
 
 end_time=`date +%s`
 date2=$(date +"%s")
