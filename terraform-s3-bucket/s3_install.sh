@@ -27,10 +27,12 @@ fi
 
 TF_IN_AUTOMATION=1 terraform init -upgrade
 TF_IN_AUTOMATION=1 terraform apply -auto-approve
-echo "[default]" > credentials
-terraform output --raw yandex_storage_bucket_velero_access_key >> credentials
-echo "" >> credentials
-terraform output --raw yandex_storage_bucket_velero_secret_key >> credentials
+#echo "[default]" > credentials
+#echo "  " >> credentials
+#terraform output --raw yandex_storage_bucket_velero_access_key >> credentials
+#echo "" >> credentials
+#echo "  " >> credentials
+#terraform output --raw yandex_storage_bucket_velero_secret_key >> credentials
 
 end_time=`date +%s`
 date2=$(date +"%s")

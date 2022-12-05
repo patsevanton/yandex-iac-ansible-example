@@ -12,6 +12,19 @@ resource "yandex_storage_bucket" "velero" {
   force_destroy = true
 }
 
+resource "local_file" "credentials" {
+  content = templatefile("credentials.tpl",
+    {
+      access_key = yandex_storage_bucket.velero.access_key
+      secret_key = yandex_storage_bucket.velero.secret_key
+    }
+  )
+  depends_on = [
+    yandex_storage_bucket.velero
+  ]
+  filename = "credentials"
+}
+
 output "yandex_storage_bucket_velero_access_key" {
   description = "access_key yandex_storage_bucket of velero"
   value       = yandex_storage_bucket.velero.access_key
