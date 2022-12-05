@@ -5,9 +5,7 @@ set -eu pipefail
 export bucket=$(terraform output --raw yandex_storage_bucket_loki_bucket)
 
 kubectl label volumesnapshotclasses.snapshot.storage.k8s.io yc-csi-snapclass \
-velero.io/csi-volumesnapshot-class="true"
-
-
+velero.io/csi-volumesnapshot-class="true" && \
 velero install \
   --backup-location-config s3Url=https://storage.yandexcloud.net,region=ru-central1 \
   --bucket $bucket \
@@ -17,3 +15,4 @@ velero install \
   --features=EnableCSI \
   --use-volume-snapshots=true \
   --snapshot-location-config region=ru-central1
+
