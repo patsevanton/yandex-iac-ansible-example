@@ -15,7 +15,6 @@ echo "Install postgresql"
 #helm repo add bitnami https://charts.bitnami.com/bitnami
 #helm repo update
 kubectl create namespace postgresql || true
-helm install postgresql bitnami/postgresql
 helm upgrade --install --wait -n postgresql postgresql bitnami/postgresql
 
 end_time=`date +%s`

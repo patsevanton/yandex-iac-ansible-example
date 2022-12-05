@@ -2,8 +2,8 @@
 
 set -eu pipefail
 
-# uninstall Kube-Prometheus-Stack
+# uninstall postgresql
 echo ""
-echo "helm uninstall Kube-Prometheus-Stack"
+echo "helm uninstall postgresql"
 helm uninstall -n postgresql postgresql || true
 kubectl delete namespace postgresql || true
