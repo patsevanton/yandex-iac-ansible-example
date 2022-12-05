@@ -19,3 +19,4 @@
 **/acme-issuer.yaml
 **/ClusterIssuer.yaml
 **/*.iml
+**/credentials
