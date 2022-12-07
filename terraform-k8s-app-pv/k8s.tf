@@ -4,7 +4,7 @@ resource "yandex_kubernetes_cluster" "velero_k8s_cluster" {
   network_id  = data.yandex_vpc_network.default.id
 
   master {
-    version = "1.22"
+    version = "1.21"
     zonal {
       zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
       subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
@@ -31,7 +31,7 @@ resource "yandex_kubernetes_node_group" "velero-k8s-node-group" {
   cluster_id  = yandex_kubernetes_cluster.velero_k8s_cluster.id
   name        = "velero-k8s-node-group"
   description = "velero-k8s-node-group"
-  version     = "1.22"
+  version     = "1.21"
 
   labels = {
     "key" = "value"
