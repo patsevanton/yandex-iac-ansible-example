@@ -1,7 +1,7 @@
-# SA k8s-cluster
+# SA loki-k8s-cluster
 resource "yandex_iam_service_account" "loki-k8s-cluster" {
   folder_id = var.yc_folder_id
-  name      = "k8s-cluster"
+  name      = "loki-k8s-cluster"
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "loki-k8s-cluster-agent-permissions" {
