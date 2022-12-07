@@ -5,10 +5,10 @@ set -eu pipefail
 start_time=`date +%s`
 date1=$(date +"%s")
 
-echo ""
-echo "refresh helm cache"
-rm -rf ~/.helm/cache/archive/*
-rm -rf ~/.helm/repository/cache/*
+#echo ""
+#echo "refresh helm cache"
+#rm -rf ~/.helm/cache/archive/*
+#rm -rf ~/.helm/repository/cache/*
 
 echo ""
 echo "Install postgresql"
