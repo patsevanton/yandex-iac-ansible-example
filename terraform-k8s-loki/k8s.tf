@@ -12,6 +12,8 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
     public_ip = true
   }
 
+  cluster_ipv4_range      = "10.113.0.0/16"
+  service_ipv4_range      = "10.97.0.0/16"
   service_account_id      = yandex_iam_service_account.loki-k8s-cluster.id
   node_service_account_id = yandex_iam_service_account.loki-k8s-node-group.id
   release_channel         = "STABLE"
