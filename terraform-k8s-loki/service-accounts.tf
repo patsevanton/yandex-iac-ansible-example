@@ -25,7 +25,7 @@ resource "yandex_resourcemanager_folder_iam_member" "loki-load-balancer-admin-pe
 # SA k8s-node-group
 resource "yandex_iam_service_account" "loki-k8s-node-group" {
   folder_id = var.yc_folder_id
-  name      = "k8s-node-group"
+  name      = "loki-k8s-node-group"
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "loki-k8s-node-group-permissions" {
