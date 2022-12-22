@@ -1,20 +1,20 @@
 config:
   clients:
-    - url: http://loki.apatsev.org.ru/loki/api/v1/push
+    - url: http://loki-loki-distributed-gateway.loki/loki/api/v1/push
   snippets:
     pipelineStages:
       - cri: {}
-      - labeldrop:
-          - filename
-          - pod
-      - json:
-          expressions:
-            method: method
-            protocol: protocol
-            status: status
-      - labels:
-          method:
-          protocol:
-          status:
-      - output:
-          source: output
+#      - labeldrop:
+#          - filename
+#          - pod
+#      - json:
+#          expressions:
+#            method: method
+#            protocol: protocol
+#            status: status
+#      - labels:
+#          method:
+#          protocol:
+#          status:
+#      - output:
+#          source: output
