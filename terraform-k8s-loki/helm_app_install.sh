@@ -22,8 +22,8 @@ helm upgrade --install --wait -n kube-prometheus-stack kube-prometheus-stack pro
 echo "http://loki-loki-distributed-gateway.loki"
 echo ""
 echo "Install Microservices deployment Loki"
-#helm repo add grafana https://grafana.github.io/helm-charts
-#helm repo update
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
 kubectl create namespace loki || true
 export access_key_id=$(terraform output --raw yandex_storage_bucket_loki_access_key)
 export secret_access_key=$(terraform output --raw yandex_storage_bucket_loki_secret_key)
@@ -43,9 +43,18 @@ kubectl create namespace promtail || true
 helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
 
 echo ""
+echo "Install Vector"
+helm repo add vector https://helm.vector.dev
+helm repo update
+kubectl create namespace vector || true
+helm install --wait vector vector/vector -n vector --set "customConfig.sinks.sink_to_loki.endpoint=http://loki-loki-distributed-gateway.loki"
+
+echo ""
 echo "Install loggenerator"
 kubectl create namespace loggenerator || true
 helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=1
+
+
 
 end_time=`date +%s`
 date2=$(date +"%s")
