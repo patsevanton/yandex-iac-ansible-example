@@ -35,12 +35,12 @@ helm upgrade --install --wait loki grafana/loki-distributed -n loki \
     -f value-loki-distributed.yaml
 
 
-echo ""
-echo "Install Promtail"
+#echo ""
+#echo "Install Promtail"
 #helm repo add grafana https://grafana.github.io/helm-charts
 #helm repo update
-kubectl create namespace promtail || true
-helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
+#kubectl create namespace promtail || true
+#helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.6.2 -f values-promtail.yaml
 
 echo ""
 echo "Install Vector"
