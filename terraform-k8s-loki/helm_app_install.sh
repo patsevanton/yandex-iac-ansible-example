@@ -47,7 +47,7 @@ echo "Install Vector"
 helm repo add vector https://helm.vector.dev
 helm repo update
 kubectl create namespace vector || true
-helm install --wait vector vector/vector -n vector --set "customConfig.sinks.sink_to_loki.endpoint=http://loki-loki-distributed-gateway.loki"
+helm install --wait vector vector/vector -n vector -f value-vector.yaml
 
 echo ""
 echo "Install loggenerator"
