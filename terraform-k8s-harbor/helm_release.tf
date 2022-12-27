@@ -24,6 +24,34 @@ resource "helm_release" "ingress_nginx" {
     name  = "controller.service.loadBalancerIP"
     value = yandex_vpc_address.harbor_address.external_ipv4_address[0].address
   }
-
 }
 
+
+resource "helm_release" "cert-manager" {
+  namespace        = "cert-manager"
+  create_namespace = true
+  name             = "jetstack"
+  repository       = "https://charts.jetstack.io"
+  chart            = "cert-manager"
+  version          = "v1.9.1"
+  wait             = true
+  depends_on = [
+    yandex_kubernetes_node_group.k8s_node_group
+  ]
+  set {
+    name  = "installCRDs"
+    value = true
+  }
+}
+
+resource "local_file" "inventory_yml" {
+  content = templatefile("ClusterIssuer.yaml.tpl",
+    {
+      email_letsencrypt = var.email_letsencrypt
+    }
+  )
+  depends_on = [
+    helm_release.cert-manager
+  ]
+  filename = "ClusterIssuer.yaml"
+}

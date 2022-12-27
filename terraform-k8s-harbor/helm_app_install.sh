@@ -10,7 +10,7 @@ echo "harbor"
 helm repo add harbor https://helm.goharbor.io
 helm repo update
 kubectl create namespace harbor || true
-helm upgrade --install --wait -n harbor harbor harbor/harbor
+helm upgrade --install --wait -n harbor harbor harbor/harbor --set externalURL=https://harbor.apatsev.org.ru --set expose.ingress.hosts.core=harbor.apatsev.org.ru --set harborAdminPassword=H@rb0rAdm
 
 
 end_time=`date +%s`
