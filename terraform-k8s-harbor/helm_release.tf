@@ -36,7 +36,7 @@ resource "helm_release" "cert-manager" {
   version          = "v1.9.1"
   wait             = true
   depends_on = [
-    yandex_kubernetes_node_group.k8s_node_group
+    yandex_kubernetes_node_group.harbor-k8s-node-group
   ]
   set {
     name  = "installCRDs"
