@@ -8,7 +8,7 @@ expose:
     # Note: if the "expose.type" is "ingress" and TLS is disabled,
     # the port must be included in the command when pulling/pushing images.
     # Refer to https://github.com/goharbor/harbor/issues/5291 for details.
-    enabled: true
+    enabled: false
     # The source of the tls certificate. Set as "auto", "secret"
     # or "none" and fill the information in the corresponding section
     # 1) auto: generate the tls certificate automatically
@@ -34,7 +34,7 @@ expose:
   ingress:
     hosts:
       core: harbor.apatsev.org.ru
-      notary:
+      notary: notary.apatsev.org.ru
     # set to the type of ingress controller if it has specific requirements.
     # leave as `default` for most ingress controllers.
     # set to `gce` if using the GCE ingress controller
@@ -712,7 +712,7 @@ trivy:
   priorityClassName:
 
 notary:
-  enabled: false
+  enabled: true
   server:
     # set the service account to be used, default if left empty
     serviceAccountName: ""
