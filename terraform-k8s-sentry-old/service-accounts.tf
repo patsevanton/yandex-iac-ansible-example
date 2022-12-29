@@ -1,7 +1,7 @@
 # SA k8s-cluster
 resource "yandex_iam_service_account" "sentry-k8s-cluster" {
   folder_id = var.yc_folder_id
-  name      = "k8s-cluster"
+  name      = "sentry-k8s-cluster"
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "sentry-k8s-cluster-agent-permissions" {
@@ -25,7 +25,7 @@ resource "yandex_resourcemanager_folder_iam_member" "sentry-load-balancer-admin-
 # SA k8s-node-group
 resource "yandex_iam_service_account" "sentry-k8s-node-group" {
   folder_id = var.yc_folder_id
-  name      = "k8s-node-group"
+  name      = "sentry-k8s-node-group"
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "sentry-k8s-node-group-permissions" {

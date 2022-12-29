@@ -6,18 +6,22 @@ start_time=`date +%s`
 date1=$(date +"%s")
 
 echo ""
-echo "Install Sentry"
+echo "Install sentry"
 helm repo add sentry https://sentry-kubernetes.github.io/charts
 helm repo update
 export fqdn_sentry_redis=$(terraform output --raw fqdn_sentry_redis)
 echo $fqdn_sentry_redis
 export sentry_redis_password=$(terraform output --raw sentry_redis_password)
 echo $sentry_redis_password
-#helm show values sentry ../../sentry-charts/sentry
-helm install sentry ../../sentry-helm-charts/sentry \
+#helm show values sentry/sentry
+helm install -n sentry sentry sentry/sentry \
      --set "redis.enabled=false" \
      --set "externalRedis.host=$fqdn_sentry_redis" \
      --set "externalRedis.password=$sentry_redis_password"
+#helm install sentry ../../sentry-helm-charts/sentry \
+#     --set "redis.enabled=false" \
+#     --set "externalRedis.host=$fqdn_sentry_redis" \
+#     --set "externalRedis.password=$sentry_redis_password"
 
 
 end_time=`date +%s`

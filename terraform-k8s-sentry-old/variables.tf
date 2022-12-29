@@ -15,8 +15,12 @@ variable "yc_folder_id" {
   description = "Yandex Cloud folder id"
 }
 
+variable "email_letsencrypt" {
+  type        = string
+  description = "email_letsencrypt"
+}
+
 variable "sentry_redis_password" {
   type        = string
   description = "sentry_redis_password"
 }
-

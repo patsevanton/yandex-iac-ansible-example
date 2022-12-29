@@ -1,4 +1,5 @@
-yc_token              = ""
-yc_cloud_id           = ""
-yc_folder_id          = ""
+yc_token     = ""
+yc_cloud_id  = ""
+yc_folder_id = ""
+email_letsencrypt = ""
 sentry_redis_password = ""
