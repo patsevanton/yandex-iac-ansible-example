@@ -24,3 +24,8 @@ variable "sentry_redis_password" {
   type        = string
   description = "sentry_redis_password"
 }
+
+variable "sentry_postgres_password" {
+  type        = string
+  description = "sentry_postgres_password"
+}
