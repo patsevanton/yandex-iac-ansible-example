@@ -34,3 +34,12 @@ resource "yandex_mdb_postgresql_user" "sentry" {
   name       = "sentry"
   password   = var.sentry_postgres_password
 }
+
+output fqdn_sentry_postgres {
+  value = "c-${yandex_mdb_postgresql_cluster.sentry_postgres.id}.rw.mdb.yandexcloud.net"
+}
+
+output sentry_postgres_password {
+  value = var.sentry_postgres_password
+  sensitive = true
+}

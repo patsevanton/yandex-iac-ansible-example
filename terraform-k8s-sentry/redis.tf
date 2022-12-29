@@ -27,6 +27,6 @@ output fqdn_sentry_redis {
 }
 
 output sentry_redis_password {
-  value = yandex_mdb_redis_cluster.sentry_redis.config[0].password
+  value = var.sentry_redis_password
   sensitive = true
 }
