@@ -15,10 +15,11 @@ echo $fqdn_sentry_redis
 export sentry_redis_password=$(terraform output --raw sentry_redis_password)
 echo $sentry_redis_password
 #helm show values sentry/sentry
-helm install -n sentry sentry sentry/sentry \
-     --set "redis.enabled=false" \
-     --set "externalRedis.host=$fqdn_sentry_redis" \
-     --set "externalRedis.password=$sentry_redis_password"
+helm install -n sentry sentry sentry/sentry
+#helm install -n sentry sentry sentry/sentry \
+#     --set "redis.enabled=false" \
+#     --set "externalRedis.host=$fqdn_sentry_redis" \
+#     --set "externalRedis.password=$sentry_redis_password"
 #helm install sentry ../../sentry-helm-charts/sentry \
 #     --set "redis.enabled=false" \
 #     --set "externalRedis.host=$fqdn_sentry_redis" \
