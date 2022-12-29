@@ -25,7 +25,7 @@ resource "yandex_mdb_postgresql_database" "sentry" {
   name       = "sentry"
   owner      = "sentry"
   depends_on = [
-    yandex_mdb_postgresql_user.test
+    yandex_mdb_postgresql_user.sentry
   ]
 }
 
