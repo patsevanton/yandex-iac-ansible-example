@@ -10,7 +10,7 @@ echo "nexus"
 helm repo add sonatype https://sonatype.github.io/helm3-charts/
 helm repo update
 kubectl create namespace nexus || true
-helm upgrade --install --wait -n nexus nexus sonatype/nexus-repository-manager
+helm upgrade --install --wait -n nexus nexus sonatype/nexus-repository-manager -f values-nexus.yaml
 #helm upgrade --install --wait -n nexus nexus nexus/nexus --set externalURL=https://nexus.apatsev.org.ru --set expose.ingress.hosts.core=nexus.apatsev.org.ru --set nexusAdminPassword=nexus12345 --set expose.tls.secretName=letsencrypt-prod  --set expose.ingress.annotations="cert-manager.io/cluster-issuer=letsencrypt-prod"
 
 
