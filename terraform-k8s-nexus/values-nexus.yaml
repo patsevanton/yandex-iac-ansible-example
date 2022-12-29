@@ -107,16 +107,17 @@ deployment:
   additionalVolumeMounts:
 
 ingress:
-  enabled: false
+  enabled: true
   ingressClassName: nginx
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hostPath: /
-  hostRepo: repo.demo
-  # tls:
-  #   - secretName: nexus-local-tls
-  #     hosts:
-  #       - repo.demo
+  hostRepo: nexus.apatsev.org.ru
+  tls:
+   - secretName: letsencrypt-prod
+     hosts:
+       - nexus.apatsev.org.ru
 
 
 service:
