@@ -7,11 +7,21 @@ date1=$(date +"%s")
 
 echo ""
 echo "sentry"
-helm repo add sonatype https://sonatype.github.io/helm3-charts/
+helm repo add sentry https://sentry-kubernetes.github.io/charts
 helm repo update
-kubectl create namespace sentry || true
-helm upgrade --install --wait -n sentry sentry sonatype/sentry-repository-manager -f values-sentry.yaml
-#helm upgrade --install --wait -n sentry sentry sentry/sentry --set externalURL=https://sentry.apatsev.org.ru --set expose.ingress.hosts.core=sentry.apatsev.org.ru --set sentryAdminPassword=sentry12345 --set expose.tls.secretName=letsencrypt-prod  --set expose.ingress.annotations="cert-manager.io/cluster-issuer=letsencrypt-prod"
+export fqdn_sentry_redis=$(terraform output --raw fqdn_sentry_redis)
+echo $fqdn_sentry_redis
+export sentry_redis_password=$(terraform output --raw sentry_redis_password)
+echo $sentry_redis_password
+#helm show values sentry/sentry
+helm install -n sentry sentry sentry/sentry \
+     --set "redis.enabled=false" \
+     --set "externalRedis.host=$fqdn_sentry_redis" \
+     --set "externalRedis.password=$sentry_redis_password"
+#helm install sentry ../../sentry-helm-charts/sentry \
+#     --set "redis.enabled=false" \
+#     --set "externalRedis.host=$fqdn_sentry_redis" \
+#     --set "externalRedis.password=$sentry_redis_password"
 
 
 end_time=`date +%s`

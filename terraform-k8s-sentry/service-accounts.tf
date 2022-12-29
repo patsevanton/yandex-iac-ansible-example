@@ -1,4 +1,4 @@
-# SA sentry-k8s-cluster
+# SA k8s-cluster
 resource "yandex_iam_service_account" "sentry-k8s-cluster" {
   folder_id = var.yc_folder_id
   name      = "sentry-k8s-cluster"

@@ -19,3 +19,8 @@ variable "email_letsencrypt" {
   type        = string
   description = "email_letsencrypt"
 }
+
+variable "sentry_redis_password" {
+  type        = string
+  description = "sentry_redis_password"
+}
