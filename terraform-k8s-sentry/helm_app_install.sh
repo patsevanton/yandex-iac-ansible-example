@@ -6,7 +6,7 @@ start_time=`date +%s`
 date1=$(date +"%s")
 
 echo ""
-echo "sentry"
+echo "Install sentry"
 helm repo add sentry https://sentry-kubernetes.github.io/charts
 helm repo update
 export fqdn_sentry_redis=$(terraform output --raw fqdn_sentry_redis)

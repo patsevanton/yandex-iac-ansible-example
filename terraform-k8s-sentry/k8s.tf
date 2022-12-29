@@ -49,8 +49,8 @@ resource "yandex_kubernetes_node_group" "sentry-k8s-node-group" {
 
     resources {
       cores         = 4
-      memory        = 8
-      core_fraction = 100
+      memory        = 16
+      core_fraction = 50
     }
 
     boot_disk {
