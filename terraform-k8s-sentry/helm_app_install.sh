@@ -10,7 +10,7 @@ echo "Install cert-manager"
 helm repo add cert-manager https://charts.jetstack.io
 helm repo update
 kubectl create namespace cert-manager || true
-werf helm upgrade --install --wait -n cert-manager cert-manager cert-manager/cert-manager --set installCRDs=true
+helm upgrade --install --wait -n cert-manager cert-manager cert-manager/cert-manager --set installCRDs=true
 kubectl apply -f ClusterIssuer.yaml
 
 echo ""
@@ -23,7 +23,7 @@ echo $fqdn_sentry_redis
 export sentry_redis_password=$(terraform output --raw sentry_redis_password)
 echo $sentry_redis_password
 #helm show values sentry/sentry
-helm install -n sentry sentry sentry/sentry
+helm upgrade --install --wait  -n sentry sentry sentry/sentry
 #helm install -n sentry sentry sentry/sentry \
 #     --set "redis.enabled=false" \
 #     --set "externalRedis.host=$fqdn_sentry_redis" \
