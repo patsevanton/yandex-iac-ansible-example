@@ -6,7 +6,15 @@ start_time=`date +%s`
 date1=$(date +"%s")
 
 echo ""
-echo "harbor"
+echo "Install cert-manager"
+helm repo add cert-manager https://charts.jetstack.io
+helm repo update
+kubectl create namespace cert-manager || true
+werf helm upgrade --install --wait -n cert-manager cert-manager cert-manager/cert-manager --set installCRDs=true
+kubectl apply -f ClusterIssuer.yaml
+
+echo ""
+echo "Install harbor"
 helm repo add harbor https://helm.goharbor.io
 helm repo update
 kubectl create namespace harbor || true
