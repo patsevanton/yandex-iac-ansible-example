@@ -1341,13 +1341,13 @@ nginx:
   ingress:
     annotations: {}
     apiVersion: ""
-    enabled: false
+    enabled: true
     extraHosts: []
     extraPaths: []
     extraRules: []
     extraTls: []
-    hostname: nginx.local
-    ingressClassName: ""
+    hostname: sentry.apatsev.org.ru
+    ingressClassName: "nginx"
     path: /
     pathType: ImplementationSpecific
     secrets: []
