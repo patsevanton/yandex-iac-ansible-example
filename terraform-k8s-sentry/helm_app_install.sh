@@ -24,10 +24,11 @@ echo $fqdn_sentry_postgres
 export sentry_postgres_password=$(terraform output --raw sentry_postgres_password) || true
 echo $sentry_postgres_password
 #helm show values sentry/sentry
-#time helm upgrade --install --wait -n sentry sentry sentry/sentry -f value-sentry.yaml --timeout 20m
-time helm upgrade --install --wait -n sentry sentry sentry/sentry -f value-sentry.yaml --timeout 20m \
-     --set "externalPostgresql.host=$fqdn_sentry_postgres" \
-     --set "externalPostgresql.password=$sentry_postgres_password"
+time helm upgrade --install --wait -n sentry sentry sentry/sentry --version 17.8.0 --timeout 20m
+# Check postgres logs
+#time helm upgrade --install --wait -n sentry sentry sentry/sentry -f value-sentry.yaml --timeout 20m \
+#     --set "externalPostgresql.host=$fqdn_sentry_postgres" \
+#     --set "externalPostgresql.password=$sentry_postgres_password"
 
 
 end_time=`date +%s`
