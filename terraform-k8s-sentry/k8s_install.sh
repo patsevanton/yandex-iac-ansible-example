@@ -25,8 +25,9 @@ else
   exit 1
 fi
 
+export TF_LOG="TRACE"
 TF_IN_AUTOMATION=1 terraform init -upgrade
-TF_IN_AUTOMATION=1 terraform apply -auto-approve
+TF_IN_AUTOMATION=1 terraform apply -auto-approve -no-color 2>&1 | tee terraform.log
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
 sed '/EOT/d' -i /home/$USER/.kube/config
