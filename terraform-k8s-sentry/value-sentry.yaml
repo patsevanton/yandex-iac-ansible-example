@@ -1339,7 +1339,8 @@ nginx:
     repository: bitnami/nginx
     tag: 1.22.0-debian-11-r3
   ingress:
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
     apiVersion: ""
     enabled: true
     extraHosts: []
@@ -1350,9 +1351,10 @@ nginx:
     ingressClassName: "nginx"
     path: /
     pathType: ImplementationSpecific
-    secrets: []
+    secrets:
+      secretName: "letsencrypt-prod"
     selfSigned: false
-    tls: false
+    tls: true
   initContainers: []
   kubeVersion: ""
   lifecycleHooks: {}
