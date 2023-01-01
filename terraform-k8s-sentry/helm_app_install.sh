@@ -22,6 +22,11 @@ export fqdn_sentry_redis=$(terraform output --raw fqdn_sentry_redis) || true
 echo $fqdn_sentry_redis
 export sentry_redis_password=$(terraform output --raw sentry_redis_password) || true
 echo $sentry_redis_password
+
+export fqdn_sentry_postgres=$(terraform output --raw fqdn_sentry_postgres) || true
+echo $fqdn_sentry_postgres
+export sentry_postgres_password=$(terraform output --raw sentry_postgres_password) || true
+echo $sentry_postgres_password
 #helm show values sentry/sentry
 time helm upgrade --install --wait  -n sentry sentry sentry/sentry -f value-sentry-https.yaml --timeout 10m
 #helm install -n sentry sentry sentry/sentry \

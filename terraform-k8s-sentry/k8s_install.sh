@@ -25,12 +25,16 @@ else
   exit 1
 fi
 
-export TF_LOG="TRACE"
+#export TF_LOG="TRACE"
 TF_IN_AUTOMATION=1 terraform init -upgrade
 TF_IN_AUTOMATION=1 terraform apply -auto-approve -no-color 2>&1 | tee terraform.log
 mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
 sed '/EOT/d' -i /home/$USER/.kube/config
+export fqdn_sentry_postgres=$(terraform output --raw fqdn_sentry_postgres) || true
+echo $fqdn_sentry_postgres
+export sentry_postgres_password=$(terraform output --raw sentry_postgres_password) || true
+echo $sentry_postgres_password
 
 end_time=`date +%s`
 date2=$(date +"%s")
