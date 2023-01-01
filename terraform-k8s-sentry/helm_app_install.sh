@@ -23,7 +23,7 @@ echo $fqdn_sentry_redis
 export sentry_redis_password=$(terraform output --raw sentry_redis_password)
 echo $sentry_redis_password
 #helm show values sentry/sentry
-time helm upgrade --install --wait  -n sentry sentry sentry/sentry -f value-sentry.yaml --timeout 10m
+time helm upgrade --install --wait  -n sentry sentry sentry/sentry -f value-sentry-http.yaml --timeout 10m
 #helm install -n sentry sentry sentry/sentry \
 #     --set "redis.enabled=false" \
 #     --set "externalRedis.host=$fqdn_sentry_redis" \
