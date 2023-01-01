@@ -1,3 +1,10 @@
+postgresql:
+  enabled: false
+externalPostgresql:
+  port: 6432
+  database: sentry
+  username: sentry
+  sslMode: require
 nginx:
   ingress:
     annotations:
