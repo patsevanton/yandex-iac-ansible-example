@@ -1,0 +1,11 @@
+nginx:
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    enabled: true
+    hostname: sentry.apatsev.org.ru
+    ingressClassName: "nginx"
+    tls: true
+sentry:
+  cleanup:
+    days: 7
