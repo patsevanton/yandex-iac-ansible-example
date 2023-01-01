@@ -33,6 +33,9 @@ resource "yandex_mdb_postgresql_user" "sentry" {
   cluster_id = yandex_mdb_postgresql_cluster.sentry_postgres.id
   name       = "sentry"
   password   = var.sentry_postgres_password
+  permission {
+    database_name = "sentry"
+  }
 }
 
 output fqdn_sentry_postgres {
