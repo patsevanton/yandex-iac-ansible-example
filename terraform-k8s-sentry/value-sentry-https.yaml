@@ -1351,8 +1351,7 @@ nginx:
     ingressClassName: "nginx"
     path: /
     pathType: ImplementationSpecific
-    secrets:
-      secretName: "letsencrypt-prod"
+    secrets: []
     selfSigned: false
     tls: true
   initContainers: []
