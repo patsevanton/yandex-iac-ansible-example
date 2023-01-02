@@ -4,7 +4,7 @@ resource "yandex_kubernetes_cluster" "sentry_k8s_cluster" {
   network_id  = data.yandex_vpc_network.default.id
 
   master {
-    version = "1.23"
+    version = "1.22"
     zonal {
       zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
       subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
@@ -33,7 +33,7 @@ resource "yandex_kubernetes_node_group" "sentry-k8s-node-group" {
   cluster_id  = yandex_kubernetes_cluster.sentry_k8s_cluster.id
   name        = "sentry-k8s-node-group"
   description = "sentry-k8s-node-group"
-  version     = "1.23"
+  version     = "1.22"
 
   labels = {
     "key" = "value"
