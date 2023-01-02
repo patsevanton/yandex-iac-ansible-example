@@ -14,4 +14,12 @@
           - docker-compose
   roles:
     - role: geerlingguy.docker
-
+  post_tasks:
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: reset ssh connection to allow user changes to affect ansible user
+      ansible.builtin.meta:
+        reset_connection
