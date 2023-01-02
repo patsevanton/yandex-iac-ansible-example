@@ -49,7 +49,7 @@ resource "yandex_kubernetes_node_group" "sentry-k8s-node-group" {
 
     resources {
       cores         = 4
-      memory        = 16
+      memory        = 8
       core_fraction = 50
     }
 
@@ -70,7 +70,7 @@ resource "yandex_kubernetes_node_group" "sentry-k8s-node-group" {
 
   scale_policy {
     fixed_scale {
-      size = 1
+      size = 3
     }
   }
 
