@@ -1,7 +1,7 @@
 resource "yandex_mdb_postgresql_cluster" "sentry_postgres" {
-  name                = "sentry_postgres"
-  environment         = "PRODUCTION"
-  network_id          = "enprkje8ae9b74e0himb" # default network
+  name        = "sentry_postgres"
+  environment = "PRODUCTION"
+  network_id  = data.yandex_vpc_network.default.id
 
   config {
     version = "11"
@@ -13,9 +13,9 @@ resource "yandex_mdb_postgresql_cluster" "sentry_postgres" {
   }
 
   host {
-    zone      = "ru-central1-b"
-    name      = "sentry_postgres_host"
-    subnet_id = "e2l6251f60t5e6faq3o7" # default-ru-central1-b
+    zone             = "ru-central1-b"
+    name             = "sentry_postgres_host"
+    subnet_id        = data.yandex_vpc_subnet.default-ru-central1-b.id
     assign_public_ip = true
   }
 }
@@ -34,9 +34,6 @@ resource "yandex_mdb_postgresql_user" "sentry" {
   name       = "sentry"
   password   = var.sentry_postgres_password
   grants     = [ "mdb_admin" ]
-  permission {
-    database_name = "sentry"
-  }
 }
 
 output fqdn_sentry_postgres {

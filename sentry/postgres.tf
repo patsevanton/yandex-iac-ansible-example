@@ -1,11 +1,3 @@
-data "yandex_vpc_network" "default" {
-  name = "default"
-}
-
-data "yandex_vpc_subnet" "default-ru-central1-b" {
-  name = "default-ru-central1-b"
-}
-
 resource "yandex_mdb_postgresql_cluster" "sentry_vm_postgres" {
   name        = "sentry_vm_postgres"
   environment = "PRODUCTION"
@@ -42,9 +34,6 @@ resource "yandex_mdb_postgresql_user" "sentry" {
   name       = "sentry"
   password   = var.sentry_postgres_password
   grants     = [ "mdb_admin" ]
-  permission {
-    database_name = "sentry"
-  }
 }
 
 output fqdn_sentry_postgres {
