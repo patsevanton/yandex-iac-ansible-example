@@ -28,6 +28,12 @@
         repo: 'https://github.com/getsentry/self-hosted.git'
         dest: /root/self-hosted
         version: 22.12.0
+#    - name: Sentry | Install
+#      ansible.builtin.shell: yes | /root/self-hosted/install.sh --no-user-prompt
+#    - name: Sentry | createuser
+#      ansible.builtin.shell: docker-compose run --rm web createuser
+#      args:
+#        chdir: /root/self-hosted
     - name: Copy default nginx config
       copy:
         src: default
