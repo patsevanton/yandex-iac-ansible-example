@@ -58,3 +58,8 @@ variable "domain" {
   type        = string
   description = "domain"
 }
+
+variable "sentry_postgres_password" {
+  type        = string
+  description = "sentry_postgres_password"
+}

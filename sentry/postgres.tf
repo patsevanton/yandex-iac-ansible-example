@@ -1,7 +1,15 @@
+data "yandex_vpc_network" "default" {
+  name = "default"
+}
+
+data "yandex_vpc_subnet" "default-ru-central1-b" {
+  name = "default-ru-central1-b"
+}
+
 resource "yandex_mdb_postgresql_cluster" "sentry_vm_postgres" {
-  name                = "sentry_vm_postgres"
-  environment         = "PRODUCTION"
-  network_id          = "enprkje8ae9b74e0himb" # default network
+  name        = "sentry_vm_postgres"
+  environment = "PRODUCTION"
+  network_id  = data.yandex_vpc_network.default.id
 
   config {
     version = "11"
@@ -13,9 +21,9 @@ resource "yandex_mdb_postgresql_cluster" "sentry_vm_postgres" {
   }
 
   host {
-    zone      = "ru-central1-b"
-    name      = "sentry_vm_postgres_host"
-    subnet_id = "e2l6251f60t5e6faq3o7" # default-ru-central1-b
+    zone             = "ru-central1-b"
+    name             = "sentry_vm_postgres_host"
+    subnet_id        = data.yandex_vpc_subnet.default-ru-central1-b.id
     assign_public_ip = true
   }
 }

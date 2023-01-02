@@ -1,29 +1,18 @@
 module "sentry" {
   source             = "../terraform-yandex-compute"
   image_family       = var.family_images_linux
-  subnet_id          = yandex_vpc_subnet.subnet-1.id
+  subnet_id          = data.yandex_vpc_subnet.default-ru-central1-b.id
   zone               = var.yc_zone
   name               = "sentry"
   hostname           = "sentry"
+  memory             = "8"
   is_nat             = true
   preemptible        = true
   core_fraction      = 50
   service_account_id = yandex_iam_service_account.sa-compute-admin.id
   depends_on = [
-    yandex_vpc_subnet.subnet-1,
     yandex_iam_service_account.sa-compute-admin
   ]
-}
-
-resource "yandex_vpc_network" "network-1" {
-  name = "network1"
-}
-
-resource "yandex_vpc_subnet" "subnet-1" {
-  name           = "subnet1"
-  zone           = "ru-central1-b"
-  network_id     = yandex_vpc_network.network-1.id
-  v4_cidr_blocks = ["192.168.10.0/24"]
 }
 
 resource "local_file" "inventory_yml" {

@@ -14,4 +14,4 @@
           - docker-compose
   roles:
     - role: geerlingguy.docker
-    - role: ansible-role-sentry
+
