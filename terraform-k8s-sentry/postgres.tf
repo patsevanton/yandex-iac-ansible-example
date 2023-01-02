@@ -8,7 +8,7 @@ resource "yandex_mdb_postgresql_cluster" "sentry_postgres" {
     resources {
       resource_preset_id = "s3-c2-m8"
       disk_type_id       = "network-ssd"
-      disk_size          = 20
+      disk_size          = 40
     }
   }
 
