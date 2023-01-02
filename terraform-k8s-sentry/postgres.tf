@@ -4,7 +4,7 @@ resource "yandex_mdb_postgresql_cluster" "sentry_postgres" {
   network_id          = "enprkje8ae9b74e0himb" # default network
 
   config {
-    version = "15"
+    version = "11"
     resources {
       resource_preset_id = "s3-c2-m8"
       disk_type_id       = "network-ssd"
