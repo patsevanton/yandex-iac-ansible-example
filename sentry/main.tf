@@ -5,10 +5,12 @@ module "sentry" {
   zone               = var.yc_zone
   name               = "sentry"
   hostname           = "sentry"
-  memory             = "8"
+  cores              = 4
+  memory             = 16
   is_nat             = true
   preemptible        = true
   core_fraction      = 50
+  nat_ip_address     = "51.250.23.38"
   service_account_id = yandex_iam_service_account.sa-compute-admin.id
   depends_on = [
     yandex_iam_service_account.sa-compute-admin

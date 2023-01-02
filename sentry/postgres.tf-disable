@@ -24,6 +24,10 @@ resource "yandex_mdb_postgresql_database" "sentry" {
   cluster_id = yandex_mdb_postgresql_cluster.sentry_vm_postgres.id
   name       = "sentry"
   owner      = "sentry"
+  extension {
+    name    = "citext"
+    version = "1.5"
+  }
   depends_on = [
     yandex_mdb_postgresql_user.sentry
   ]
