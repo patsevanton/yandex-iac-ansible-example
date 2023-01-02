@@ -18,6 +18,16 @@
   roles:
     - role: geerlingguy.docker
   post_tasks:
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: git clone repo self-hosted
+      ansible.builtin.git:
+        repo: 'https://github.com/getsentry/self-hosted.git'
+        dest: /root/self-hosted
+        version: 22.12.0
     - name: Copy default nginx config
       copy:
         src: default
@@ -27,11 +37,6 @@
         state: restarted
         daemon_reload: yes
         name: nginx
-    - name: add user ubuntu to docker group
-      ansible.builtin.user:
-        name: ubuntu
-        groups: docker
-        append: yes
     - name: reset ssh connection to allow user changes to affect ansible user
       ansible.builtin.meta:
         reset_connection
