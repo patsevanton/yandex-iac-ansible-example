@@ -9,5 +9,5 @@ resource "yandex_dns_recordset" "sentry_apatsev_org_ru" {
   name    = "sentry.apatsev.org.ru."
   type    = "A"
   ttl     = 200
-  data    = ["51.250.33.166"]
+  data    = [module.sentry.external_ip[0]]
 }
