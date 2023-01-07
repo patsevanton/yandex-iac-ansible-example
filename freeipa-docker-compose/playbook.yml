@@ -1,0 +1,127 @@
+---
+- name: Playbook to configure IPA servers
+  hosts: ipaserver
+  become: true
+  collections:
+    - freeipa.ansible_freeipa
+  pre_tasks:
+    - set_fact:
+        ipaserver_realm: "{{ ipaserver_realm|upper }}"
+    - name: Remove 127.0.1.1 from /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        state: absent
+        regexp: '^127.0.1.1'
+    - name: 'Add association between external ip and ipa domain into etc/hosts'
+      lineinfile:
+        path: '/etc/hosts'
+        line: '{{ ipaserver_ip_addresses|first }} {{ ipaserver_domain }}'
+        insertbefore: BOF
+    - name: Install packages bind-utils git nano epel-release
+      become: true
+      package:
+        name:
+          - bind-utils
+          - git
+          - nano
+          - vim
+          - epel-release
+        state: present
+    - name: Retrieve hostname from IP address.
+      command: dig +short +onesoa -x "{{ ansible_default_ipv4.address }}"
+      register: dig_out
+    - name: Provide reverse_hostname fact.
+      set_fact:
+        reverse_hostname: "{{ dig_out.stdout_lines[0][:-1] }}"
+    - name: Print reverse_hostname
+      debug:
+        var: reverse_hostname
+    - name: Set hostname as ipaserver_domain
+      hostname:
+        name: "{{ ipaserver_domain }}"
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
+  roles:
+    - role: freeipa.ansible_freeipa.ipaserver
+      state: present
+  post_tasks:
+    - name: Create a directory 
+      ansible.builtin.file:
+        path: freeipa-certs
+        state: directory
+        mode: '0755'
+    - name: Download Let is Encrypt CA certificates
+      get_url:
+        url: "{{ item }}"
+        dest: freeipa-certs
+      loop:
+        - https://letsencrypt.org/certs/isrgrootx1.pem
+        - https://letsencrypt.org/certs/isrg-root-x2.pem
+        - https://letsencrypt.org/certs/lets-encrypt-r3.pem
+        - https://letsencrypt.org/certs/lets-encrypt-e1.pem
+        - https://letsencrypt.org/certs/lets-encrypt-r4.pem
+        - https://letsencrypt.org/certs/lets-encrypt-e2.pem
+    - name: Install Let is Encrypt CA certificates into FreeIPA certificate store
+      shell: "ipa-cacert-manage install {{ item }}"
+      loop:
+        - freeipa-certs/isrgrootx1.pem
+        - freeipa-certs/isrg-root-x2.pem
+        - freeipa-certs/lets-encrypt-r3.pem
+        - freeipa-certs/lets-encrypt-e1.pem
+        - freeipa-certs/lets-encrypt-r4.pem
+        - freeipa-certs/lets-encrypt-e2.pem
+      register: ipa_cacert_manage_install
+    - name: Debug ipa-cacert-manage install
+      debug:
+        var: ipa_cacert_manage_install
+    - name: Update local IPA certificate databases with certificates from the server
+      shell: "ipa-certupdate"
+      register: ipa_certupdate
+    - name: Debug ipa-certupdate
+      debug:
+        var: ipa_certupdate
+    - name: Install packages certbot
+      become: yes
+      package:
+        name:
+          - certbot
+        state: present
+    - name: Stop service httpd, if started
+      ansible.builtin.service:
+        name: httpd
+        state: stopped
+    - name: Create letsencrypt certificate
+      shell: certbot certonly --standalone --preferred-challenges http --agree-tos -n -d {{ ipaserver_domain }} --register-unsafely-without-email
+      args:
+        creates: /etc/letsencrypt/live/{{ ipaserver_domain }}
+      register: create_letsencrypt_certificate
+    - name: Debug Create letsencrypt certificate
+      debug:
+        var: create_letsencrypt_certificate
+    - name: Start service httpd, if not started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+    - name: Add Lets Encrypt SSL certificates to for use in FreeIPA Web UI
+      shell: ipa-server-certinstall -w -d /etc/letsencrypt/live/{{ ipaserver_domain }}/privkey.pem /etc/letsencrypt/live/{{ ipaserver_domain }}/cert.pem -p '{{ ipadm_password }}' --pin=''
+      register: add_lets_encrypt_ssl_certificates_to_freeipa
+    - name: Debug Add Lets Encrypt SSL certificates to for use in FreeIPA Web UI
+      debug:
+        var: add_lets_encrypt_ssl_certificates_to_freeipa      
+    - name: Restart FreeIPA services
+      shell: ipactl restart
+      register: restart_freeipa_services
+    - name: Debug Restart FreeIPA services
+      debug:
+        var: restart_freeipa_services   
+    - name: Ensure gitlab user in freeipa is present
+      community.general.ipa_user:
+        name: gitlab_ldap_sync
+        givenname: gitlab_ldap_sync
+        sn: gitlab_ldap_sync
+        state: present
+        password: "{{ ipaadmin_password }}"
+        ipa_host: "{{ ipaserver_domain }}"
+        ipa_user: admin
+        ipa_pass: "{{ipaadmin_password}}"
