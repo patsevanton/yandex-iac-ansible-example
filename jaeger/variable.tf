@@ -28,26 +28,31 @@ variable "family_images_linux" {
 variable "ssh_user" {
   type        = string
   description = "ssh_user"
+  default     = "ubuntu"
 }
 
 variable "cores" {
   type        = string
   description = "Cores CPU. Examples: 2, 4, 6, 8 and more"
+  default     = 2
 }
 
 variable "memory" {
   type        = string
   description = "Memory GB. Examples: 2, 4, 6, 8 and more"
+  default     = 4
 }
 
 variable "disk_size" {
   type        = string
   description = "Disk size GB. Min 50 for Windows."
+  default     = 50
 }
 
 variable "disk_type" {
   type        = string
   description = "Disk type. Examples: network-ssd, network-hdd, network-ssd-nonreplicated"
+  default     = "network-ssd"
 }
 
 variable "hostname" {

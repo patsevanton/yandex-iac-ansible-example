@@ -28,6 +28,7 @@ variable "family_images_linux" {
 variable "ssh_user" {
   type        = string
   description = "ssh_user"
+  default     = "ubuntu"
 }
 
 #variable "cores" {
@@ -38,6 +39,7 @@ variable "ssh_user" {
 variable "memory" {
   type        = string
   description = "Memory GB. Examples: 2, 4, 6, 8 and more"
+  default     = 4
 }
 
 #variable "disk_size" {

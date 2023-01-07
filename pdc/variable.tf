@@ -22,11 +22,13 @@ variable "yc_zone" {
 variable "memory" {
   type        = string
   description = "Memory GB. Examples: 2, 4, 6, 8 and more"
+  default     = 4
 }
 
 variable "disk_size" {
   type        = string
   description = "Disk size GB. Min 50 for Windows."
+  default     = 50
 }
 
 variable "family_images_windows" {

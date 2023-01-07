@@ -32,6 +32,7 @@ variable "family_freeipa_linux" {
 variable "ssh_user" {
   type        = string
   description = "ssh_user"
+  default     = "ubuntu"
 }
 
 variable "ssh_freeipa_user" {
@@ -62,6 +63,7 @@ variable "freeipa_domain_path" {
 variable "letsencrypt_domain" {
   type        = string
   description = "letsencrypt_domain"
+  default     = "sslip.io"
 }
 
 variable "pswd_gitlab_ldap_sync" {

@@ -28,4 +28,5 @@ variable "family_images_linux" {
 variable "ssh_user" {
   type        = string
   description = "ssh_user"
+  default     = "ubuntu"
 }
