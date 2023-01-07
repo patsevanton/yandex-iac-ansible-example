@@ -1,8 +1,13 @@
 - hosts: docker
   become: true
-  roles:
-    - role: geerlingguy.docker
-  post_tasks:
+  pre_tasks:
+    - name: Install docker, docker-compose
+      apt:
+        name:
+          - docker
+          - docker-compose
+        state: present
+        update_cache: true
     - name: add user ubuntu to docker group
       ansible.builtin.user:
         name: ubuntu
