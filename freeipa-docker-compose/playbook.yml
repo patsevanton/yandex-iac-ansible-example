@@ -1,4 +1,4 @@
-- hosts: docker
+- hosts: ipaserver
   become: true
   pre_tasks:
     - name: Install docker, docker-compose
