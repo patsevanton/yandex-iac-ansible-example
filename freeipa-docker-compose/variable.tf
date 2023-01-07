@@ -22,31 +22,37 @@ variable "yc_zone" {
 variable "family_images_linux" {
   type        = string
   description = "Family of images jenkins in Yandex Cloud. Example: ubuntu-2004-lts"
+  default     = "ubuntu-2004-lts"
 }
 
 variable "ssh_user" {
   type        = string
   description = "ssh_user"
+  default     = "ubuntu"
 }
 
 variable "cores" {
   type        = string
   description = "Cores CPU. Examples: 2, 4, 6, 8 and more"
+  default     = 2
 }
 
 variable "memory" {
   type        = string
   description = "Memory GB. Examples: 2, 4, 6, 8 and more"
+  default     = 4
 }
 
 variable "disk_size" {
   type        = string
   description = "Disk size GB. Min 50 for Windows."
+  default     = 50
 }
 
 variable "disk_type" {
   type        = string
   description = "Disk type. Examples: network-ssd, network-hdd, network-ssd-nonreplicated"
+  default     = "network-ssd"
 }
 
 variable "hostname" {
@@ -57,4 +63,5 @@ variable "hostname" {
 variable "letsencrypt_domain" {
   type        = string
   description = "letsencrypt_domain"
+  default     = "sslip.io"
 }
