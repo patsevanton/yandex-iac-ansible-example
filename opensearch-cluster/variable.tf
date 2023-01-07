@@ -22,4 +22,5 @@ variable "yc_zone" {
 variable "family_images_linux" {
   type        = string
   description = "Family of images jenkins in Yandex Cloud. Example: ubuntu-2004-lts"
+  default     = "ubuntu-2004-lts"
 }
