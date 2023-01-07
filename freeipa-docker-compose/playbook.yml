@@ -1,17 +1,15 @@
----
-- hosts: ipaserver
+- hosts: docker
   become: true
   pre_tasks:
-    - name: Install python3-pip
+    - name: Install docker, docker-compose
       apt:
-        name:
-          - python3-pip
-        state: present
-        update_cache: true
-    - name: Install multi python packages with version specifiers
-      pip:
         name:
           - docker
           - docker-compose
-  roles:
-    - role: geerlingguy.docker
+        state: present
+        update_cache: true
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
