@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  freeipa:
+    image: freeipa/freeipa-server:centos-8-stream
+    hostname: sanctuary
+    domainname: serv.sanctuary.local
+    container_name: freeipa-dev
+    ports:
+      - 80:80
+      - 443:443
+      - 389:389
+      - 636:636
+      - 88:88
+      - 464:464
+      - 88:88/udp
+      - 464:464/udp
+      - 123:123/udp
+    dns:
+      - 10.64.0.1
+      - 1.1.1.1
+      - 1.0.0.1
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    environment:
+      IPA_SERVER_HOSTNAME: serv.sanctuary.local
+      IPA_SERVER_IP: 192.168.1.100
+      TZ: "Europe/Paris"
+    command:
+      - -U
+      - --domain=sanctuary.local
+      - --realm=sanctuary.local
+      - --admin-password=pass
+      - --http-pin=pass
+      - --dirsrv-pin=pass
+      - --ds-password=pass
+      - --no-dnssec-validation
+      - --no-host-dns
+      - --setup-dns
+      - --auto-forwarders
+      - --allow-zone-overlap
+      - --unattended
+    cap_add:
+      - SYS_TIME
+      - NET_ADMIN
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./data:/data
+      - ./logs:/var/logs
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.lo.disable_ipv6=0
+    security_opt:
+      - "seccomp:unconfined"
+    labels:
+      - dev
