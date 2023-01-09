@@ -37,3 +37,11 @@
         owner: ubuntu
         group: ubuntu
         mode: '0644'
+
+    - name: Copy freeipa.service
+      ansible.builtin.copy:
+        src: freeipa.service
+        dest: /etc/systemd/system/freeipa.service
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
