@@ -35,3 +35,19 @@
         owner: ubuntu
         group: ubuntu
         mode: '0644'
+
+    - name: Copy freeipa.packops.local.yaml
+      ansible.builtin.copy:
+        src: freeipa.packops.local.yaml
+        dest: /etc/docker-compose/freeipa.packops.local.yaml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Copy freeipa-pwd-portal.yaml
+      ansible.builtin.copy:
+        src: freeipa-pwd-portal.yaml
+        dest: /etc/docker-compose/freeipa-pwd-portal.yaml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
