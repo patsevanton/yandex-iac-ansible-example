@@ -13,8 +13,8 @@ services:
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
       - "datavol:/data"
-      - "./server/ipa-volume:/root/shared"
-      - "./server/config:/root/pw-portal/config"
+#      - "./server/ipa-volume:/root/shared"
+#      - "./server/config:/root/pw-portal/config"
     command:
       - --ip-address=172.16.1.10
       - "--domain=local.xetus.com"
