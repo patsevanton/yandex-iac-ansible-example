@@ -31,10 +31,10 @@ services:
       - -U
       - --domain=sanctuary.local
       - --realm=sanctuary.local
-      - --admin-password=pass
-      - --http-pin=pass
-      - --dirsrv-pin=pass
-      - --ds-password=pass
+      - --admin-password=YOURPASSWORD
+      - --http-pin=YOURPASSWORD
+      - --dirsrv-pin=YOURPASSWORD
+      - --ds-password=YOURPASSWORD
       - --no-dnssec-validation
       - --no-host-dns
       - --setup-dns
