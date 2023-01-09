@@ -1,5 +1,5 @@
----
 version: '3.7'
+
 services:
   freeipa:
     image: freeipa/freeipa-server:centos-8
@@ -32,7 +32,6 @@ services:
       - --no-host-dns
       - --unattended
     ports:
-
       - "80:80"
       - "443:443"
       - "389:389"
