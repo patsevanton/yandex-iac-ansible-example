@@ -9,15 +9,15 @@ services:
     domainname: home.lan
     privileged: true
     ports:
-      - "8097:80" # HTTP
-      - "9444:443" # HTTPS
-      - "389:389" # LDAP
-      - "636:636" # LDAPS
-      - "88:88" # Kerberos
-      - "464:464" # Kerberos
-      - "88:88/udp" # Kerberos
-      - "464:464/udp" # Kerberos
       - "123:123/udp" # ntp
+      - "389:389" # LDAP
+      - "464:464" # Kerberos
+      - "464:464/udp" # Kerberos
+      - "636:636" # LDAPS
+      - "8097:80" # HTTP
+      - "88:88" # Kerberos
+      - "88:88/udp" # Kerberos
+      - "9444:443" # HTTPS
     environment:
       - IPA_SERVER_HOSTNAME=freeipa.home.lan
       - IPA_SERVER_INSTALL_OPTS=-U -r HOME.LAN
