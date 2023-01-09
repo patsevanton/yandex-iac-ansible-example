@@ -3,7 +3,7 @@ version: '2'
 services:
   freeipa:
     image: freeipa/freeipa-server:fedora-25
-    container_name: freeipa
+    container_name: freeipa4
     restart: unless-stopped
     hostname: freeipa.local.xetus.com
     domainname: freeipa.local.xetus.com

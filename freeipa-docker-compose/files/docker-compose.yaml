@@ -3,7 +3,7 @@ version: "3.8"
 services:
   freeipa:
     image: freeipa/freeipa-server:centos-8-stream
-    container_name: freeipa
+    container_name: freeipa1
     restart: unless-stopped
     hostname: sanctuary
     domainname: serv.sanctuary.local
