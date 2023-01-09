@@ -28,10 +28,19 @@
         state: directory
         owner: ubuntu
         group: ubuntu
+
     - name: Copy docker-compose.yaml
       ansible.builtin.copy:
         src: docker-compose.yaml
         dest: /etc/docker-compose/docker-compose.yaml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Copy docker-compose2.3.yaml
+      ansible.builtin.copy:
+        src: docker-compose2.3.yaml
+        dest: /etc/docker-compose/docker-compose2.3.yaml
         owner: ubuntu
         group: ubuntu
         mode: '0644'
