@@ -13,8 +13,8 @@ services:
       - 443:443     # HTTPS
       - 464:464     # kerberos
       - 464:464/udp # kerberos
-      - 53:53       # bind
-      - 53:53/udp   # bind
+#      - 53:53       # bind
+#      - 53:53/udp   # bind
       - 636:636     # LDAPS
       - 80:80       # HTTP
       - 88:88       # kerberos
