@@ -7,15 +7,17 @@ services:
     domainname: serv.sanctuary.local
     container_name: freeipa-dev
     ports:
-      - 80:80
-      - 443:443
-      - 389:389
-      - 636:636
-      - 88:88
-      - 464:464
-      - 88:88/udp
-      - 464:464/udp
-      - 123:123/udp
+      - 123:123/udp # ntp
+      - 389:389     # LDAP
+      - 443:443     # HTTPS
+      - 464:464     # kerberos
+      - 464:464/udp # kerberos
+      - 53:53       # bind
+      - 53:53/udp   # bind
+      - 636:636     # LDAPS
+      - 80:80       # HTTP
+      - 88:88       # kerberos
+      - 88:88/udp   # kerberos
     dns:
       - 10.64.0.1
       - 1.1.1.1
@@ -26,7 +28,7 @@ services:
     environment:
       IPA_SERVER_HOSTNAME: serv.sanctuary.local
       IPA_SERVER_IP: 192.168.1.100
-      TZ: "Europe/Paris"
+      TZ: "Europe/Moscow"
     command:
       - -U
       - --domain=sanctuary.local
