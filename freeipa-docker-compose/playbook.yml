@@ -30,14 +30,6 @@
         group: ubuntu
         mode: '0644'
 
-    - name: Copy docker-compose2.3.yaml
-      ansible.builtin.copy:
-        src: docker-compose2.3.yaml
-        dest: /etc/docker-compose/docker-compose2.3.yaml
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
-
     - name: Copy freeipa.packops.local.yaml
       ansible.builtin.copy:
         src: freeipa.packops.local.yaml
