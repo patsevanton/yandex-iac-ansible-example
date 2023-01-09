@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   freeipa:
-    image: freeipa/freeipa-server:centos-8-stream
+    image: freeipa/freeipa-server:centos-8-stream-4.9.10
     container_name: freeipa
     restart: unless-stopped
     hostname: freeipa
