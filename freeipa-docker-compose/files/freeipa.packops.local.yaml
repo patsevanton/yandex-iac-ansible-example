@@ -3,23 +3,23 @@ version: '3.7'
 services:
   freeipa:
     image: freeipa/freeipa-server:centos-8-stream
-    container_name: freeipa3
+    container_name: freeipa
     restart: unless-stopped
     hostname: freeipa.packops.local
-#    ports:
-#      - "80:80"
-#      - "443:443"
-#      - "389:389"
-#      - "636:636"
-#      - "88:88"
-#      - "464:464"
-#      - "88:88/udp"
-#      - "464:464/udp"
-#      - "123:123/udp"
-#      - "7389:7389"
-#      - "9443:9443"
-#      - "9444:9444"
-#      - "9445:9445"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "389:389"
+      - "636:636"
+      - "88:88"
+      - "464:464"
+      - "88:88/udp"
+      - "464:464/udp"
+      - "123:123/udp"
+      - "7389:7389"
+      - "9443:9443"
+      - "9444:9444"
+      - "9445:9445"
     environment:
       IPA_SERVER_HOSTNAME: freeipa.packops.local
       TZ: "Europe/Moscow"

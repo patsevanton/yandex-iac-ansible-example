@@ -3,7 +3,7 @@ version: '2'
 services:
   freeipa:
     image: freeipa/freeipa-server:fedora-25
-    container_name: freeipa4
+    container_name: freeipa
     restart: unless-stopped
     hostname: freeipa.local.xetus.com
     domainname: freeipa.local.xetus.com
@@ -37,10 +37,10 @@ services:
     domainname: freeipa
     extra_hosts:
       - "freeipa.local.xetus.com:172.16.1.10"
-#    ports:
-#      - '8888:8888/tcp'
-#      - '8888:8888/udp'
-#      - '9443:9443/tcp'
+    ports:
+      - '8888:8888/tcp'
+      - '8888:8888/udp'
+      - '9443:9443/tcp'
     volumes:
       - "./server/nginx/nginx.conf:/etc/nginx/nginx.conf"
       - "./server/nginx/nginx.crt:/etc/nginx/ssl/nginx.crt"
