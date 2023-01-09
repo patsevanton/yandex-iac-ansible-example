@@ -20,7 +20,6 @@ services:
       - 88:88
       - 88:88/udp
     dns:
-      - 10.64.0.1
       - 1.1.1.1
       - 1.0.0.1
     tty: true
@@ -30,19 +29,19 @@ services:
       IPA_SERVER_IP: 192.168.1.100
       TZ: "Europe/Moscow"
     command:
-      - -U
-      - --domain=sanctuary.local
-      - --realm=sanctuary.local
       - --admin-password=YOURPASSWORD
-      - --http-pin=YOURPASSWORD
+      - --allow-zone-overlap
+      - --auto-forwarders
       - --dirsrv-pin=YOURPASSWORD
+      - --domain=sanctuary.local
       - --ds-password=YOURPASSWORD
+      - --http-pin=YOURPASSWORD
       - --no-dnssec-validation
       - --no-host-dns
+      - --realm=sanctuary.local
       - --setup-dns
-      - --auto-forwarders
-      - --allow-zone-overlap
       - --unattended
+      - -U
     cap_add:
       - SYS_TIME
       - NET_ADMIN

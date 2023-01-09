@@ -17,24 +17,21 @@ services:
       - 80:80
       - 88:88
       - 88:88/udp
-      - 9443:9443
-      - 9444:9444
-      - 9445:9445
     tty: true
     stdin_open: true
     environment:
       IPA_SERVER_HOSTNAME: freeipa.packops.local
       TZ: "Europe/Moscow"
     command:
-      - -U
-      - --domain=packops.local
-      - --realm=packops.local
-      - --http-pin=YOURPASSWORD
-      - --dirsrv-pin=YOURPASSWORDe
-      - --ds-password=YOURPASSWORD
       - --admin-password=YOURPASSWORD
+      - --dirsrv-pin=YOURPASSWORDe
+      - --domain=packops.local
+      - --ds-password=YOURPASSWORD
+      - --http-pin=YOURPASSWORD
       - --no-host-dns
+      - --realm=packops.local
       - --unattended
+      - -U
     cap_add:
       - SYS_TIME
       - NET_ADMIN
