@@ -16,9 +16,9 @@ resource "local_file" "inventory_yml" {
   content = templatefile("inventory_yml.tpl",
     {
       ssh_user           = var.ssh_user
-      hostname           = var.hostname
       freeipa_public_ip  = module.freeipa.external_ip[0]
-      letsencrypt_domain = var.letsencrypt_domain
+      freeipa_password   = var.freeipa_password
+      freeipa_fqdn       = var.freeipa_fqdn
     }
   )
   filename = "inventory.yml"

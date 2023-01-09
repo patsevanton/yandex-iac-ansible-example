@@ -6,7 +6,7 @@ services:
     container_name: freeipa
     restart: unless-stopped
     hostname: freeipa
-    domainname: freeipa.apatsev.org.ru
+    domainname: {{freeipa_fqdn}}
     ports:
       - 123:123/udp
       - 389:389
@@ -25,16 +25,20 @@ services:
     tty: true
     stdin_open: true
     environment:
-      IPA_SERVER_HOSTNAME: freeipa.apatsev.org.ru
+      IPA_SERVER_HOSTNAME: {{freeipa_fqdn}}
       TZ: "Europe/Moscow"
     command:
-      - --admin-password=YOURPASSWORD
-      - --dirsrv-pin=YOURPASSWORD
+      - --admin-password={{freeipa_password}}
+      - --allow-zone-overlap
+      - --auto-forwarders
+      - --dirsrv-pin={{freeipa_password}}
       - --domain=apatsev.org.ru
-      - --ds-password=YOURPASSWORD
-      - --http-pin=YOURPASSWORD
+      - --ds-password={{freeipa_password}}
+      - --http-pin={{freeipa_password}}
+      - --no-dnssec-validation
       - --no-host-dns
       - --realm=apatsev.org.ru
+      - --setup-dns
       - --unattended
       - -U
     cap_add:
@@ -43,7 +47,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - freeipavol:/data
+      - freeipavolume:/data
+      - freeipavolumelogs:/var/logs
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv6.conf.lo.disable_ipv6=0
@@ -51,4 +56,5 @@ services:
       - "seccomp:unconfined"
 
 volumes:
-  freeipavol:
+  freeipavolume:
+  freeipavolumelogs:

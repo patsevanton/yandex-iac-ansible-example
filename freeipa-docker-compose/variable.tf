@@ -55,13 +55,12 @@ variable "disk_type" {
   default     = "network-ssd"
 }
 
-variable "hostname" {
+variable "freeipa_password" {
   type        = string
-  description = "hostname"
+  description = "freeipa_password"
 }
 
-variable "letsencrypt_domain" {
+variable "freeipa_fqdn" {
   type        = string
-  description = "letsencrypt_domain"
-  default     = "sslip.io"
+  description = "freeipa_fqdn"
 }
