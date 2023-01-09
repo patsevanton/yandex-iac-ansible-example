@@ -22,14 +22,6 @@
         owner: ubuntu
         group: ubuntu
 
-#    - name: Copy docker-compose.yaml
-#      ansible.builtin.copy:
-#        src: docker-compose.yaml
-#        dest: /etc/docker-compose/docker-compose.yaml
-#        owner: ubuntu
-#        group: ubuntu
-#        mode: '0644'
-
     - name: Create docker-compose.yaml
       template:
         src: "docker-compose.yaml.j2"
@@ -37,14 +29,6 @@
         owner: ubuntu
         group: ubuntu
         mode: '0644'
-
-#    - name: Copy freeipa.packops.local.yaml
-#      ansible.builtin.copy:
-#        src: freeipa.packops.local.yaml
-#        dest: /etc/docker-compose/freeipa.packops.local.yaml
-#        owner: ubuntu
-#        group: ubuntu
-#        mode: '0644'
 
     - name: Create freeipa.packops.local.yaml
       template:
