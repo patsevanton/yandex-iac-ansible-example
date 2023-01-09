@@ -2,7 +2,8 @@ version: '3.7'
 
 services:
   freeipa:
-    image: freeipa/freeipa-server:centos-8
+    image: freeipa/freeipa-server:centos-8-stream
+    container_name: freeipa
     restart: unless-stopped
     hostname: freeipa.packops.local
     ports:
@@ -21,7 +22,7 @@ services:
       - "9445:9445"
     environment:
       IPA_SERVER_HOSTNAME: freeipa.packops.local
-      TZ: "Asia/Tehran"
+      TZ: "Europe/Moscow"
     tty: true
     stdin_open: true
     cap_add:
