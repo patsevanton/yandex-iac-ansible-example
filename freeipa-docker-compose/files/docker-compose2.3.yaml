@@ -1,0 +1,45 @@
+version: "2.3"
+
+services:
+  FreeIPAServer:
+    image: freeipa/freeipa-server
+    restart: always
+    hostname: freeipa
+    domainname: home.lan
+    privileged: true
+
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /media/HDD/freeipa.home.lan/data:/data:Z
+
+    ports:
+      - "8097:80" # HTTP
+      - "9444:443" # HTTPS
+      - "389:389" # LDAP
+      - "636:636" # LDAPS
+      - "88:88" # Kerberos
+      - "464:464" # Kerberos
+      - "88:88/udp" # Kerberos
+      - "464:464/udp" # Kerberos
+      - "123:123/udp" # ntp
+
+    environment:
+      - IPA_SERVER_HOSTNAME=freeipa.home.lan
+      - IPA_SERVER_INSTALL_OPTS=-U -r HOME.LAN
+      - IPA_SERVER_IP=192.168.1.33
+      - PASSWORD=password # at least 8 characters
+
+      - VIRTUAL_PROTO=https
+      - VIRTUAL_HOST=freeipa.home.lan
+      - VIRTUAL_PORT=443
+
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+
+    networks:
+      - reverse-proxy
+
+networks:
+  reverse-proxy:
+    external:
+      name: reverse-proxy
