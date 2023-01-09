@@ -8,17 +8,17 @@ services:
     hostname: sanctuary
     domainname: serv.sanctuary.local
     ports:
-      - 123:123/udp # ntp
-      - 389:389     # LDAP
-      - 443:443     # HTTPS
-      - 464:464     # kerberos
-      - 464:464/udp # kerberos
-#      - 53:53       # bind
-#      - 53:53/udp   # bind
-      - 636:636     # LDAPS
-      - 80:80       # HTTP
-      - 88:88       # kerberos
-      - 88:88/udp   # kerberos
+      - 123:123/udp
+      - 389:389
+      - 443:443
+      - 464:464
+      - 464:464/udp
+#      - 53:53
+#      - 53:53/udp
+      - 636:636
+      - 80:80
+      - 88:88
+      - 88:88/udp
     dns:
       - 10.64.0.1
       - 1.1.1.1
@@ -56,8 +56,6 @@ services:
       - net.ipv6.conf.lo.disable_ipv6=0
     security_opt:
       - "seccomp:unconfined"
-    labels:
-      - dev
 
 volumes:
   freeipavolume:

@@ -7,35 +7,24 @@ services:
     restart: unless-stopped
     hostname: freeipa.packops.local
     ports:
-      - "123:123/udp"
-      - "389:389"
-      - "443:443"
-      - "464:464"
-      - "464:464/udp"
-      - "636:636"
-      - "7389:7389"
-      - "80:80"
-      - "88:88"
-      - "88:88/udp"
-      - "9443:9443"
-      - "9444:9444"
-      - "9445:9445"
+      - 123:123/udp
+      - 389:389
+      - 443:443
+      - 464:464
+      - 464:464/udp
+      - 636:636
+      - 7389:7389
+      - 80:80
+      - 88:88
+      - 88:88/udp
+      - 9443:9443
+      - 9444:9444
+      - 9445:9445
+    tty: true
+    stdin_open: true
     environment:
       IPA_SERVER_HOSTNAME: freeipa.packops.local
       TZ: "Europe/Moscow"
-    tty: true
-    stdin_open: true
-    cap_add:
-      - NET_ADMIN
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - freeipavol:/data
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
-      - net.ipv6.conf.lo.disable_ipv6=0
-    security_opt:
-      - "seccomp:unconfined"
     command:
       - -U
       - --domain=packops.local
@@ -46,6 +35,18 @@ services:
       - --admin-password=YOURPASSWORD
       - --no-host-dns
       - --unattended
+    cap_add:
+      - SYS_TIME
+      - NET_ADMIN
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - freeipavol:/data
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.lo.disable_ipv6=0
+    security_opt:
+      - "seccomp:unconfined"
 
 volumes:
   freeipavol:
