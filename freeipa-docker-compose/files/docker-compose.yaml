@@ -5,8 +5,8 @@ services:
     image: freeipa/freeipa-server:centos-8-stream
     container_name: freeipa
     restart: unless-stopped
-    hostname: sanctuary
-    domainname: serv.sanctuary.local
+    hostname: freeipa
+    domainname: freeipa.apatsev.org.ru
     ports:
       - 123:123/udp
       - 389:389
@@ -21,24 +21,24 @@ services:
       - 88:88/udp
     dns:
       - 1.1.1.1
-      - 1.0.0.1
+      - 8.8.8.8
     tty: true
     stdin_open: true
     environment:
-      IPA_SERVER_HOSTNAME: serv.sanctuary.local
-      IPA_SERVER_IP: 192.168.1.100
+      IPA_SERVER_HOSTNAME: freeipa.apatsev.org.ru
+#      IPA_SERVER_IP: 192.168.1.100
       TZ: "Europe/Moscow"
     command:
       - --admin-password=YOURPASSWORD
       - --allow-zone-overlap
       - --auto-forwarders
       - --dirsrv-pin=YOURPASSWORD
-      - --domain=sanctuary.local
+      - --domain=apatsev.org.ru
       - --ds-password=YOURPASSWORD
       - --http-pin=YOURPASSWORD
       - --no-dnssec-validation
       - --no-host-dns
-      - --realm=sanctuary.local
+      - --realm=apatsev.org.ru
       - --setup-dns
       - --unattended
       - -U
