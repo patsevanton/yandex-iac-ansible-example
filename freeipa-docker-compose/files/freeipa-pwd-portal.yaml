@@ -16,13 +16,13 @@ services:
 #      - "./server/ipa-volume:/root/shared"
 #      - "./server/config:/root/pw-portal/config"
     command:
-      - --ip-address=172.16.1.10
-      - "--domain=local.xetus.com"
-      - "--realm=LOCAL.XETUS.COM"
-      - "--ds-password=testabc123"
       - "--admin-password=testabc123"
-      - --setup-dns
+      - "--domain=local.xetus.com"
+      - "--ds-password=testabc123"
+      - "--realm=LOCAL.XETUS.COM"
       - --auto-forwarders
+      - --ip-address=172.16.1.10
+      - --setup-dns
       - --unattended
     environment:
       IPA_SERVER_IP: "172.16.1.10"
