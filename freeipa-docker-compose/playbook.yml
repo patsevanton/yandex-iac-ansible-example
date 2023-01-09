@@ -29,6 +29,7 @@
         owner: ubuntu
         group: ubuntu
         mode: '0644'
+      register: docker_compose
 
     - name: Create freeipa.packops.local.yaml
       template:
@@ -45,3 +46,12 @@
         owner: ubuntu
         group: ubuntu
         mode: '0644'
+      register: freeipa_service
+
+    - name: Restart service freeipa
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: freeipa
+      when: docker_compose.changed or freeipa_service
+
