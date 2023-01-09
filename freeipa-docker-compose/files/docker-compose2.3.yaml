@@ -3,11 +3,11 @@ version: "2.3"
 services:
   freeipa:
     image: freeipa/freeipa-server
+    container_name: freeipa
     restart: unless-stopped
     hostname: freeipa
     domainname: home.lan
     privileged: true
-
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /media/HDD/freeipa.home.lan/data:/data:Z

@@ -1,25 +1,10 @@
 version: '2'
 
-#
-# TODO:
-#
-#
-# 1. allow things (like realm, etc..) to be configurable in an .env file
-# 2. check fi you can set the freeipa hostname to the IP address so that
-# developers don't need to muck around with their /etc/hosts file
-#
-
 services:
-  smtp:
-    container_name: mailhog
-    image: "mailhog/mailhog:v1.0.0"
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-
   freeipa:
     image: freeipa/freeipa-server:fedora-25
     container_name: freeipa
+    restart: unless-stopped
     hostname: freeipa.local.xetus.com
     domainname: freeipa.local.xetus.com
     extra_hosts:

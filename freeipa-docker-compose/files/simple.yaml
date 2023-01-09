@@ -2,8 +2,8 @@ version: "3"
 
 services:
   "central-ipa":
-    container_name: "ipa-central"
     image: "docker.io/freeipa/freeipa-server:${FREEIPA_VERSION:-centos-8-stream}"
+    container_name: "ipa-central"
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
       - "./ipa-central/data:/data"
