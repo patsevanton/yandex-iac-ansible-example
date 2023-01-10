@@ -1,0 +1,57 @@
+- hosts: ipaserver
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+  roles:
+    - role: geerlingguy.docker
+  post_tasks:
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: reset ssh connection to allow user changes to affect ansible user
+      ansible.builtin.meta:
+        reset_connection
+    - name: Create directory /etc/docker-compose
+      ansible.builtin.file:
+        path: /etc/docker-compose
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Create docker-compose.yaml
+      template:
+        src: "docker-compose.yaml.j2"
+        dest: /etc/docker-compose/docker-compose.yaml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      register: docker_compose
+
+    - name: Create freeipa.packops.local.yaml
+      template:
+        src: "freeipa.packops.local.yaml.j2"
+        dest: /etc/docker-compose/freeipa.packops.local.yaml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Copy freeipa.service
+      ansible.builtin.copy:
+        src: freeipa.service
+        dest: /etc/systemd/system/freeipa.service
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      register: freeipa_service
+
+    - name: Restart service freeipa
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: freeipa
+      when: docker_compose.changed or freeipa_service
+
