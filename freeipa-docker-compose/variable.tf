@@ -64,3 +64,8 @@ variable "freeipa_fqdn" {
   type        = string
   description = "freeipa_fqdn"
 }
+
+variable "freeipa_domain" {
+  type        = string
+  description = "freeipa_domain"
+}
