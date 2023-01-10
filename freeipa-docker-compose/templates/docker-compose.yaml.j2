@@ -32,12 +32,12 @@ services:
       - --allow-zone-overlap
       - --auto-forwarders
       - --dirsrv-pin={{freeipa_password}}
-      - --domain=apatsev.org.ru
+      - --domain={{freeipa_domain}}
       - --ds-password={{freeipa_password}}
       - --http-pin={{freeipa_password}}
       - --no-dnssec-validation
       - --no-host-dns
-      - --realm=apatsev.org.ru
+      - --realm={{freeipa_domain}}
       - --setup-dns
       - --unattended
       - -U

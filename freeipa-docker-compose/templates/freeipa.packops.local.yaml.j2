@@ -30,11 +30,11 @@ services:
     command:
       - --admin-password={{freeipa_password}}
       - --dirsrv-pin={{freeipa_password}}
-      - --domain=apatsev.org.ru
+      - --domain={{freeipa_domain}}
       - --ds-password={{freeipa_password}}
       - --http-pin={{freeipa_password}}
       - --no-host-dns
-      - --realm=apatsev.org.ru
+      - --realm={{freeipa_domain}}
       - --unattended
       - -U
     cap_add:
