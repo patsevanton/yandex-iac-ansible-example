@@ -21,7 +21,7 @@ services:
       - 88:88/udp
     dns:
       - ns1.yandexcloud.net
-      - 1.1.1.1
+      - ns2.yandexcloud.net
     tty: true
     stdin_open: true
     environment:
@@ -41,9 +41,9 @@ services:
       - --setup-dns
       - --unattended
       - -U
-      #- --external-ca
-      - --external_cert_file=/root/certificate.crt
-      - --external_ca_file=/ca/ca_cert.crt
+      - --external-ca
+      #- --external_cert_file=/root/certificate.crt
+      #- --external_ca_file=/ca/ca_cert.crt
     cap_add:
       - SYS_TIME
       - NET_ADMIN
@@ -51,7 +51,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /var/lib/freeipa:/data
-      - ./log:/var/logs
+      - ./log:/var/log/
       - /etc/docker-compose/ca:/ca
       - /etc/docker-compose/freeiparoot:/root
     sysctls:
