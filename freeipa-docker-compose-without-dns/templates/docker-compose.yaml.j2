@@ -31,9 +31,6 @@ services:
       - --http-pin={{freeipa_password}}
       - --realm={{freeipa_domain}}
       - --unattended
-      - --external-ca
-      #- --external_cert_file=/root/certificate.crt
-      #- --external_ca_file=/ca/ca_cert.crt
     cap_add:
       - SYS_TIME
       - NET_ADMIN
