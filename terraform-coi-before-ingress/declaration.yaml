@@ -1,7 +1,15 @@
 spec:
   containers:
-    - image: cr.yandex/yc/demo/coi:v1
+    - name: nginx
+      image: cr.yandex/mirror/nginx
       securityContext:
         privileged: false
-      stdin: false
       tty: false
+      volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx_conf
+  restartPolicy: Always
+  volumes:
+    - name: nginx_conf
+      hostPath:
+        path: /nginx.conf

@@ -1,8 +1,37 @@
 #cloud-config
-ssh_pwauth: no
-users:
-  - name: yc-user
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    shell: /bin/bash
-    ssh_authorized_keys:
-      - "<публичный SSH-ключ>"
+write_files:
+  - content: |
+      user  nginx;
+      worker_processes auto;
+      
+      error_log  /var/log/nginx/error.log warn;
+      pid        /var/run/nginx.pid;
+      
+      events {
+        worker_connections  1024;
+      }
+      
+      stream {
+        upstream server1 {
+          server 192.0.2.125:443;
+        }
+        
+        upstream server2 {
+          server 192.0.2.126:443;
+        }
+        
+        map $ssl_preread_server_name $upstream {
+          hostnames;
+          .server1.example.com server1;
+          .server2.example.com server2;
+        }
+        
+        server {
+          listen 443;
+          listen [::]:443;
+          
+          ssl_preread on;
+          proxy_pass $upstream;
+        }
+      }
+    path: /etc/nginx/nginx.conf
