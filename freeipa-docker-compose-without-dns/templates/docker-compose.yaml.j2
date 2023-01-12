@@ -5,7 +5,7 @@ services:
     image: freeipa/freeipa-server:fedora-37-4.10.1
     container_name: freeipa
     restart: unless-stopped
-    hostname: freeipa
+    hostname: {{freeipa_fqdn}}
     domainname: {{freeipa_fqdn}}
     ports:
       - 123:123/udp
@@ -13,19 +13,13 @@ services:
       - 443:443
       - 464:464
       - 464:464/udp
-#      - 53:53
-#      - 53:53/udp
       - 636:636
       - 80:80
       - 88:88
       - 88:88/udp
-    dns:
-      - ns1.yandexcloud.net
-      - 1.1.1.1
     tty: true
     stdin_open: true
     environment:
-      IPA_SERVER_HOSTNAME: {{freeipa_fqdn}}
       TZ: "Europe/Moscow"
     command:
       - --admin-password={{freeipa_password}}
@@ -35,7 +29,6 @@ services:
       - --http-pin={{freeipa_password}}
       - --realm={{freeipa_domain}}
       - --unattended
-      - -U
     cap_add:
       - SYS_TIME
       - NET_ADMIN
@@ -46,5 +39,3 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv6.conf.lo.disable_ipv6=0
-    security_opt:
-      - "seccomp:unconfined"
