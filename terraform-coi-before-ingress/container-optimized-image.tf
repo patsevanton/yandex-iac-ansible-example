@@ -2,21 +2,27 @@ data "yandex_compute_image" "container-optimized-image" {
   family = "container-optimized-image"
 }
 
-resource "yandex_iam_service_account" "sa-compute-admin" {
+resource "yandex_iam_service_account" "coi-sa" {
   folder_id = var.yc_folder_id
-  name      = "sa-compute-admin"
+  name      = "coi-sa"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "sa-compute-admin-permissions" {
+resource "yandex_resourcemanager_folder_iam_member" "coi-sa-compute-admin-permissions" {
   folder_id = var.yc_folder_id
   role      = "compute.admin"
-  member    = "serviceAccount:${yandex_iam_service_account.sa-compute-admin.id}"
+  member    = "serviceAccount:${yandex_iam_service_account.coi-sa.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "coi-vpc-publicAdmin-permissions" {
+  folder_id = var.yc_folder_id
+  role      = "vpc.publicAdmin"
+  member    = "serviceAccount:${yandex_iam_service_account.coi-sa.id}"
 }
 
 resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
   name = "autoscaled-ig-with-coi"
   folder_id = var.yc_folder_id
-  service_account_id = yandex_iam_service_account.sa-compute-admin.id
+  service_account_id = yandex_iam_service_account.coi-sa.id
   instance_template {
     platform_id = "standard-v3"
     resources {
@@ -41,7 +47,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
       docker-container-declaration = file("${path.module}/declaration.yaml")
       user-data = file("${path.module}/cloud_config.yaml")
     }
-    service_account_id = yandex_iam_service_account.sa-compute-admin.id
+    service_account_id = yandex_iam_service_account.coi-sa.id
   }
 
   scale_policy {
@@ -57,7 +63,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
   }
 
   allocation_policy {
-    zones = ["ru-central1-a", "ru-central1-b", "ru-central1-c"]
+    zones = ["ru-central1-a"]
   }
 
   deploy_policy {
