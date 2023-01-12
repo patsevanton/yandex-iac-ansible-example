@@ -1,57 +1,101 @@
 - hosts: ipaserver
   become: true
+  vars:
+    - server_hostname: apatsev.org.ru
+    - key_size: 4096
+    - key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
+    - country_name: RU
+    - email_address: admin@apatsev.org.ru
+    - organization_name: APATSEV
+
   pre_tasks:
     - name: Update apt cache.
       apt: update_cache=true cache_valid_time=600
       when: ansible_os_family == 'Debian'
-  roles:
-    - role: geerlingguy.docker
-  post_tasks:
-    - name: add user ubuntu to docker group
-      ansible.builtin.user:
-        name: ubuntu
-        groups: docker
-        append: yes
-    - name: reset ssh connection to allow user changes to affect ansible user
-      ansible.builtin.meta:
-        reset_connection
+
     - name: Create directory /etc/docker-compose
       ansible.builtin.file:
         path: /etc/docker-compose
         state: directory
-        owner: ubuntu
-        group: ubuntu
+        owner: "{{ ssh_user }}"
+        group: "{{ ssh_user }}"
+
+    - name: Create directory /etc/docker-compose/ca
+      ansible.builtin.file:
+        path: /etc/docker-compose/ca
+        state: directory
+        owner: "{{ ssh_user }}"
+        group: "{{ ssh_user }}"
+
+    - name: Create directory /etc/docker-compose/freeiparoot
+      ansible.builtin.file:
+        path: /etc/docker-compose/freeiparoot
+        state: directory
+        owner: "{{ ssh_user }}"
+        group: "{{ ssh_user }}"
+
+  roles:
+    - role: geerlingguy.docker
+  post_tasks:
+
+    #### Create docker-compose freeipa
+
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: "{{ ssh_user }}"
+        groups: docker
+        append: yes
+
+    - name: reset ssh connection to allow user changes to affect ansible user
+      ansible.builtin.meta:
+        reset_connection
 
     - name: Create docker-compose.yaml
       template:
         src: "docker-compose.yaml.j2"
         dest: /etc/docker-compose/docker-compose.yaml
-        owner: ubuntu
-        group: ubuntu
+        owner: "{{ ssh_user }}"
+        group: "{{ ssh_user }}"
         mode: '0644'
       register: docker_compose
 
-    - name: Create freeipa.packops.local.yaml
-      template:
-        src: "freeipa.packops.local.yaml.j2"
-        dest: /etc/docker-compose/freeipa.packops.local.yaml
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
+    - name: check for /etc/docker-compose/freeiparoot/ipa.csr
+      stat: path=/etc/docker-compose/freeiparoot/ipa.csr
+      register: ipa_csr
 
-    - name: Copy freeipa.service
-      ansible.builtin.copy:
-        src: freeipa.service
-        dest: /etc/systemd/system/freeipa.service
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
-      register: freeipa_service
+    - name: fail if ipa.csr not exists on host
+      fail: msg="Create certificate and run again"
+      when: not ipa_csr.stat.exists
 
-    - name: Restart service freeipa
-      ansible.builtin.systemd:
-        state: restarted
-        daemon_reload: yes
-        name: freeipa
-      when: docker_compose.changed or freeipa_service
+#### Generate certificate CA
+    - name: Generate an OpenSSL private key
+      community.crypto.openssl_privatekey:
+        path: "/etc/docker-compose/ca/privkey.pem"
+        size: "{{ key_size }}"
+        type: "{{ key_type }}"
+        backup: yes
+    - name: Generate an OpenSSL Certificate Signing Request with Subject information
+      community.crypto.openssl_csr:
+        path: "/etc/docker-compose/ca/request.csr"
+        privatekey_path: "/etc/docker-compose/ca/privkey.pem"
+        country_name: "{{ country_name }}"
+        organization_name: "{{ organization_name }}"
+        email_address: "{{ email_address }}"
+        common_name: "{{ freeipa_domain }}"
+        basic_constraints: "CA:TRUE"
+        basic_constraints_critical: yes
+    - name: Generate a Self Signed OpenSSL certificate
+      community.crypto.x509_certificate:
+        path: "/etc/docker-compose/ca/ca_cert.crt"
+        privatekey_path: "/etc/docker-compose/ca/privkey.pem"
+        csr_path: "/etc/docker-compose/ca/request.csr"
+        provider: selfsigned
 
+#### Use the CA to sign a certificate
+    - name: Generate an OpenSSL certificate signed with your own CA certificate
+      community.crypto.x509_certificate:
+        path: /etc/docker-compose/freeiparoot/certificate.crt
+        csr_path: /etc/docker-compose/freeiparoot/ipa.csr
+        ownca_path: /etc/docker-compose/ca/ca_cert.crt
+        ownca_privatekey_path: /etc/docker-compose/ca/privkey.pem
+        provider: ownca

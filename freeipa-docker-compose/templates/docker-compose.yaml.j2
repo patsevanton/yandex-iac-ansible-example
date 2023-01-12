@@ -5,16 +5,13 @@ services:
     image: freeipa/freeipa-server:fedora-37-4.10.1
     container_name: freeipa
     restart: unless-stopped
-    hostname: freeipa
-    domainname: {{freeipa_fqdn}}
+    hostname: {{freeipa_fqdn}}
     ports:
       - 123:123/udp
       - 389:389
       - 443:443
       - 464:464
       - 464:464/udp
-#      - 53:53
-#      - 53:53/udp
       - 636:636
       - 80:80
       - 88:88

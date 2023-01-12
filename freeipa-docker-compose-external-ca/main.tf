@@ -1,6 +1,6 @@
 module "freeipa" {
   source        = "git::https://github.com/patsevanton/terraform-yandex-compute.git?ref=v1.16.0"
-  image_family  = "ubuntu-2004-lts"
+  image_family  = var.family_images_linux
   subnet_id     = data.yandex_vpc_subnet.default-ru-central1-b.id
   zone          = data.yandex_vpc_subnet.default-ru-central1-b.zone
   name          = "freeipa"
@@ -10,8 +10,7 @@ module "freeipa" {
   preemptible   = true
   core_fraction = 50
   user          = var.ssh_user
-  ssh_pubkey    = "~/.ssh/id_ecdsa.pub"
-  private_key   = "~/.ssh/id_ecdsa"
+  nat_ip_address = var.nat_ip_address
 }
 
 resource "local_file" "inventory_yml" {

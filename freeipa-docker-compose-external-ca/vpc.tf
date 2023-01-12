@@ -13,10 +13,3 @@ data "yandex_vpc_subnet" "default-ru-central1-b" {
 data "yandex_vpc_subnet" "default-ru-central1-c" {
   name = "default-ru-central1-c"
 }
-
-resource "yandex_vpc_address" "freeipa_address" {
-  name = "freeipa"
-  external_ipv4_address {
-    zone_id = "ru-central1-b"
-  }
-}

@@ -69,3 +69,9 @@ variable "freeipa_domain" {
   type        = string
   description = "freeipa_domain"
 }
+
+variable "nat_ip_address" {
+  description = "Public IP address for instance to access the internet over NAT"
+  type        = string
+  default     = ""
+}

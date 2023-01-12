@@ -3,20 +3,16 @@
   vars:
     - server_hostname: apatsev.org.ru
     - key_size: 4096
-    - passphrase: # Set if you want passphrase
     - key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
     - country_name: RU
     - email_address: admin@apatsev.org.ru
-    - organization_name: APATSEV.ORG.RU
+    - organization_name: APATSEV
 
   pre_tasks:
     - name: Update apt cache.
       apt: update_cache=true cache_valid_time=600
       when: ansible_os_family == 'Debian'
-    - name: Disable SELinux
-      ansible.posix.selinux:
-        state: disabled
-      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
     - name: Create directory /etc/docker-compose
       ansible.builtin.file:
         path: /etc/docker-compose
@@ -63,15 +59,6 @@
         mode: '0644'
       register: docker_compose
 
-    - name: Copy freeipa.service
-      ansible.builtin.copy:
-        src: freeipa.service
-        dest: /etc/systemd/system/freeipa.service
-        owner: "{{ ssh_user }}"
-        group: "{{ ssh_user }}"
-        mode: '0644'
-      register: freeipa_service
-
     - name: check for /etc/docker-compose/freeiparoot/ipa.csr
       stat: path=/etc/docker-compose/freeiparoot/ipa.csr
       register: ipa_csr
@@ -96,6 +83,7 @@
         email_address: "{{ email_address }}"
         common_name: "{{ freeipa_domain }}"
         basic_constraints: "CA:TRUE"
+        basic_constraints_critical: yes
     - name: Generate a Self Signed OpenSSL certificate
       community.crypto.x509_certificate:
         path: "/etc/docker-compose/ca/ca_cert.crt"
