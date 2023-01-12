@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   freeipa:
-    image: freeipa/freeipa-server:centos-8-stream-4.9.10
+    image: freeipa/freeipa-server:fedora-37-4.10.1
     container_name: freeipa
     restart: unless-stopped
     hostname: freeipa
@@ -48,12 +48,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /var/lib/freeipa:/data
-      - freeipavolumelogs:/var/logs
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv6.conf.lo.disable_ipv6=0
     security_opt:
       - "seccomp:unconfined"
-
-volumes:
-  freeipavolumelogs:
