@@ -10,6 +10,7 @@ module "freeipa" {
   preemptible   = true
   core_fraction = 50
   user          = var.ssh_user
+  nat_ip_address = var.nat_ip_address
 }
 
 resource "local_file" "inventory_yml" {
