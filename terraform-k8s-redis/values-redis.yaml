@@ -1,3 +1,4 @@
+architecture: standalone
 master:
   service:
     type: ClusterIP
@@ -6,23 +7,16 @@ master:
     enabled: false
   resources:
     limits:
-      memory: 5000Mi
-      cpu: 2000m
+      memory: 3000Mi
+      cpu: 1000m
     requests:
-      memory: 5000Mi
-      cpu: 2000m
+      memory: 3000Mi
+      cpu: 1000m
 commonConfiguration: |-
   maxmemory 450mb
   maxmemory-policy allkeys-lru
 
 metrics:
   enabled: true
-  resources:
-    limits:
-      cpu: "1000m"
-      memory: "500Mi"
-    requests:
-      cpu: "1000m"
-      memory: "100Mi"
   serviceMonitor:
     enabled: true
