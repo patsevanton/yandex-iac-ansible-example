@@ -6,6 +6,14 @@ start_time=`date +%s`
 date1=$(date +"%s")
 
 echo ""
+echo "Install Kube-Prometheus-Stack"
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#helm repo update
+kubectl create namespace kube-prometheus-stack || true
+helm upgrade --install --wait -n kube-prometheus-stack kube-prometheus-stack \
+     prometheus-community/kube-prometheus-stack --version 43.3.1 -f values-kube-prometheus-stack.yaml
+
+echo ""
 echo "Install redis"
 helm repo add bitnami https://charts.bitnami.com/bitnami
 #helm repo update
