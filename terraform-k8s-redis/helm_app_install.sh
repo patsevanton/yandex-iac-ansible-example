@@ -15,10 +15,10 @@ helm upgrade --install --wait -n kube-prometheus-stack kube-prometheus-stack \
 
 echo ""
 echo "Install redis"
-helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add archive-full-bitnami https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 #helm repo update
 kubectl create namespace redis || true
-helm upgrade --install --wait -n redis redis bitnami/redis --version 17.4.2 -f values-redis.yaml
+helm upgrade --install --wait -n redis redis archive-full-bitnami/redis --version 17.4.2 -f values-redis.yaml
 
 end_time=`date +%s`
 date2=$(date +"%s")
