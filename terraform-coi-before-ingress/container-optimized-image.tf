@@ -13,23 +13,30 @@ resource "yandex_resourcemanager_folder_iam_member" "coi-compute-admin-permissio
   member    = "serviceAccount:${yandex_iam_service_account.coi-sa.id}"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "coi-admin-permissions" {
+resource "yandex_resourcemanager_folder_iam_member" "coi-vpc-admin-permissions" {
   folder_id = var.yc_folder_id
-  role      = "admin"
+  role      = "vpc.admin"
+  member    = "serviceAccount:${yandex_iam_service_account.coi-sa.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "coi-iam-serviceAccounts-user-permissions" {
+  folder_id = var.yc_folder_id
+  role      = "iam.serviceAccounts.user"
   member    = "serviceAccount:${yandex_iam_service_account.coi-sa.id}"
 }
 
 resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
-  name = "autoscaled-ig-with-coi"
-  folder_id = var.yc_folder_id
+  name               = "autoscaled-ig-with-coi"
+  folder_id          = var.yc_folder_id
   service_account_id = yandex_iam_service_account.coi-sa.id
   depends_on = [
     yandex_resourcemanager_folder_iam_member.coi-compute-admin-permissions,
-    yandex_resourcemanager_folder_iam_member.coi-admin-permissions,
+    yandex_resourcemanager_folder_iam_member.coi-vpc-admin-permissions,
+    yandex_resourcemanager_folder_iam_member.coi-iam-serviceAccounts-user-permissions,
   ]
   instance_template {
     service_account_id = yandex_iam_service_account.coi-sa.id
-    platform_id = "standard-v3"
+    platform_id        = "standard-v3"
     resources {
       cores  = 2
       memory = 2
@@ -44,13 +51,13 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
 
     network_interface {
       network_id = data.yandex_vpc_network.default.id
-      subnet_ids =[data.yandex_vpc_subnet.default-ru-central1-a.id]
-      nat = true
+      subnet_ids = [data.yandex_vpc_subnet.default-ru-central1-a.id]
+      nat        = true
     }
 
     metadata = {
       docker-container-declaration = file("${path.module}/declaration.yaml")
-      user-data = file("${path.module}/cloud_config.yaml")
+      user-data                    = file("${path.module}/cloud_config.yaml")
     }
 
   }
@@ -73,8 +80,8 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
 
   deploy_policy {
     max_unavailable = 1
-    max_creating = 1
-    max_expansion = 1
-    max_deleting = 1
+    max_creating    = 1
+    max_expansion   = 1
+    max_deleting    = 1
   }
 }
