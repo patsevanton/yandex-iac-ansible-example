@@ -14,7 +14,7 @@ resource "helm_release" "ingress_nginx" {
   name       = "ingress-nginx"
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
-  version    = "4.4.0"
+  version    = "4.4.2"
   wait       = true
   depends_on = [
     yandex_kubernetes_node_group.loki-k8s-node-group
@@ -22,7 +22,7 @@ resource "helm_release" "ingress_nginx" {
 
   set {
     name  = "controller.service.loadBalancerIP"
-    value = yandex_vpc_address.loki_address.external_ipv4_address[0].address
+    value = yandex_vpc_address.promgrafana_address.external_ipv4_address[0].address
   }
 
 }
