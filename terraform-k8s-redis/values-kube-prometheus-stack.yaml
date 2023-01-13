@@ -4,5 +4,5 @@ grafana:
     enabled: true
     ingressClassName: nginx
     hosts:
-     - loki.apatsev.org.ru
+     - promgrafana.apatsev.org.ru
     path: /
