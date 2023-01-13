@@ -1,0 +1,55 @@
+deployment:
+  # -- If true, will be deployed as a deployment. Not recommended to set true along with daemonset.enabled
+  enabled: true
+  # -- The number of replicas to run. Only affects deployments.
+  replicaCount: 1
+
+daemonset:
+  # -- If True, will be run as a daemonset. Not recommended to set true along with deployment.enabled
+  enabled: false
+
+# -- The stress command to run, with all of the flags. Try stress -c 1
+stressCmd: 'stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 10s'
+
+image:
+  # -- The image repository. Probably don't change this unless you know what's going on here.
+  repository: ubuntu
+  # -- The pullPolicy. Usually best set to Always
+  pullPolicy: Always
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+# -- This is intentionally insecure in order to accomodate how this chart runs.
+podSecurityContext:
+  fsGroup: 0
+
+# -- This is intentionally insecure in order to accomodate how this chart runs.
+securityContext:
+  readOnlyRootFilesystem: false
+  runAsNonRoot: false
+  runAsUser: 0
+  runAsGroup: 0
+
+# -- How you set this will largely depend on how you want to use this chart.
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
