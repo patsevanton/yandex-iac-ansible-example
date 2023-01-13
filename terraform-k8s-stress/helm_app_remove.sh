@@ -5,9 +5,9 @@ set -eu pipefail
 # uninstall Kube-Prometheus-Stack
 echo ""
 echo "helm uninstall Kube-Prometheus-Stack"
-helm uninstall -n redis redis || true
+helm uninstall -n stress stress || true
 helm uninstall -n kube-prometheus-stack kube-prometheus-stack || true
-kubectl delete namespace redis || true
+kubectl delete namespace stress || true
 kubectl delete namespace kube-prometheus-stack || true
 kubectl delete crd alertmanagerconfigs.monitoring.coreos.com || true
 kubectl delete crd alertmanagers.monitoring.coreos.com || true
