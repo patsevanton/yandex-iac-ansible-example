@@ -1,11 +1,28 @@
-commonConfiguration: |-
-  appendonly yes
-  save ""
-
 master:
+  service:
+    type: ClusterIP
+    port: 6379
+  persistence:
+    enabled: false
   resources:
-    limits: {}
-    requests: {}
+    limits:
+      memory: 5000Mi
+      cpu: 2000m
+    requests:
+      memory: 5000Mi
+      cpu: 2000m
+commonConfiguration: |-
+  maxmemory 450mb
+  maxmemory-policy allkeys-lru
 
 metrics:
   enabled: true
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "500Mi"
+    requests:
+      cpu: "1000m"
+      memory: "100Mi"
+  serviceMonitor:
+    enabled: true
