@@ -42,6 +42,8 @@ alertmanager:
       # время до отправки повторного сообщения
       repeat_interval: 10s
       receiver: 'telega'
+      routes:
+      - receiver: 'telega'
     receivers:
       - name: 'telega'
         telegram_configs:
