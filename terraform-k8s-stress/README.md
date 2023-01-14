@@ -1,9 +1,4 @@
-## View logs loki
-```
-stern -n loki .
-```
+TG_BOT_TOKEN get by https://velenux.wordpress.com/2022/09/12/how-to-configure-prometheus-alertmanager-to-send-alerts-to-telegram/
+TG_CHAT_ID get by https://www.alphr.com/find-chat-id-telegram/
 
-## View logs promtail
-```
-stern -n promtail .
-```
+https://sidmid.ru/prometheus-grafana-alertmanager-%D0%B2-docker/

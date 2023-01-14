@@ -27,3 +27,12 @@ resource "helm_release" "ingress_nginx" {
 
 }
 
+resource "local_file" "values-kube-prometheus-stack.yaml" {
+  content = templatefile("values-kube-prometheus-stack.yaml.tpl",
+    {
+      bot_token    = var.bot_token
+      chat_id      = var.chat_id
+    }
+  )
+  filename = "values-kube-prometheus-stack.yaml"
+}
