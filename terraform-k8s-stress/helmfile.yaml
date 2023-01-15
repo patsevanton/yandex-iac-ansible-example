@@ -8,6 +8,8 @@ repositories:
     url: https://zekker6.github.io/helm-charts/
   - name: sudermanjr
     url: https://charts.sudermanjr.com
+  - name: bitnami
+    url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 
 releases:
   - name: kube-prometheus-stack
@@ -25,10 +27,18 @@ releases:
     chart: zekker6/karma
     version: 0.1.1
 
-  - name: stress
-    namespace: stress
-    chart: sudermanjr/stress
-    version: 0.2.0
+  - name: redis
+    namespace: redis
+    chart: bitnami/redis
+    version: 17.4.2
     set:
-      - name: stressCmd
-        value: 'stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 10m'
+      - name: architecture
+        value: standalone
+
+#  - name: stress
+#    namespace: stress
+#    chart: sudermanjr/stress
+#    version: 0.2.0
+#    set:
+#      - name: stressCmd
+#        value: 'stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 10m'
