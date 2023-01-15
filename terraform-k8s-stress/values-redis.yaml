@@ -4,6 +4,7 @@ metrics:
   enabled: true
   serviceMonitor:
     enabled: true
+    honorLabels: true
     additionalLabels:
       release: kube-prometheus-stack
   prometheusRule:
