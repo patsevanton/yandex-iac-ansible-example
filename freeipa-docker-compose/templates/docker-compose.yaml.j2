@@ -31,6 +31,12 @@ services:
       - --http-pin={{freeipa_password}}
       - --realm={{freeipa_domain}}
       - --unattended
+    healthcheck:
+      test: ["CMD", "/usr/bin/systemctl", "status", "ipa"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 60s
     cap_add:
       - SYS_TIME
       - NET_ADMIN
