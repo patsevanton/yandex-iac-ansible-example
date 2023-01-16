@@ -31,13 +31,6 @@
         mode: '0644'
       register: docker_compose
 
-    - name: Create freeipa.packops.local.yaml
-      template:
-        src: "freeipa.packops.local.yaml.j2"
-        dest: /etc/docker-compose/freeipa.packops.local.yaml
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
 
     - name: Copy freeipa.service
       ansible.builtin.copy:
