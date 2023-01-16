@@ -48,14 +48,16 @@ echo ""
 # helm repo update
 # helm install postgresql bitnami/postgresql -f postgresql-values.yaml
 
-export external_ip=$(kubectl get services traefik --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-export traefik_url=traefik.$external_ip.sslip.io
-echo $traefik_url
+external_ip=$(kubectl get services traefik --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export external_ip
+traefik_url=traefik.$external_ip.sslip.io
+export traefik_url
+echo "$traefik_url"
 
 end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
-echo Execution time was $(expr $end_time - $start_time)  s.
-DIFF=$(($date2-$date1))
-echo "Duration: $(($DIFF / 3600 )) hours $((($DIFF % 3600) / 60)) minutes $(($DIFF % 60)) seconds"
+echo "Execution time was $(( end_time - start_time )) s."
+DIFF=$(( date2 - date1 ))
+echo "Duration: $(( DIFF / 3600 )) hours $((( DIFF % 3600) / 60 )) minutes $(( DIFF % 60 )) seconds"
 echo "###############"

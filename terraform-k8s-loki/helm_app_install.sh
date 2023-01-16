@@ -25,9 +25,12 @@ echo "Install Microservices deployment Loki"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 kubectl create namespace loki || true
-export access_key_id=$(terraform output --raw yandex_storage_bucket_loki_access_key)
-export secret_access_key=$(terraform output --raw yandex_storage_bucket_loki_secret_key)
-export bucket=$(terraform output --raw yandex_storage_bucket_loki_bucket)
+access_key_id=$(terraform output --raw yandex_storage_bucket_loki_access_key)
+export access_key_id
+secret_access_key=$(terraform output --raw yandex_storage_bucket_loki_secret_key)
+export secret_access_key
+bucket=$(terraform output --raw yandex_storage_bucket_loki_bucket)
+export bucket
 helm upgrade --install --wait loki grafana/loki-distributed -n loki \
     --set "loki.storageConfig.aws.access_key_id=$access_key_id"  \
     --set "loki.storageConfig.aws.secret_access_key=$secret_access_key"  \
@@ -59,7 +62,7 @@ helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set 
 end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
-echo Execution time was $(expr $end_time - $start_time)  s.
-DIFF=$(($date2-$date1))
-echo "Duration: $(($DIFF / 3600 )) hours $((($DIFF % 3600) / 60)) minutes $(($DIFF % 60)) seconds"
+echo "Execution time was $(( end_time - start_time )) s."
+DIFF=$(( date2 - date1 ))
+echo "Duration: $(( DIFF / 3600 )) hours $((( DIFF % 3600) / 60 )) minutes $(( DIFF % 60 )) seconds"
 echo "###############"
