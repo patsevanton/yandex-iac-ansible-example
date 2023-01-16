@@ -22,7 +22,7 @@ echo "Install Jenkins"
 helm repo add jenkins https://charts.jenkins.io
 helm repo update
 # helm upgrade --install --atomic jenkins --set controller.ingress.hostName=$jenkins_url,controller.ingress.tls[0].hosts=$jenkins_url -f jenkins-values.yaml jenkins/jenkins
- helm upgrade --install --atomic jenkins -f jenkins-values-minimal.yaml jenkins/jenkins
+werf helm upgrade --install --atomic jenkins -f jenkins-values-minimal.yaml jenkins/jenkins
 echo ""
 echo "Print jenkins password"
 kubectl exec --namespace default -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
