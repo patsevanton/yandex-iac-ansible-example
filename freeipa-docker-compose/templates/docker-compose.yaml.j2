@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   freeipa:
-    image: freeipa/freeipa-server:fedora-37-4.10.1
+    image: quay.io/freeipa/freeipa-server:fedora-37-4.10.1
     container_name: freeipa
     restart: unless-stopped
     hostname: {{freeipa_fqdn}}
@@ -37,7 +37,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - /var/lib/freeipa:/data
+      - ./data:/data
+      - ./backup:/var/lib/ipa/backup
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv6.conf.lo.disable_ipv6=0

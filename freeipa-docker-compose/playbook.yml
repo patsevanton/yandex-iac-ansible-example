@@ -31,21 +31,25 @@
         mode: '0644'
       register: docker_compose
 
-
-    - name: Copy freeipa.service
-      ansible.builtin.copy:
-        src: freeipa.service
-        dest: /etc/systemd/system/freeipa.service
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
-      register: freeipa_service
-
-    - name: Restart service freeipa
-      ansible.builtin.systemd:
-        state: restarted
-        daemon_reload: yes
-        name: freeipa
-      when: docker_compose.changed or freeipa_service
-
-s
+#    - name: Copy freeipa.service
+#      ansible.builtin.copy:
+#        src: freeipa.service
+#        dest: /etc/systemd/system/freeipa.service
+#        owner: ubuntu
+#        group: ubuntu
+#        mode: '0644'
+#      register: freeipa_service
+#
+#    - name: Restart service freeipa
+#      ansible.builtin.systemd:
+#        state: restarted
+#        daemon_reload: yes
+#        name: freeipa
+#      when: docker_compose.changed or freeipa_service
+#
+#    - name: Ensure a cron job backup freeipa
+#      ansible.builtin.cron:
+#        name: "backup freeipa"
+#        user: ubuntu
+#        hour: "*/4"
+#        job: "docker exec -it freeipa ipa-backup"
