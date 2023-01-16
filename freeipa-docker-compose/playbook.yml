@@ -1,37 +1,51 @@
 - hosts: ipaserver
   become: true
-  vars:
-    - server_hostname: apatsev.org.ru
-    - key_size: 4096
-    - passphrase: # Set if you want passphrase
-    - key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
-    - country_name: KE
-    - email_address: admin@apatsev.org.ru
-    - organization_name: apatsev.org.ru
   pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+  roles:
+    - role: geerlingguy.docker
+  post_tasks:
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: reset ssh connection to allow user changes to affect ansible user
+      ansible.builtin.meta:
+        reset_connection
     - name: Create directory /etc/docker-compose
       ansible.builtin.file:
         path: /etc/docker-compose
         state: directory
         owner: ubuntu
         group: ubuntu
-    - name: Generate an OpenSSL private key
-      openssl_privatekey:
-        path: "/etc/docker-compose/{{ server_hostname }}_privkey.pem"
-        size: "{{ key_size }}"
-        type: "{{ key_type }}"
-        backup: yes
-    - name: Generate an OpenSSL Certificate Signing Request with Subject information
-      openssl_csr:
-        path: "/etc/docker-compose/{{ server_hostname }}.csr"
-        privatekey_path: "/etc/docker-compose/{{ server_hostname }}_privkey.pem"
-        country_name: "{{ country_name }}"
-        organization_name: "{{ organization_name }}"
-        email_address: "{{ email_address }}"
-        common_name: "{{ server_hostname }}"
-    - name: Generate a Self Signed OpenSSL certificate
-      openssl_certificate:
-        path: "/etc/docker-compose/{{ server_hostname }}_cert.pem"
-        privatekey_path: "/etc/docker-compose//{{ server_hostname }}_privkey.pem"
-        csr_path: "/etc/docker-compose/{{ server_hostname }}.csr"
-        provider: selfsigned
+
+    - name: Create docker-compose.yaml
+      template:
+        src: "docker-compose.yaml.j2"
+        dest: /etc/docker-compose/docker-compose.yaml
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      register: docker_compose
+
+
+    - name: Copy freeipa.service
+      ansible.builtin.copy:
+        src: freeipa.service
+        dest: /etc/systemd/system/freeipa.service
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      register: freeipa_service
+
+    - name: Restart service freeipa
+      ansible.builtin.systemd:
+        state: restarted
+        daemon_reload: yes
+        name: freeipa
+      when: docker_compose.changed or freeipa_service
+
+s
