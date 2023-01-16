@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 # Check command available yc terraform kubectl helm

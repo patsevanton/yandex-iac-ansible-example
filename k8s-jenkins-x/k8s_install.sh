@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 # Check command available yc terraform kubectl helm
@@ -40,7 +40,7 @@ echo "External IP nginx-ingress-ingress-nginx-controller"
 kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}'
 echo ""
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

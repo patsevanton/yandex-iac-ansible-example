@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 #echo ""
@@ -22,7 +22,7 @@ helmfile apply
 #helm upgrade --install --wait -n stress stress sudermanjr/stress --version 0.2.0 -f values-stress.yaml
 
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

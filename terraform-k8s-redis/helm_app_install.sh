@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 echo ""
@@ -20,7 +20,7 @@ helm repo add archive-full-bitnami https://raw.githubusercontent.com/bitnami/cha
 kubectl create namespace redis || true
 helm upgrade --install --wait -n redis redis archive-full-bitnami/redis --version 17.4.2 -f values-redis.yaml
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

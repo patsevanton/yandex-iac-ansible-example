@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 # Check command available yc terraform kubectl helm
@@ -31,7 +31,7 @@ mkdir -p /home/$USER/.kube
 terraform output kubeconfig > /home/$USER/.kube/config
 sed '/EOT/d' -i /home/$USER/.kube/config
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

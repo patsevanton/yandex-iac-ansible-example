@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 # Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
@@ -25,7 +25,7 @@ echo ""
 echo "Print jenkins password"
 kubectl exec --namespace default -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

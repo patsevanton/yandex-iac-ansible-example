@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 #echo ""
@@ -18,7 +18,7 @@ kubectl create namespace postgresql || true
 helm install postgresql bitnami/postgresql
 helm upgrade --install --wait -n postgresql postgresql bitnami/postgresql
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

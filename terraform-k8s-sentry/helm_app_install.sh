@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 echo ""
@@ -31,7 +31,7 @@ time helm upgrade --install --wait -n sentry sentry sentry/sentry --timeout 20m
 #     --set "externalPostgresql.password=$sentry_postgres_password"
 
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

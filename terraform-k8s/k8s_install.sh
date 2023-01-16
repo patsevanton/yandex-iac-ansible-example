@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 # Check command available yc terraform kubectl helm
@@ -38,7 +38,7 @@ sed '/EOT/d' -i /home/$USER/.kube/config
 # # Получение External IP (внешнего IP) Kubernetes сервиса nginx-ingress-ingress-nginx-controller
 # export external_ip=$(kubectl get services nginx-ingress-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

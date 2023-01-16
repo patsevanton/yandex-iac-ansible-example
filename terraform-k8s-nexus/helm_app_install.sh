@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 echo ""
@@ -14,7 +14,7 @@ helm upgrade --install --wait -n nexus nexus sonatype/nexus-repository-manager -
 #helm upgrade --install --wait -n nexus nexus nexus/nexus --set externalURL=https://nexus.apatsev.org.ru --set expose.ingress.hosts.core=nexus.apatsev.org.ru --set nexusAdminPassword=nexus12345 --set expose.tls.secretName=letsencrypt-prod  --set expose.ingress.annotations="cert-manager.io/cluster-issuer=letsencrypt-prod"
 
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

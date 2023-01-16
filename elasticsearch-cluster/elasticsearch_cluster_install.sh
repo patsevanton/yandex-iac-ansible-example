@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 TF_IN_AUTOMATION=1 terraform init -upgrade
 unset HTTP_PROXY
@@ -11,7 +11,7 @@ TF_IN_AUTOMATION=1 terraform apply -auto-approve
 ansible-galaxy install buluma.java
 ansible-galaxy install elastic.elasticsearch,v7.17.0
 ansible-playbook -i inventory.yml playbook.yml
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 TF_IN_AUTOMATION=1 terraform init -upgrade
 unset HTTP_PROXY
@@ -13,7 +13,7 @@ ansible-galaxy install buluma.java
 ansible-galaxy install idealista.zookeeper_role
 ansible-galaxy install --force git+https://github.com/AlexeySetevoi/ansible-clickhouse.git,master
 ansible-playbook -i inventory.yml playbook.yml
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.

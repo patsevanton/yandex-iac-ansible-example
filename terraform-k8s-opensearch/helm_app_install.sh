@@ -2,7 +2,7 @@
 
 set -eu pipefail
 
-start_time=`date +%s`
+start_time=$(date +%s)
 date1=$(date +"%s")
 
 echo ""
@@ -13,7 +13,7 @@ werf helm install --wait opensearch opensearch/opensearch --version 2.7.0 --set 
 werf helm install --wait opensearch-dashboards opensearch/opensearch-dashboards --version 2.5.3
 
 
-end_time=`date +%s`
+end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
 echo Execution time was `expr $end_time - $start_time` s.
