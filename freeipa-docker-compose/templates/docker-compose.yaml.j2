@@ -26,18 +26,11 @@ services:
       TZ: "Europe/Moscow"
     command:
       - --admin-password={{freeipa_password}}
-      - --allow-zone-overlap
-      - --auto-forwarders
       - --dirsrv-pin={{freeipa_password}}
-      - --domain={{freeipa_domain}}
       - --ds-password={{freeipa_password}}
       - --http-pin={{freeipa_password}}
-      - --no-dnssec-validation
-      - --no-host-dns
       - --realm={{freeipa_domain}}
-      - --setup-dns
       - --unattended
-      - -U
     cap_add:
       - SYS_TIME
       - NET_ADMIN
@@ -45,8 +38,13 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /var/lib/freeipa:/data
+      - /etc/docker-compose/ca:/ca
+      - /etc/docker-compose/freeiparoot:/root
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv6.conf.lo.disable_ipv6=0
     security_opt:
       - "seccomp:unconfined"
+    tmpfs:
+    - /tmp
+    - /run

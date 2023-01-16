@@ -31,6 +31,7 @@
         mode: '0644'
       register: docker_compose
 
+
     - name: Copy freeipa.service
       ansible.builtin.copy:
         src: freeipa.service
