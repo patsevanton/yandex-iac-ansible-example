@@ -44,3 +44,11 @@ echo "Install cert-manager:"
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
 helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --set installCRDs=true
+
+end_time=$(date +%s)
+date2=$(date +"%s")
+echo "###############"
+echo "Execution time was $(( end_time - start_time )) s."
+DIFF=$(( date2 - date1 ))
+echo "Duration: $(( DIFF / 3600 )) hours $((( DIFF % 3600) / 60 )) minutes $(( DIFF % 60 )) seconds"
+echo "###############"
