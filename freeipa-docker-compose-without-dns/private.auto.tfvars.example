@@ -1,7 +1,0 @@
-yc_token            = ""
-yc_cloud_id         = ""
-yc_folder_id        = ""
-freeipa_password    = ""
-freeipa_fqdn        = freeipa.apatsev.org.ru
-freeipa_domain      = "apatsev.org.ru"
-nat_ip_address      = ""
