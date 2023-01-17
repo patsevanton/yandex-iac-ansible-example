@@ -1,3 +1,4 @@
+---
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -15,5 +16,17 @@ spec:
   secretName: grafana-cert
   dnsNames:
     - grafana.apatsev.org
+  issuerRef:
+    name: ca-issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: consul-cert
+  namespace: consul
+spec:
+  secretName: consul-cert
+  dnsNames:
+    - consul.apatsev.org
   issuerRef:
     name: ca-issuer

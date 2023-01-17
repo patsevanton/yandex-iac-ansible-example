@@ -6,8 +6,9 @@ start_time=$(date +%s)
 date1=$(date +"%s")
 
 echo ""
-echo "Install grafana"
+echo "Install grafana and consul"
 kubectl create namespace grafana || true
+kubectl create namespace consul || true
 kubectl apply -f certificate.yaml
 helmfile apply
 

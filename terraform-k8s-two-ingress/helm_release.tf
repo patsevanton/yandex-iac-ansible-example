@@ -37,6 +37,11 @@ resource "helm_release" "traefik" {
     value = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
   }
 
+  set {
+    name  = "ingressClass.isDefaultClass"
+    value = false
+  }
+
 }
 
 resource "helm_release" "cert-manager" {

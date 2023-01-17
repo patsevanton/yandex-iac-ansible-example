@@ -20,3 +20,10 @@ resource "yandex_vpc_address" "grafana_address" {
     zone_id = "ru-central1-a"
   }
 }
+
+resource "yandex_vpc_address" "consul_address" {
+  name = "consul"
+  external_ipv4_address {
+    zone_id = "ru-central1-a"
+  }
+}
