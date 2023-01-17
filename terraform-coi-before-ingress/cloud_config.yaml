@@ -7,15 +7,19 @@ write_files:
             use           epoll;
             worker_connections  128;
         }
+
+        error_log  /dev/stderr error;
         
         http {
             server_tokens off;
             include       mime.types;
             charset       utf-8;
             
+            access_log    /dev/stdout      combined;
+        
             server {
                 server_name   localhost;
-                listen        127.0.0.1:80;
+                listen        80;
                 
                 error_page    500 502 503 504  /50x.html;
                 
