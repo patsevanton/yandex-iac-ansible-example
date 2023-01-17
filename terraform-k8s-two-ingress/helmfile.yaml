@@ -2,43 +2,18 @@ helmDefaults:
   wait: true
 
 repositories:
-  - name: prometheus-community
-    url: https://prometheus-community.github.io/helm-charts
-  - name: zekker6
-    url: https://zekker6.github.io/helm-charts/
-  - name: sudermanjr
-    url: https://charts.sudermanjr.com
-  - name: bitnami
+  - name: archive-full-bitnami
     url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 
 releases:
-  - name: kube-prometheus-stack
-    namespace: kube-prometheus-stack
-    chart: prometheus-community/kube-prometheus-stack
-    disableValidationOnInstall: true
-    labels:
-      name: kube-prometheus-stack
-    version: 44.0.0
+  - name: grafana
+    namespace: grafana
+    createNamespace: true
+    chart: archive-full-bitnami/grafana
+    version: 8.2.22
     values:
-      - "values-kube-prometheus-stack.yaml"
-
-  - name: karma
-    namespace: kube-prometheus-stack
-    chart: zekker6/karma
-    version: 0.1.1
-
-  - name: redis
-    namespace: redis
-    chart: bitnami/redis
-    version: 17.4.2
-    set:
-      - name: architecture
-        value: standalone
-
-#  - name: stress
-#    namespace: stress
-#    chart: sudermanjr/stress
-#    version: 0.2.0
-#    set:
-#      - name: stressCmd
-#        value: 'stress --cpu 8 --io 4 --vm 2 --vm-bytes 128M --timeout 10m'
+      - ingress:
+          enabled: true
+          hostname: grafana.apatsev.org.ru
+          annotations:
+            kubernetes.io/ingress.class: traefik

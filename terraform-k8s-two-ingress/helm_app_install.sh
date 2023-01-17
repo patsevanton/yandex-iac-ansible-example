@@ -7,7 +7,7 @@ date1=$(date +"%s")
 
 #echo ""
 #echo "Install Kube-Prometheus-Stack"
-#helmfile apply
+helmfile apply
 #helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 ##helm repo update
 #kubectl create namespace kube-prometheus-stack || true

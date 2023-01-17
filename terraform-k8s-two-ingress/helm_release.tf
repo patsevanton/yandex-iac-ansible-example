@@ -32,4 +32,9 @@ resource "helm_release" "traefik" {
     yandex_kubernetes_node_group.twoingress-k8s-node-group
   ]
 
+  set {
+    name  = "service.spec.loadBalancerIP"
+    value = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
+  }
+
 }
