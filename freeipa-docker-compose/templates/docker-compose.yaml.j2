@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  s5cmd:
+    image: peakcom/s5cmd
+    env:
+      S3_ENDPOINT_URL: https://storage.yandexcloud.net/{{bucket}}
+      AWS_ACCESS_KEY_ID: {{access_key}}
+      AWS_SECRET_ACCESS_KEY: {{secret_key}}
+    volumes:
+      - ./backup:/backup
   freeipa:
     image: quay.io/freeipa/freeipa-server:fedora-37-4.10.1
     container_name: freeipa
