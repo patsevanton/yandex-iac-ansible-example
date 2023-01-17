@@ -4,8 +4,7 @@ write_files:
       user  nginx;
       worker_processes  auto;
 
-      error_log  /var/log/nginx/error.log notice;
-      # error_log  /dev/stderr error;
+      error_log  /dev/stderr notice;
       pid        /var/run/nginx.pid;
 
       events {
@@ -20,8 +19,7 @@ write_files:
         '$status $body_bytes_sent "$http_referer" '
         '"$http_user_agent" "$http_x_forwarded_for"';
 
-        access_log  /var/log/nginx/access.log  main;
-        # access_log    /dev/stdout      combined;
+        access_log    /dev/stdout      main;
 
         sendfile        on;
 
