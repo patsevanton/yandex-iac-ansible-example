@@ -38,3 +38,20 @@ resource "helm_release" "traefik" {
   }
 
 }
+
+resource "helm_release" "cert-manager" {
+  namespace        = "cert-manager"
+  create_namespace = true
+  name             = "jetstack"
+  repository       = "https://charts.jetstack.io"
+  chart            = "cert-manager"
+  version          = "1.11.0"
+  wait             = true
+  depends_on = [
+    yandex_kubernetes_node_group.twoingress-k8s-node-group
+  ]
+  set {
+    name  = "installCRDs"
+    value = true
+  }
+}
