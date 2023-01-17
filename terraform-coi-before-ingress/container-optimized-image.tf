@@ -65,10 +65,10 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
 
   scale_policy {
     auto_scale {
-      initial_size           = 3
+      initial_size           = 1
       measurement_duration   = 60
       cpu_utilization_target = 75
-      min_zone_size          = 3
+      min_zone_size          = 1
       max_size               = 15
       warmup_duration        = 60
       stabilization_duration = 120
