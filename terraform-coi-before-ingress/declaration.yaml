@@ -1,10 +1,11 @@
 spec:
   containers:
     - name: nginx
-      image: cr.yandex/mirror/nginx
+      image: cr.yandex/mirror/nginx:1.17.4-alpine
       securityContext:
         privileged: false
       tty: false
+      stdin: false
       volumeMounts:
         - mountPath: /etc/nginx/nginx.conf
           name: nginx_conf
