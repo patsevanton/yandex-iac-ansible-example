@@ -30,4 +30,4 @@ write_files:
                 }
             }
         }
-    path: /etc/nginx/nginx.conf
+    path: /nginx.conf
