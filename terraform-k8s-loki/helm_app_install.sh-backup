@@ -20,7 +20,7 @@ werf helm upgrade --install --wait kube-prometheus-stack prometheus-community/ku
 
 #echo ""
 #echo "Install cassandra"
-#helm repo add bitnami https://charts.bitnami.com/bitnami
+#helm repo add bitnami https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 #helm repo update
 #kubectl create namespace cassandra || true
 #werf helm upgrade --install --wait cassandra bitnami/cassandra -n cassandra -f value-cassandra.yaml

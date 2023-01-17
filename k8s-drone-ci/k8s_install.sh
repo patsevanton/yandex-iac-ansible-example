@@ -44,7 +44,7 @@ echo ""
 
 # Установка PostgreSQL
 # echo "Install PostgreSQL by helm"
-# helm repo add bitnami https://charts.bitnami.com/bitnami
+# helm repo add bitnami https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 # helm repo update
 # helm install postgresql bitnami/postgresql -f postgresql-values.yaml
 

@@ -12,7 +12,7 @@ date1=$(date +"%s")
 
 echo ""
 echo "Install postgresql"
-#helm repo add bitnami https://charts.bitnami.com/bitnami
+#helm repo add bitnami https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 #helm repo update
 kubectl create namespace postgresql || true
 helm install postgresql bitnami/postgresql
