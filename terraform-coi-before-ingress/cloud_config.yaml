@@ -2,8 +2,7 @@
 write_files:
   - content: |
         worker_processes  2;
-        user              www-data;
-        
+
         events {
             use           epoll;
             worker_connections  128;
