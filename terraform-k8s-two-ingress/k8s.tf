@@ -1,6 +1,6 @@
-resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
-  name        = "loki-cluster"
-  description = "loki-cluster"
+resource "yandex_kubernetes_cluster" "twoingress_k8s_cluster" {
+  name        = "twoingress-cluster"
+  description = "twoingress-cluster"
   network_id  = data.yandex_vpc_network.default.id
 
   master {
@@ -14,25 +14,25 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
 
   cluster_ipv4_range      = "10.113.0.0/16"
   service_ipv4_range      = "10.97.0.0/16"
-  service_account_id      = yandex_iam_service_account.loki-k8s-cluster.id
-  node_service_account_id = yandex_iam_service_account.loki-k8s-node-group.id
+  service_account_id      = yandex_iam_service_account.twoingress-k8s-cluster.id
+  node_service_account_id = yandex_iam_service_account.twoingress-k8s-node-group.id
   release_channel         = "STABLE"
   // to keep permissions of service account on destroy
   // until cluster will be destroyed
   depends_on = [
-    yandex_resourcemanager_folder_iam_member.loki-k8s-cluster-agent-permissions,
-    yandex_resourcemanager_folder_iam_member.loki-vpc-publicAdmin-permissions,
-    yandex_resourcemanager_folder_iam_member.loki-load-balancer-admin-permissions,
-    yandex_resourcemanager_folder_iam_member.loki-k8s-node-group-permissions,
+    yandex_resourcemanager_folder_iam_member.twoingress-k8s-cluster-agent-permissions,
+    yandex_resourcemanager_folder_iam_member.twoingress-vpc-publicAdmin-permissions,
+    yandex_resourcemanager_folder_iam_member.twoingress-load-balancer-admin-permissions,
+    yandex_resourcemanager_folder_iam_member.twoingress-k8s-node-group-permissions,
   ]
 }
 
 # yandex_kubernetes_node_group
 
-resource "yandex_kubernetes_node_group" "loki-k8s-node-group" {
-  cluster_id  = yandex_kubernetes_cluster.loki_k8s_cluster.id
-  name        = "loki-k8s-node-group"
-  description = "loki-k8s-node-group"
+resource "yandex_kubernetes_node_group" "twoingress-k8s-node-group" {
+  cluster_id  = yandex_kubernetes_cluster.twoingress_k8s_cluster.id
+  name        = "twoingress-k8s-node-group"
+  description = "twoingress-k8s-node-group"
   version     = "1.22"
 
   labels = {
@@ -105,8 +105,8 @@ locals {
 apiVersion: v1
 clusters:
 - cluster:
-    server: ${yandex_kubernetes_cluster.loki_k8s_cluster.master[0].external_v4_endpoint}
-    certificate-authority-data: ${base64encode(yandex_kubernetes_cluster.loki_k8s_cluster.master[0].cluster_ca_certificate)}
+    server: ${yandex_kubernetes_cluster.twoingress_k8s_cluster.master[0].external_v4_endpoint}
+    certificate-authority-data: ${base64encode(yandex_kubernetes_cluster.twoingress_k8s_cluster.master[0].cluster_ca_certificate)}
   name: kubernetes
 contexts:
 - context:

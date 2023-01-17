@@ -1,7 +1,7 @@
 provider "helm" {
   kubernetes {
-    host                   = yandex_kubernetes_cluster.loki_k8s_cluster.master[0].external_v4_endpoint
-    cluster_ca_certificate = yandex_kubernetes_cluster.loki_k8s_cluster.master[0].cluster_ca_certificate
+    host                   = yandex_kubernetes_cluster.twoingress_k8s_cluster.master[0].external_v4_endpoint
+    cluster_ca_certificate = yandex_kubernetes_cluster.twoingress_k8s_cluster.master[0].cluster_ca_certificate
     exec {
       api_version = "client.authentication.k8s.io/v1beta1"
       args        = ["k8s", "create-token"]
@@ -17,7 +17,7 @@ resource "helm_release" "ingress_nginx" {
   version    = "4.4.2"
   wait       = true
   depends_on = [
-    yandex_kubernetes_node_group.loki-k8s-node-group
+    yandex_kubernetes_node_group.twoingress-k8s-node-group
   ]
 
 }
@@ -29,7 +29,7 @@ resource "helm_release" "traefik" {
   version    = "20.8.0"
   wait       = true
   depends_on = [
-    yandex_kubernetes_node_group.loki-k8s-node-group
+    yandex_kubernetes_node_group.twoingress-k8s-node-group
   ]
 
 }
