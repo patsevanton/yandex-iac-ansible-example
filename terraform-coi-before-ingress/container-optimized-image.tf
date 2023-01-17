@@ -58,6 +58,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
     metadata = {
       docker-container-declaration = file("${path.module}/declaration.yaml")
       user-data                    = file("${path.module}/cloud_config.yaml")
+      ssh-keys                     = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
     }
 
   }
