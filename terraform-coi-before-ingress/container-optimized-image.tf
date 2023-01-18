@@ -51,8 +51,12 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
 
     network_interface {
       network_id = data.yandex_vpc_network.default.id
-      subnet_ids = [data.yandex_vpc_subnet.default-ru-central1-a.id]
-      nat        = true
+      subnet_ids = [
+        data.yandex_vpc_subnet.default-ru-central1-a.id,
+        data.yandex_vpc_subnet.default-ru-central1-b.id,
+        data.yandex_vpc_subnet.default-ru-central1-c.id
+      ]
+      nat = true
     }
 
     metadata = {
@@ -65,7 +69,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
 
   scale_policy {
     auto_scale {
-      initial_size           = 1
+      initial_size           = 3
       measurement_duration   = 60
       cpu_utilization_target = 75
       min_zone_size          = 1
@@ -76,7 +80,11 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
   }
 
   allocation_policy {
-    zones = ["ru-central1-a"]
+    zones = [
+      "ru-central1-a",
+      "ru-central1-b",
+      "ru-central1-c"
+    ]
   }
 
   deploy_policy {
