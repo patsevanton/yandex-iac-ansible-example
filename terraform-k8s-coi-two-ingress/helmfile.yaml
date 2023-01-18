@@ -1,0 +1,44 @@
+helmDefaults:
+  wait: true
+
+repositories:
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+  - name: bitnami
+    url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+
+releases:
+  - name: grafana
+    namespace: grafana
+    createNamespace: true
+    chart: grafana/grafana
+    version: 6.50.0
+    values:
+      - ingress:
+          enabled: true
+          annotations:
+            kubernetes.io/ingress.class: traefik
+            cert-manager.io/cluster-issuer: ca-issuer
+          hosts:
+            - grafana.apatsev.org.ru
+          tls:
+            - secretName: grafana-cert
+              hosts:
+                - grafana.apatsev.org.ru
+  - name: consul
+    namespace: consul
+    createNamespace: true
+    chart: bitnami/consul
+    version: 10.9.9
+    values:
+      - ingress:
+          enabled: true
+          path: /
+          hostname: consul.apatsev.org.ru
+          annotations:
+            cert-manager.io/cluster-issuer: ca-issuer
+          ingressClassName: "nginx"
+          extraTls:
+            - hosts:
+                - consul.apatsev.org.ru
+              secretName: consul-cert

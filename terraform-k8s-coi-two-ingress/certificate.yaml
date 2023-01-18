@@ -1,0 +1,40 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ca-issuer
+  namespace: grafana
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-cert
+  namespace: grafana
+spec:
+  secretName: grafana-cert
+  dnsNames:
+    - grafana.apatsev.org
+  issuerRef:
+    name: ca-issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ca-issuer
+  namespace: consul
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: consul-cert
+  namespace: consul
+spec:
+  secretName: consul-cert
+  dnsNames:
+    - consul.apatsev.org
+  issuerRef:
+    name: ca-issuer
