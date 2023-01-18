@@ -19,6 +19,12 @@ resource "yandex_resourcemanager_folder_iam_member" "coi-vpc-admin-permissions" 
   member    = "serviceAccount:${yandex_iam_service_account.coi-sa.id}"
 }
 
+resource "yandex_resourcemanager_folder_iam_member" "coi-load-balancer-admin-permissions" {
+  folder_id = var.yc_folder_id
+  role      = "load-balancer.admin"
+  member    = "serviceAccount:${yandex_iam_service_account.coi-sa.id}"
+}
+
 resource "yandex_resourcemanager_folder_iam_member" "coi-iam-serviceAccounts-user-permissions" {
   folder_id = var.yc_folder_id
   role      = "iam.serviceAccounts.user"
@@ -41,6 +47,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
     yandex_iam_service_account.coi-sa,
     yandex_resourcemanager_folder_iam_member.coi-compute-admin-permissions,
     yandex_resourcemanager_folder_iam_member.coi-vpc-admin-permissions,
+    yandex_resourcemanager_folder_iam_member.coi-load-balancer-admin-permissions,
     yandex_resourcemanager_folder_iam_member.coi-iam-serviceAccounts-user-permissions,
   ]
   instance_template {
