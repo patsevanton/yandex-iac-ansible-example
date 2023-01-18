@@ -25,11 +25,19 @@ resource "yandex_resourcemanager_folder_iam_member" "coi-iam-serviceAccounts-use
   member    = "serviceAccount:${yandex_iam_service_account.coi-sa.id}"
 }
 
+resource "time_sleep" "wait_for_coi_sa" {
+  create_duration = "10s"
+
+  depends_on = [yandex_iam_service_account.coi-sa]
+}
+
+
 resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
   name               = "autoscaled-ig-with-coi"
   folder_id          = var.yc_folder_id
   service_account_id = yandex_iam_service_account.coi-sa.id
   depends_on = [
+    time_sleep.wait_for_coi_sa,
     yandex_iam_service_account.coi-sa,
     yandex_resourcemanager_folder_iam_member.coi-compute-admin-permissions,
     yandex_resourcemanager_folder_iam_member.coi-vpc-admin-permissions,
