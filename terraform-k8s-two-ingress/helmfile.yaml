@@ -36,7 +36,7 @@ releases:
           path: /
           hostname: consul.apatsev.org.ru
           annotations:
-            cert-manager.io/cluster-issuer: cluster-issuer-name
+            cert-manager.io/cluster-issuer: ca-issuer
           ingressClassName: "nginx"
           extraTls:
             - hosts:
