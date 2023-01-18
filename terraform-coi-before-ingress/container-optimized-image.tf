@@ -33,10 +33,8 @@ resource "yandex_resourcemanager_folder_iam_member" "coi-iam-serviceAccounts-use
 
 resource "time_sleep" "wait_for_coi_sa" {
   create_duration = "10s"
-
-  depends_on = [yandex_iam_service_account.coi-sa]
+  depends_on      = [yandex_iam_service_account.coi-sa]
 }
-
 
 resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
   name               = "autoscaled-ig-with-coi"
