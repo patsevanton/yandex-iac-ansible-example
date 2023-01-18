@@ -30,6 +30,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
   folder_id          = var.yc_folder_id
   service_account_id = yandex_iam_service_account.coi-sa.id
   depends_on = [
+    yandex_iam_service_account.coi-sa,
     yandex_resourcemanager_folder_iam_member.coi-compute-admin-permissions,
     yandex_resourcemanager_folder_iam_member.coi-vpc-admin-permissions,
     yandex_resourcemanager_folder_iam_member.coi-iam-serviceAccounts-user-permissions,
@@ -92,5 +93,34 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
     max_creating    = 1
     max_expansion   = 1
     max_deleting    = 1
+  }
+
+  load_balancer {
+    target_group_name = "coi-target-group"
+  }
+
+}
+
+resource "yandex_lb_network_load_balancer" "sni_balancer" {
+  name = "sni-balancer"
+
+  listener {
+    name        = "coi-listener"
+    port        = 80
+    target_port = 80
+    external_address_spec {
+      ip_version = "ipv4"
+    }
+  }
+
+  attached_target_group {
+    target_group_id = yandex_compute_instance_group.autoscaled-ig-with-coi.load_balancer.0.target_group_id
+
+    healthcheck {
+      name = "healthcheck"
+      tcp_options {
+        port = 80
+      }
+    }
   }
 }
