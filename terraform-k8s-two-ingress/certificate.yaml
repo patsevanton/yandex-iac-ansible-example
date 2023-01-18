@@ -8,14 +8,6 @@ spec:
   selfSigned: {}
 ---
 apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: ca-issuer
-  namespace: consul
-spec:
-  selfSigned: {}
----
-apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: grafana-cert
@@ -26,6 +18,14 @@ spec:
     - grafana.apatsev.org
   issuerRef:
     name: ca-issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ca-issuer
+  namespace: consul
+spec:
+  selfSigned: {}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
