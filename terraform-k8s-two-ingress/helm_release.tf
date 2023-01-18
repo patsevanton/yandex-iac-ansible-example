@@ -20,6 +20,11 @@ resource "helm_release" "ingress_nginx" {
     yandex_kubernetes_node_group.twoingress-k8s-node-group
   ]
 
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = yandex_vpc_address.consul_address.external_ipv4_address[0].address
+  }
+
 }
 
 resource "helm_release" "traefik" {
