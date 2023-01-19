@@ -6,10 +6,15 @@ start_time=$(date +%s)
 date1=$(date +"%s")
 
 echo ""
-echo "Install grafana and consul"
 export NginxLoadBalancerIP=$(terraform output --raw NginxLoadBalancerIP)
 export TraefikLoadBalancerIP=$(terraform output --raw TraefikLoadBalancerIP)
+echo "================Install cert-manager======================"
+kubectl create namespace grafana || true
+kubectl create namespace consul || true
 helmfile apply -f helmfile-cert-manager.yaml
+echo "================Create Certificate======================"
+kubectl apply -f certificate.yaml
+echo "================Install Other chart======================"
 helmfile apply -f helmfile.yaml
 
 
