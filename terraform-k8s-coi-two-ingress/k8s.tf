@@ -1,3 +1,8 @@
+resource "time_sleep" "wait_for_twoingress_k8s" {
+  create_duration = "10s"
+  depends_on      = [yandex_iam_service_account.twoingress-k8s-cluster]
+}
+
 resource "yandex_kubernetes_cluster" "twoingress_k8s_cluster" {
   name        = "twoingress-cluster"
   description = "twoingress-cluster"
@@ -12,18 +17,15 @@ resource "yandex_kubernetes_cluster" "twoingress_k8s_cluster" {
     public_ip = true
   }
 
-  cluster_ipv4_range      = "10.113.0.0/16"
-  service_ipv4_range      = "10.97.0.0/16"
+  cluster_ipv4_range      = "10.0.0.0/16"
+  service_ipv4_range      = "10.1.0.0/16"
   service_account_id      = yandex_iam_service_account.twoingress-k8s-cluster.id
   node_service_account_id = yandex_iam_service_account.twoingress-k8s-node-group.id
   release_channel         = "STABLE"
   // to keep permissions of service account on destroy
   // until cluster will be destroyed
   depends_on = [
-    yandex_resourcemanager_folder_iam_member.twoingress-k8s-cluster-agent-permissions,
-    yandex_resourcemanager_folder_iam_member.twoingress-vpc-publicAdmin-permissions,
-    yandex_resourcemanager_folder_iam_member.twoingress-load-balancer-admin-permissions,
-    yandex_resourcemanager_folder_iam_member.twoingress-k8s-node-group-permissions,
+    time_sleep.wait_for_twoingress_k8s,
   ]
 }
 
