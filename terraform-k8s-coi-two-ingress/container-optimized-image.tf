@@ -2,9 +2,19 @@ data "yandex_compute_image" "container-optimized-image" {
   family = "container-optimized-image"
 }
 
-resource "time_sleep" "wait_for_coi_sa" {
+resource "local_file" "cloud_config_yaml" {
+  content = templatefile("cloud_config_yaml.tpl",
+    {
+      consul_lb_ip  = yandex_vpc_address.consul_address.external_ipv4_address[0].address
+      grafana_lb_ip = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
+    }
+  )
+  filename = "cloud_config.yaml"
+}
+
+resource "time_sleep" "cloud_config_yaml" {
   create_duration = "10s"
-  depends_on      = [yandex_iam_service_account.coi-sa]
+  depends_on      = [local_file.cloud_config_yaml]
 }
 
 resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
@@ -12,7 +22,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
   folder_id          = var.yc_folder_id
   service_account_id = yandex_iam_service_account.coi-sa.id
   depends_on = [
-    time_sleep.wait_for_coi_sa,
+    time_sleep.cloud_config_yaml,
     yandex_iam_service_account.coi-sa,
     yandex_resourcemanager_folder_iam_member.coi-compute-admin-permissions,
     yandex_resourcemanager_folder_iam_member.coi-vpc-admin-permissions,
@@ -90,8 +100,8 @@ resource "yandex_lb_network_load_balancer" "sni_balancer" {
 
   listener {
     name        = "coi-listener"
-    port        = 80
-    target_port = 80
+    port        = 443
+    target_port = 443
     external_address_spec {
       ip_version = "ipv4"
     }
@@ -103,8 +113,13 @@ resource "yandex_lb_network_load_balancer" "sni_balancer" {
     healthcheck {
       name = "healthcheck"
       tcp_options {
-        port = 80
+        port = 443
       }
     }
   }
+}
+
+output "SNILBBalancerIP" {
+  description = "Public IP address for docker"
+  value       = flatten(flatten(yandex_lb_network_load_balancer.sni_balancer.listener)[0].external_address_spec)[0].address
 }

@@ -9,7 +9,7 @@ resource "yandex_dns_recordset" "grafana_apatsev_org_ru" {
   name    = "grafana.apatsev.org.ru."
   type    = "A"
   ttl     = 200
-  data    = [yandex_vpc_address.grafana_address.external_ipv4_address[0].address]
+  data    = [flatten(flatten(yandex_lb_network_load_balancer.sni_balancer.listener)[0].external_address_spec)[0].address]
 }
 
 resource "yandex_dns_recordset" "consul_apatsev_org_ru" {
@@ -17,5 +17,5 @@ resource "yandex_dns_recordset" "consul_apatsev_org_ru" {
   name    = "consul.apatsev.org.ru."
   type    = "A"
   ttl     = 200
-  data    = [yandex_vpc_address.consul_address.external_ipv4_address[0].address]
+  data    = [flatten(flatten(yandex_lb_network_load_balancer.sni_balancer.listener)[0].external_address_spec)[0].address]
 }

@@ -132,12 +132,15 @@ output "kubeconfig" {
   value = local.kubeconfig
 }
 
+# consul_lb_ip
 output "NginxLoadBalancerIP" {
   description = "Public IP address for docker"
   value       = yandex_vpc_address.consul_address.external_ipv4_address[0].address
 }
 
+# grafana_lb_ip
 output "TraefikLoadBalancerIP" {
   description = "Public IP address for docker"
   value       = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
 }
+
