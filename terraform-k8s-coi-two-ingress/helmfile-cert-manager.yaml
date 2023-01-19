@@ -1,6 +1,3 @@
-helmDefaults:
-  wait: true
-
 repositories:
   - name: cert-manager
     url: https://charts.jetstack.io

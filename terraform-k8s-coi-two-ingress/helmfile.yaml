@@ -1,32 +1,14 @@
-helmDefaults:
-  wait: true
-
 repositories:
-  - name: ingress-nginx
-    url: https://kubernetes.github.io/ingress-nginx
   - name: archive-full-bitnami
     url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
-
-  - name: traefik
-    url: https://traefik.github.io/charts
   - name: grafana
     url: https://grafana.github.io/helm-charts
 
 releases:
-  - name: ingress-nginx
-    namespace: ingress-nginx
-    createNamespace: true
-    chart: ingress-nginx/ingress-nginx
-    version: 4.4.2
-    set:
-      - name: controller.service.loadBalancerIP
-        value: {{ requiredEnv "NginxLoadBalancerIP" }}
   - name: consul
     namespace: consul
     createNamespace: true
     chart: archive-full-bitnami/consul
-    needs:
-      - ingress-nginx/ingress-nginx
     version: 10.9.9
     values:
       - ingress:
@@ -41,20 +23,10 @@ releases:
                 - consul.apatsev.org.ru
               secretName: consul-cert
 
-  - name: traefik
-    namespace: traefik
-    createNamespace: true
-    chart: traefik/traefik
-    version: 20.8.0
-    set:
-      - name: service.spec.loadBalancerIP
-        value: {{ requiredEnv "TraefikLoadBalancerIP" }}
   - name: grafana
     namespace: grafana
     createNamespace: true
     chart: grafana/grafana
-    needs:
-      - traefik/traefik
     version: 6.50.0
     values:
       - ingress:

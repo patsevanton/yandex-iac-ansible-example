@@ -6,15 +6,30 @@ start_time=$(date +%s)
 date1=$(date +"%s")
 
 echo ""
-export NginxLoadBalancerIP=$(terraform output --raw NginxLoadBalancerIP)
-export TraefikLoadBalancerIP=$(terraform output --raw TraefikLoadBalancerIP)
-echo "================Install cert-manager======================"
+NginxLoadBalancerIP=$(terraform output --raw NginxLoadBalancerIP)
+export NginxLoadBalancerIP
+TraefikLoadBalancerIP=$(terraform output --raw TraefikLoadBalancerIP)
+export TraefikLoadBalancerIP
+echo "================ create namespace ======================"
 kubectl create namespace grafana || true
 kubectl create namespace consul || true
+echo "================Install ingress-nginx======================"
+helmfile apply -f helmfile-ingress-nginx.yaml
+echo sleep 10
+sleep 10
+echo "================ Install traefik ======================"
+helmfile apply -f helmfile-traefik.yaml
+echo sleep 10
+sleep 10
+echo "================ Install cert-manager ======================"
 helmfile apply -f helmfile-cert-manager.yaml
-echo "================Create Certificate======================"
+echo sleep 10
+sleep 10
+echo "================ Create Certificate ======================"
 kubectl apply -f certificate.yaml
-echo "================Install Other chart======================"
+echo sleep 10
+sleep 10
+echo "================ Install Other chart ======================"
 helmfile apply -f helmfile.yaml
 
 

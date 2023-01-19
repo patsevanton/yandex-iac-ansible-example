@@ -1,0 +1,13 @@
+repositories:
+  - name: traefik
+    url: https://traefik.github.io/charts
+
+releases:
+  - name: traefik
+    namespace: traefik
+    createNamespace: true
+    chart: traefik/traefik
+    version: 20.8.0
+    set:
+      - name: service.spec.loadBalancerIP
+        value: {{ requiredEnv "TraefikLoadBalancerIP" }}
