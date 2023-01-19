@@ -32,6 +32,8 @@ releases:
     namespace: grafana
     createNamespace: true
     chart: grafana/grafana
+    needs:
+      - traefik/traefik
     version: 6.50.0
     values:
       - ingress:
