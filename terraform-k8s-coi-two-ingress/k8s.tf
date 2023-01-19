@@ -1,5 +1,5 @@
 resource "time_sleep" "wait_for_twoingress_k8s" {
-  create_duration = "10s"
+  create_duration = "20s"
   depends_on      = [yandex_iam_service_account.twoingress-k8s-cluster]
 }
 
