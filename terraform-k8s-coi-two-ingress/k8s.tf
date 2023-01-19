@@ -131,3 +131,13 @@ KUBECONFIG
 output "kubeconfig" {
   value = local.kubeconfig
 }
+
+output "NginxLoadBalancerIP" {
+  description = "Public IP address for docker"
+  value       = yandex_vpc_address.consul_address.external_ipv4_address[0].address
+}
+
+output "TraefikLoadBalancerIP" {
+  description = "Public IP address for docker"
+  value       = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
+}

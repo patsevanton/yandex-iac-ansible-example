@@ -7,10 +7,10 @@ date1=$(date +"%s")
 
 echo ""
 echo "Install grafana and consul"
-kubectl create namespace grafana || true
-kubectl create namespace consul || true
-kubectl apply -f certificate.yaml
-helmfile apply
+export NginxLoadBalancerIP=$(terraform output --raw NginxLoadBalancerIP)
+export TraefikLoadBalancerIP=$(terraform output --raw TraefikLoadBalancerIP)
+helmfile apply -f helmfile-cert-manager.yaml
+helmfile apply -f helmfile.yaml
 
 
 end_time=$(date +%s)
