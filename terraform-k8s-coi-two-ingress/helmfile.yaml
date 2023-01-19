@@ -4,12 +4,13 @@ helmDefaults:
 repositories:
   - name: ingress-nginx
     url: https://kubernetes.github.io/ingress-nginx
+  - name: archive-full-bitnami
+    url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+
   - name: traefik
     url: https://traefik.github.io/charts
   - name: grafana
     url: https://grafana.github.io/helm-charts
-  - name: archive-full-bitnami
-    url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 
 releases:
   - name: ingress-nginx
@@ -20,6 +21,26 @@ releases:
     set:
       - name: controller.service.loadBalancerIP
         value: {{ requiredEnv "NginxLoadBalancerIP" }}
+  - name: consul
+    namespace: consul
+    createNamespace: true
+    chart: archive-full-bitnami/consul
+    needs:
+      - ingress-nginx/ingress-nginx
+    version: 10.9.9
+    values:
+      - ingress:
+          enabled: true
+          path: /
+          hostname: consul.apatsev.org.ru
+          annotations:
+            cert-manager.io/cluster-issuer: ca-issuer
+          ingressClassName: "nginx"
+          extraTls:
+            - hosts:
+                - consul.apatsev.org.ru
+              secretName: consul-cert
+
   - name: traefik
     namespace: traefik
     createNamespace: true
@@ -47,20 +68,3 @@ releases:
             - secretName: grafana-cert
               hosts:
                 - grafana.apatsev.org.ru
-  - name: consul
-    namespace: consul
-    createNamespace: true
-    chart: archive-full-bitnami/consul
-    version: 10.9.9
-    values:
-      - ingress:
-          enabled: true
-          path: /
-          hostname: consul.apatsev.org.ru
-          annotations:
-            cert-manager.io/cluster-issuer: ca-issuer
-          ingressClassName: "nginx"
-          extraTls:
-            - hosts:
-                - consul.apatsev.org.ru
-              secretName: consul-cert
