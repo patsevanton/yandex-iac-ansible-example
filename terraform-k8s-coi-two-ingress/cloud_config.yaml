@@ -17,16 +17,9 @@ write_files:
         access_log  /dev/stdout   basic;
         error_log   /dev/stderr   debug;
 
-        upstream consul {
-          server ${consul_lb_ip}:443;
-        }
-        upstream grafana {
-          server ${grafana_lb_ip}:443;
-        }
-
         map $ssl_preread_server_name $targetBackend {
-          consul.apatsev.org.ru   consul;
-          grafana.apatsev.org.ru  grafana;
+          consul.apatsev.org.ru   ${consul_lb_ip}:443;
+          grafana.apatsev.org.ru  ${grafana_lb_ip}:443;
         }
 
         server {
