@@ -2,19 +2,23 @@ data "yandex_compute_image" "container-optimized-image" {
   family = "container-optimized-image"
 }
 
-resource "local_file" "cloud_config_yaml" {
-  content = templatefile("cloud_config_yaml.tpl",
-    {
-      consul_lb_ip  = yandex_vpc_address.consul_address.external_ipv4_address[0].address
-      grafana_lb_ip = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
-    }
-  )
-  filename = "cloud_config.yaml"
+data "cloudinit_config" "cloud_config_yaml" {
+  gzip          = false
+  base64_encode = false
+  part {
+    content_type = "text/cloud-config"
+    content = templatefile("${path.module}/cloud_config.yaml",
+      {
+        consul_lb_ip  = yandex_vpc_address.consul_address.external_ipv4_address[0].address
+        grafana_lb_ip = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
+      }
+    )
+  }
 }
 
-resource "time_sleep" "cloud_config_yaml" {
+resource "time_sleep" "coi-sa" {
   create_duration = "10s"
-  depends_on      = [local_file.cloud_config_yaml]
+  depends_on      = [yandex_iam_service_account.coi-sa]
 }
 
 resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
@@ -22,7 +26,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
   folder_id          = var.yc_folder_id
   service_account_id = yandex_iam_service_account.coi-sa.id
   depends_on = [
-    time_sleep.cloud_config_yaml,
+    time_sleep.coi-sa,
     yandex_iam_service_account.coi-sa,
     yandex_resourcemanager_folder_iam_member.coi-compute-admin-permissions,
     yandex_resourcemanager_folder_iam_member.coi-vpc-admin-permissions,
@@ -56,7 +60,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
 
     metadata = {
       docker-container-declaration = file("${path.module}/declaration.yaml")
-      user-data                    = file("${path.module}/cloud_config.yaml")
+      user-data                    = data.cloudinit_config.cloud_config_yaml.rendered
       ssh-keys                     = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
     }
 

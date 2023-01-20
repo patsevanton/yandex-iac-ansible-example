@@ -18,10 +18,10 @@ write_files:
         error_log   /dev/stderr   debug;
 
         upstream consul {
-          server 62.84.116.110:443;
+          server ${consul_lb_ip}:443;
         }
         upstream grafana {
-          server 84.201.133.27:443;
+          server ${grafana_lb_ip}:443;
         }
 
         map $ssl_preread_server_name $targetBackend {
