@@ -2,6 +2,13 @@ data "yandex_compute_image" "container-optimized-image" {
   family = "container-optimized-image"
 }
 
+locals {
+  vhost_ip_map = {
+    "consul.apatsev.org.ru"  = yandex_vpc_address.consul_address.external_ipv4_address[0].address
+    "grafana.apatsev.org.ru" = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
+  }
+}
+
 data "cloudinit_config" "cloud_config_yaml" {
   gzip          = false
   base64_encode = false
@@ -9,8 +16,7 @@ data "cloudinit_config" "cloud_config_yaml" {
     content_type = "text/cloud-config"
     content = templatefile("${path.module}/cloud_config.yaml",
       {
-        consul_lb_ip  = yandex_vpc_address.consul_address.external_ipv4_address[0].address
-        grafana_lb_ip = yandex_vpc_address.grafana_address.external_ipv4_address[0].address
+        vhost_ip_map = local.vhost_ip_map
       }
     )
   }

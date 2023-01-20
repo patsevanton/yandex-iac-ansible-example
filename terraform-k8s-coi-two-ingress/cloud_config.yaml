@@ -18,8 +18,9 @@ write_files:
         error_log   /dev/stderr   debug;
 
         map $ssl_preread_server_name $targetBackend {
-          consul.apatsev.org.ru   ${consul_lb_ip}:443;
-          grafana.apatsev.org.ru  ${grafana_lb_ip}:443;
+          %{ for vhost, ip in vhost_ip_map ~}
+          ${vhost} ${ip}:443;
+          %{ endfor ~}
         }
 
         server {
