@@ -80,12 +80,12 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
       #      custom_rules = [
       #        {
       #          labels = {
-      #            queue = "dj600000000220a507nq"
+      #            network_load_balancer = "id nlb"
       #          }
-      #          metric_name = "queue.messages.stored_count"
+      #          metric_name = "network_load_balancer.processed_packets"
       #          metric_type = "GAUGE"
       #          rule_type = "WORKLOAD"
-      #          target = 5
+      #          target = 5 # подбирать от нагрузки
       #        },
       #      ]
       min_zone_size          = 1
