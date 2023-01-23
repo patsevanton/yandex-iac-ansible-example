@@ -80,7 +80,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
       #      custom_rules = [
       #        {
       #          labels = {
-      #            network_load_balancer = "id nlb"
+      #            network_load_balancer = yandex_lb_network_load_balancer.sni_balancer.id
       #          }
       #          metric_name = "network_load_balancer.processed_packets"
       #          metric_type = "GAUGE"
