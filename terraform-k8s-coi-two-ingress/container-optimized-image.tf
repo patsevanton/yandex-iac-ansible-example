@@ -77,17 +77,17 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
       initial_size           = 3
       measurement_duration   = 60
       cpu_utilization_target = 75
-      #      custom_rules = [
-      #        {
-      #          labels = {
-      #            network_load_balancer = yandex_lb_network_load_balancer.sni_balancer.id
-      #          }
-      #          metric_name = "network_load_balancer.processed_packets"
-      #          metric_type = "GAUGE"
-      #          rule_type = "WORKLOAD"
-      #          target = 5 # подбирать от нагрузки
-      #        },
-      #      ]
+      custom_rules = [
+        {
+          labels = {
+            network_load_balancer = yandex_lb_network_load_balancer.sni_balancer.id
+          }
+          metric_name = "network_load_balancer.processed_packets"
+          metric_type = "GAUGE"
+          rule_type   = "WORKLOAD"
+          target      = 5 # подбирать от нагрузки
+        },
+      ]
       min_zone_size          = 1
       max_size               = 15
       warmup_duration        = 60
