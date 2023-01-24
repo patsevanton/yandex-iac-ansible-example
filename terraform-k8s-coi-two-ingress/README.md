@@ -30,3 +30,9 @@ test
     }
 }
 ```
+
+
+## Yandex Мониторинг
+``` 
+"*"{folderId="b1g972v94kscfi3qmfmh", service="network-load-balancer", network_load_balancer="sni-balancer", upstream_ip="*", direction="ingress"}
+```
