@@ -36,3 +36,7 @@ test
 ``` 
 "*"{folderId="b1g972v94kscfi3qmfmh", service="network-load-balancer", network_load_balancer="sni-balancer", upstream_ip="*", direction="ingress"}
 ```
+
+```
+{folderId="b1g972v94kscfi3qmfmh", service="network-load-balancer", name="processed_packets", direction="egress", network_load_balancer="sni-balancer", protocol="tcp"}
+```
