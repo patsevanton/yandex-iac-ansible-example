@@ -57,9 +57,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
     network_interface {
       network_id = data.yandex_vpc_network.default.id
       subnet_ids = [
-        data.yandex_vpc_subnet.default-ru-central1-a.id,
         data.yandex_vpc_subnet.default-ru-central1-b.id,
-        data.yandex_vpc_subnet.default-ru-central1-c.id
       ]
       nat = true
     }
@@ -74,30 +72,36 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
 
   scale_policy {
     auto_scale {
-      initial_size           = 3
-      measurement_duration   = 60
-      cpu_utilization_target = 75
-      #      custom_rule {
-      #        labels = {
-      #          network_load_balancer = yandex_lb_network_load_balancer.sni_balancer.id
-      #        }
-      #        metric_name = "network_load_balancer.processed_packets"
-      #        metric_type = "GAUGE"
-      #        rule_type   = "WORKLOAD"
-      #        target      = 5 # подбирать от нагрузки
-      #      }
+      initial_size         = 1
+      measurement_duration = 60
+      custom_rule {
+        labels = {
+          "key1" = "value1"
+        }
+        metric_name = "network_load_balancer.processed_packets"
+        metric_type = "GAUGE"
+        rule_type   = "WORKLOAD"
+        target      = 5
+      }
+      custom_rule {
+        labels = {
+          "key1" = "value1"
+        }
+        metric_name = "network_load_balancer.processed_bytes"
+        metric_type = "GAUGE"
+        rule_type   = "WORKLOAD"
+        target      = 5
+      }
       min_zone_size          = 1
       max_size               = 15
       warmup_duration        = 60
-      stabilization_duration = 120
+      stabilization_duration = 60
     }
   }
 
   allocation_policy {
     zones = [
-      "ru-central1-a",
       "ru-central1-b",
-      "ru-central1-c"
     ]
   }
 
@@ -116,6 +120,10 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
 
 resource "yandex_lb_network_load_balancer" "sni_balancer" {
   name = "sni-balancer"
+
+  labels = {
+    "key1" = "value1"
+  }
 
   listener {
     name        = "coi-listener"
