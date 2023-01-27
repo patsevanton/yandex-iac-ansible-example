@@ -4,7 +4,7 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
   network_id  = data.yandex_vpc_network.default.id
 
   master {
-    version = "1.22"
+    version = "1.23"
     zonal {
       zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
       subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
@@ -20,6 +20,7 @@ resource "yandex_kubernetes_cluster" "loki_k8s_cluster" {
   // to keep permissions of service account on destroy
   // until cluster will be destroyed
   depends_on = [
+    time_sleep.wait_for_loki_k8s_cluster_sa,
     yandex_resourcemanager_folder_iam_member.loki-k8s-cluster-agent-permissions,
     yandex_resourcemanager_folder_iam_member.loki-vpc-publicAdmin-permissions,
     yandex_resourcemanager_folder_iam_member.loki-load-balancer-admin-permissions,

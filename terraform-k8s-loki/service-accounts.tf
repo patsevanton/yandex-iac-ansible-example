@@ -4,6 +4,11 @@ resource "yandex_iam_service_account" "loki-k8s-cluster" {
   name      = "loki-k8s-cluster"
 }
 
+resource "time_sleep" "wait_for_loki_k8s_cluster_sa" {
+  create_duration = "20s"
+  depends_on      = [yandex_iam_service_account.loki-k8s-cluster]
+}
+
 resource "yandex_resourcemanager_folder_iam_member" "loki-k8s-cluster-agent-permissions" {
   folder_id = var.yc_folder_id
   role      = "k8s.clusters.agent"
@@ -33,3 +38,4 @@ resource "yandex_resourcemanager_folder_iam_member" "loki-k8s-node-group-permiss
   role      = "container-registry.images.puller"
   member    = "serviceAccount:${yandex_iam_service_account.loki-k8s-node-group.id}"
 }
+
