@@ -14,7 +14,4 @@ inputs = {
   node_ipv4_cidr_mask_size = "25"
   version_k8s              = "1.23"
   zone                     = "ru-central1-b"
-  folder_id                = ""
-  subnet_id                = ""
-  network_id               = ""
 }

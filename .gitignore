@@ -22,3 +22,4 @@
 **/credentials
 **/env.hcl
 /terraform-k8s-stress/values-kube-prometheus-stack.yaml
+**/.terragrunt-cache/2l-eRwH783sIU0sHdSlRbQcJDho/t9JEDCPcZ-DprqeDzKhVxJLQ4K8/
