@@ -20,4 +20,5 @@
 **/ClusterIssuer.yaml
 **/*.iml
 **/credentials
+**/env.hcl
 /terraform-k8s-stress/values-kube-prometheus-stack.yaml
