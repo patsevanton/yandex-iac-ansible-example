@@ -1,5 +1,5 @@
 terraform {
-  source = 
+  source = "github.com/patsevanton/terraform-yandex-kubernetes-node-group.git?ref=main"
 }
 
 include {
@@ -7,13 +7,13 @@ include {
 }
 
 
-dependency "masters" {
-  config_path = "../masters"
+dependency "master" {
+  config_path = "../master"
 }
 
 inputs = {
 
-  cluster_id  = dependency.masters.outputs.cluster_id
+  cluster_id  = dependency.master.outputs.cluster_id
   pool_name   = ""
   k8s_version = "1.23"
   nat         = false
@@ -24,6 +24,5 @@ inputs = {
   disk        = 100
   disk_type   = "network-ssd"
   k8s_zone    = ["ru-central1-b"]
-  subnet_id   = []
 
 }
