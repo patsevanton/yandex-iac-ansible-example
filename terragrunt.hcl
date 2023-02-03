@@ -6,7 +6,7 @@ inputs = merge({
 
   cloud_id   = local.env_vars.locals.cloud_id
   # subnet_id  = local.env_vars.locals.subnet_id
-  # network_id = local.env_vars.locals.network_id
+  network_id = local.env_vars.locals.network_id
   folder_id  = local.env_vars.locals.folder_id
 
 })
