@@ -14,7 +14,7 @@ dependency "master" {
 inputs = {
 
   cluster_id  = dependency.master.outputs.cluster_id
-  pool_name   = ""
+  pool_name   = "test-node"
   k8s_version = "1.23"
   nat         = false
   num         = 3
