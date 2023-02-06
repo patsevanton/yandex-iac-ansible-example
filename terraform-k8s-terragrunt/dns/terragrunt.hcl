@@ -14,6 +14,7 @@ inputs = {
   description = "grafana"
   zone = "apatsev.org.ru."
   name = "apatsev-org-ru"
+  public = true
   recordset = [
     {
       name = "grafana.apatsev.org.ru."
