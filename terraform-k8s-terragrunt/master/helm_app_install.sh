@@ -5,6 +5,8 @@ set -eu pipefail
 start_time=$(date +%s)
 date1=$(date +"%s")
 
+NginxLoadBalancerIP=$(terraform output --raw NginxLoadBalancerIP)
+export NginxLoadBalancerIP
 echo "================Install ingress-nginx======================"
 helmfile apply -f helmfile-ingress-nginx.yaml
 echo sleep 5
