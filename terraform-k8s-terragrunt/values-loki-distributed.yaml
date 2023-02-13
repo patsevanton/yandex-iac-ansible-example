@@ -1105,7 +1105,7 @@ gateway:
 # Configuration for the compactor
 compactor:
   # -- Specifies whether compactor should be enabled
-  enabled: false
+  enabled: true
   image:
     # -- The Docker registry for the compactor image. Overrides `loki.image.registry`
     registry: null
@@ -1149,7 +1149,7 @@ compactor:
   tolerations: []
   persistence:
     # -- Enable creating PVCs for the compactor
-    enabled: false
+    enabled: true
     # -- Size of persistent disk
     size: 10Gi
     # -- Storage class to be used.
@@ -1383,7 +1383,7 @@ indexGateway:
   tolerations: []
   persistence:
     # -- Enable creating PVCs which is required when using boltdb-shipper
-    enabled: false
+    enabled: true
     # -- Use emptyDir with ramdisk for storage. **Please note that all data in indexGateway will be lost on pod restart**
     inMemory: false
     # -- Size of persistent or memory disk
