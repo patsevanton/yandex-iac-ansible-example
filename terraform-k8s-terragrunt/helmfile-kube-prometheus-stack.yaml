@@ -12,11 +12,5 @@ releases:
       - ingress:
           enabled: true
           path: /
-          hostname: consul.apatsev.org.ru
-          annotations:
-            cert-manager.io/cluster-issuer: ca-issuer
+          hostname: grafana.apatsev.org.ru
           ingressClassName: "nginx"
-          extraTls:
-            - hosts:
-                - consul.apatsev.org.ru
-              secretName: consul-cert

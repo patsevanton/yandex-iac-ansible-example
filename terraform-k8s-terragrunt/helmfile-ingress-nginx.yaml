@@ -10,4 +10,4 @@ releases:
     version: 4.4.2
     set:
       - name: controller.service.loadBalancerIP
-        value: {{ requiredEnv "NginxLoadBalancerIP" }}
+        value: {{ requiredEnv "external_ipv4_address" }}
