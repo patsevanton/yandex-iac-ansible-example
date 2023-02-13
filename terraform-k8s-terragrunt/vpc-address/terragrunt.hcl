@@ -8,5 +8,5 @@ include {
 
 inputs = {
   yandex_vpc_address_name = "grafana"
-  zone_id                 = "ru-central1-a"
+  zone_id                 = "ru-central1-b"
 }
