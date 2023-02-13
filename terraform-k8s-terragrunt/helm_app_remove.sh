@@ -11,4 +11,4 @@ helmfile destroy -f helmfile-ingress-nginx.yaml
 helmfile destroy -f helmfile-kube-prometheus-stack.yaml
 kubectl delete namespace monitoring || true
 kubectl delete namespace ingress-nginx|| true
-
+rm -f /home/$USER/.kube/config
