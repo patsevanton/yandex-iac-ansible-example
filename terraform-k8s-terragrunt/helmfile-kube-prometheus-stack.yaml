@@ -15,8 +15,4 @@ releases:
       name: kube-prometheus-stack
     version: 44.3.1
     values:
-      - ingress:
-          enabled: true
-          path: /
-          hostname: grafana.apatsev.org.ru
-          ingressClassName: "nginx"
+      - "values-kube-prometheus-stack.yaml"
