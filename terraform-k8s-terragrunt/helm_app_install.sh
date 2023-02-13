@@ -17,23 +17,13 @@ cd vpc-address
 export external_ipv4_address=$(terragrunt output --raw external_ipv4_address)
 echo "$external_ipv4_address"
 cd ..
-pwd
-#NginxLoadBalancerIP=$(terragrunt output --raw NginxLoadBalancerIP)
-#export NginxLoadBalancerIP
-#echo "================Install ingress-nginx======================"
-#helmfile apply -f helmfile-ingress-nginx.yaml
-#echo sleep 5
-#sleep 5
-#echo "================ Install cert-manager ======================"
-#helmfile apply -f helmfile-cert-manager.yaml
-#echo sleep 5
-#sleep 5
-#echo "================ Create ClusterIssuer ======================"
-#kubectl apply -f ClusterIssuer.yaml
-#echo sleep 5
-#sleep 5
-#echo "================ Install kube-prometheus-stack ======================"
-#helmfile apply -f helmfile-kube-prometheus-stack.yaml
+
+echo "================Install ingress-nginx======================"
+helmfile apply -f helmfile-ingress-nginx.yaml
+echo sleep 5
+sleep 5
+echo "================ Install kube-prometheus-stack ======================"
+helmfile apply -f helmfile-kube-prometheus-stack.yaml
 
 
 end_time=$(date +%s)
