@@ -2,18 +2,13 @@
 
 echo ""
 
-NginxLoadBalancerIP=$(terraform output --raw NginxLoadBalancerIP)
-export NginxLoadBalancerIP
-echo "================Uninstall other chart======================"
-helmfile destroy -f helmfile.yaml
-echo "================Destroy Certificate======================"
-kubectl delete -f certificate.yaml
-echo "================Destroy cert-manager======================"
-helmfile destroy -f helmfile-cert-manager.yaml
-helmfile destroy -f helmfile-traefik.yaml
+cd vpc-address
+export external_ipv4_address=$(terragrunt output --raw external_ipv4_address)
+echo "$external_ipv4_address"
+cd ..
+
 helmfile destroy -f helmfile-ingress-nginx.yaml
-kubectl delete namespace grafana || true
-kubectl delete namespace consul || true
-kubectl delete namespace cert-manager || true
+helmfile destroy -f helmfile-kube-prometheus-stack.yaml
+kubectl delete namespace monitoring || true
 kubectl delete namespace ingress-nginx|| true
-kubectl delete namespace traefik|| true
+
