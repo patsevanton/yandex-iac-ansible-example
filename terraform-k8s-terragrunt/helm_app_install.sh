@@ -7,10 +7,15 @@ date1=$(date +"%s")
 
 
 mkdir -p "/home/$USER/.kube"
-export cluster_id=$(terragrunt output --raw cluster_id) || true
+cd master
+export cluster_id=$(terragrunt output --raw cluster_id)
+cd ..
 yc managed-kubernetes cluster get-credentials --id "$cluster_id" --external --force
 
-terragrunt output --raw NginxLoadBalancerIP
+cd vpc-address
+export external_ipv4_address=$(terragrunt output --raw external_ipv4_address)
+cd ..
+pwd
 #NginxLoadBalancerIP=$(terragrunt output --raw NginxLoadBalancerIP)
 #export NginxLoadBalancerIP
 #echo "================Install ingress-nginx======================"
