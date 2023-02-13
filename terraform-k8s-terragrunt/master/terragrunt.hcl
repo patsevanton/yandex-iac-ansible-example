@@ -1,6 +1,6 @@
 
 terraform {
-  source = "github.com/patsevanton/terraform-yandex-kubernetes-cluster.git?ref=main"
+  source = "github.com/patsevanton/terraform-yandex-kubernetes-cluster.git//.?ref=main"
 }
 
 include {
