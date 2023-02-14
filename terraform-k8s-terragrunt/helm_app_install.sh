@@ -26,16 +26,16 @@ echo "================ Install kube-prometheus-stack ======================"
 helmfile apply -f helmfile-kube-prometheus-stack.yaml
 echo sleep 5
 sleep 5
-echo "================ Install loki-distributed ======================"
-helmfile apply -f helmfile-loki-distributed.yaml
-echo sleep 5
-sleep 5
-echo "================ Install promtail ======================"
-helmfile apply -f helmfile-promtail.yaml
-echo sleep 5
-sleep 5
-echo "================ Install promtail ======================"
-helmfile apply -f helmfile-loggenerator.yaml
+#echo "================ Install loki-distributed ======================"
+#helmfile apply -f helmfile-loki-distributed.yaml
+#echo sleep 5
+#sleep 5
+#echo "================ Install promtail ======================"
+#helmfile apply -f helmfile-promtail.yaml
+#echo sleep 5
+#sleep 5
+#echo "================ Install promtail ======================"
+#helmfile apply -f helmfile-loggenerator.yaml
 
 
 end_time=$(date +%s)
