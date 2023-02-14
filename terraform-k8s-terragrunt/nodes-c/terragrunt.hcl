@@ -24,5 +24,7 @@ inputs = {
   disk        = 100
   disk_type   = "network-ssd"
   k8s_zone    = ["ru-central1-c"]
-
+  subnet_id   = [
+    "b0caoi5rb4u3sbms1vra", # ru-central1-c
+  ]
 }
