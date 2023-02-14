@@ -14,15 +14,15 @@ dependency "master" {
 inputs = {
 
   cluster_id  = dependency.master.outputs.cluster_id
-  pool_name   = "test-node"
+  pool_name   = "test-node-a"
   k8s_version = "1.23"
   nat         = false
   num         = 1
-  max_num     = 8
+  max_num     = 1
   cpu         = 4
   memory      = 8
   disk        = 100
   disk_type   = "network-ssd"
-  k8s_zone    = ["ru-central1-b"]
+  k8s_zone    = ["ru-central1-a"]
 
 }
