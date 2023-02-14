@@ -295,8 +295,8 @@ prometheusRule:
   # -- PrometheusRule annotations
   annotations: {}
   # -- Additional PrometheusRule labels
-  labels:
-    release: prometheus
+  labels: {}
+  #  release: prometheus
   # -- Contents of Prometheus rules file
   groups:
     - name: loki_rules
