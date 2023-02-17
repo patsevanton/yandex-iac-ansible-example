@@ -2986,7 +2986,6 @@ prometheus:
     additionalScrapeConfigs:
       - job_name: "grafana-login"
         scrape_interval: 5s
-#        enable_http2: false
         scheme: http
         metrics_path: "/probe"
         params:
