@@ -18,14 +18,20 @@ export external_ipv4_address=$(terragrunt output --raw external_ipv4_address)
 echo "$external_ipv4_address"
 cd ..
 
+echo "================Create secret======================"
+kubectl create namespace monitoring
+kubectl create secret generic grafana-password --from-file=grafana-password.txt -n monitoring
+
 echo "================Install ingress-nginx======================"
 helmfile apply -f helmfile-ingress-nginx.yaml
 echo sleep 5
 sleep 5
 echo "================ Install kube-prometheus-stack ======================"
 helmfile apply -f helmfile-kube-prometheus-stack.yaml
-#echo sleep 5
-#sleep 5
+echo sleep 5
+sleep 5
+echo "================ Install prometheus-blackbox-exporter ======================"
+helmfile apply -f helmfile-prometheus-blackbox-exporter.yaml
 #echo "================ Install loki-distributed ======================"
 #helmfile apply -f helmfile-loki-distributed.yaml
 #echo sleep 5

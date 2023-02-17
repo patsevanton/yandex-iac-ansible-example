@@ -132,6 +132,16 @@ config:
         valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
         follow_redirects: true
         preferred_ip_protocol: "ip4"
+    http_basic_auth_password_file:
+      prober: http
+      timeout: 5s
+      http:
+        method: GET
+        valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+        preferred_ip_protocol: "ip4"
+        basic_auth:
+          username: "admin"
+          password_file: "/grafana-password/grafana-password.txt"
 
 # Set custom config path, other than default /config/blackbox.yaml. If let empty, path will be "/config/blackbox.yaml"
 # configPath: "/foo/bar"
@@ -146,12 +156,11 @@ extraConfigmapMounts: []
 
 ## Additional secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
-extraSecretMounts: []
-  # - name: secret-files
-  #   mountPath: /etc/secrets
-  #   secretName: blackbox-secret-files
-  #   readOnly: true
-  #   defaultMode: 420
+extraSecretMounts:
+   - name: grafana-password
+     mountPath: /grafana-password/grafana-password.txt
+     secretName: grafana-password
+     subPath: "grafana-password.txt"
 
 resources: {}
   # limits:
@@ -223,10 +232,11 @@ serviceMonitor:
   ## https://github.com/coreos/prometheus-operator for blackbox-exporter itself
   ##
   selfMonitor:
-    enabled: false
+    enabled: true
     additionalMetricsRelabels: {}
     additionalRelabeling: []
-    labels: {}
+    labels:
+      release: prometheus
     interval: 30s
     scrapeTimeout: 30s
 
