@@ -136,7 +136,7 @@ config:
       prober: http
       timeout: 5s
       http:
-        method: GET
+#        method: GET
         valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
         preferred_ip_protocol: "ip4"
         basic_auth:
