@@ -13,3 +13,13 @@ datasources:
     uid: loki
     url: http://loki-gateway
     version: 1
+
+  - access: proxy
+    basicAuth: false
+    editable: true
+    isDefault: false
+    name: prometheus
+    type: prometheus
+    uid: prometheus
+    url: http://prometheus:9090
+    version: 1
