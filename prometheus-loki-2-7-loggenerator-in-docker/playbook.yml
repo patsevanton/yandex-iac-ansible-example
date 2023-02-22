@@ -29,30 +29,25 @@
         mode: '0755'
         owner: ubuntu
 
-    - name: Copy local-config.yaml
-      copy:
-        src: local-config.yaml
-        dest: /etc/docker-compose/local-config.yaml
+#    - name: Copy local-config.yaml
+#      copy:
+#        src: local-config.yaml
+#        dest: /etc/docker-compose/local-config.yaml
 
-    - name: Copy docker-compose-230.yml
+    - name: Copy docker-compose.yml
       copy:
-        src: docker-compose-230.yml
-        dest: /etc/docker-compose/docker-compose-230.yml
-
-    - name: Copy docker-compose-261.yml
-      copy:
-        src: docker-compose-261.yml
-        dest: /etc/docker-compose/docker-compose-261.yml
+        src: docker-compose.yml
+        dest: /etc/docker-compose/docker-compose.yml
 
     - name: Copy files of directory config to /etc/docker-compose/config/
       copy:
         src: config/    # note the '/' <-- !!!
         dest: /etc/docker-compose/config/
 
-    - name: Copy promtail-old.yaml
-      copy:
-        src: config/promtail-old.yaml
-        dest: /etc/docker-compose/config/promtail-old.yaml
+#    - name: Copy promtail.yaml
+#      copy:
+#        src: config/promtail.yaml
+#        dest: /etc/docker-compose/config/promtail.yaml
 
     - name: add user ubuntu to docker group
       ansible.builtin.user:
