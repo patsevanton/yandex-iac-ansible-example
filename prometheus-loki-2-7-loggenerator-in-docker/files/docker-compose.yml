@@ -142,6 +142,25 @@ services:
       init:
         condition: service_completed_successfully
 
+  table-manager:
+    image: grafana/loki:2.7.3
+    volumes:
+      - ./config:/etc/loki/
+      - loki:/loki
+    ports:
+      - "3100"
+      - "7946"
+    command: "-config.file=/etc/loki/loki.yaml -target=table-manager"
+    networks:
+      - loki
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    depends_on:
+      init:
+        condition: service_completed_successfully
+
   cassandra:
     image: bitnami/cassandra:3.11.11
     container_name: cassandra
