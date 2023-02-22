@@ -18,14 +18,14 @@ common:
       chunks_directory: /loki/chunks/
       rules_directory: /loki/rules
 
-#memberlist:
-#  join_members: ["loki-read", "loki-write", "cassandra", "ingester"]
-#  dead_node_reclaim_time: 30s
-#  gossip_to_dead_nodes_time: 15s
-#  left_ingesters_timeout: 30s
-#  bind_addr: ['0.0.0.0']
-#  bind_port: 7946
-#  gossip_interval: 2s
+memberlist:
+  join_members: ["loki-read", "loki-write"]
+  dead_node_reclaim_time: 30s
+  gossip_to_dead_nodes_time: 15s
+  left_ingesters_timeout: 30s
+  bind_addr: ['0.0.0.0']
+  bind_port: 7946
+  gossip_interval: 2s
 
 ingester:
   lifecycler:
@@ -34,7 +34,7 @@ ingester:
     ring:
       replication_factor: 1
       kvstore:
-        store: inmemory
+        store: memberlist
     final_sleep: 0s
   chunk_idle_period: 1h
   wal:
