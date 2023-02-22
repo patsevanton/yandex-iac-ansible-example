@@ -1,0 +1,19 @@
+---
+- hosts: lokiindocker
+  become: true
+  tasks:
+
+    - name: docker stop
+      shell: "docker stop $(docker ps -a -q)"
+      args:
+        chdir: /etc/docker-compose
+
+    - name: docker rm
+      shell: "docker rm $(docker ps -a -q)"
+      args:
+        chdir: /etc/docker-compose
+
+    - name: docker volume prune
+      shell: "docker volume prune -f"
+      args:
+        chdir: /etc/docker-compose

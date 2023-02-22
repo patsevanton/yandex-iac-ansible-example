@@ -1,0 +1,61 @@
+---
+- hosts: lokiindocker
+  become: true
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    - name: install pip3
+      apt: name=python3-pip state=present
+    - name: Install multi python packages with version specifiers
+      pip:
+        name:
+          - docker
+          - docker-compose
+  roles:
+    - role: geerlingguy.docker
+  post_tasks:
+    - name: Create a new directory www at given path
+      ansible.builtin.file:
+        path: /etc/docker-compose
+        state: directory
+        mode: '0755'
+        owner: ubuntu
+
+    - name: Creates directory /etc/docker-compose/config
+      file:
+        path: /home/ubuntu/config
+        state: directory
+        mode: '0755'
+        owner: ubuntu
+
+    - name: Copy local-config.yaml
+      copy:
+        src: local-config.yaml
+        dest: /etc/docker-compose/local-config.yaml
+
+    - name: Copy docker-compose-230.yml
+      copy:
+        src: docker-compose-230.yml
+        dest: /etc/docker-compose/docker-compose-230.yml
+
+    - name: Copy docker-compose-261.yml
+      copy:
+        src: docker-compose-261.yml
+        dest: /etc/docker-compose/docker-compose-261.yml
+
+    - name: Copy files of directory config to /etc/docker-compose/config/
+      copy:
+        src: config/    # note the '/' <-- !!!
+        dest: /etc/docker-compose/config/
+
+    - name: Copy promtail-old.yaml
+      copy:
+        src: config/promtail-old.yaml
+        dest: /etc/docker-compose/config/promtail-old.yaml
+
+    - name: add user ubuntu to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
