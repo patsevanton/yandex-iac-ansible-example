@@ -1,0 +1,15 @@
+helmDefaults:
+  wait: true
+
+repositories:
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+
+releases:
+  - name: loki-distributed
+    namespace: loki
+    createNamespace: true
+    chart: grafana/loki-distributed
+    version: 0.69.4
+    values:
+      - "values-loki-distributed.yaml"
