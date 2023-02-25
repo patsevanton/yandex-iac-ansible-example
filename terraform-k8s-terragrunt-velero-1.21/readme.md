@@ -24,5 +24,4 @@ velero install \
   --use-volume-snapshots=true \
   --snapshot-location-config region=ru-central1
   --use-restic
-
 ```

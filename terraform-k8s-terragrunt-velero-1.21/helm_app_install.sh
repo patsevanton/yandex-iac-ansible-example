@@ -19,8 +19,8 @@ echo "$external_ipv4_address"
 cd ..
 
 
-echo "================ Install kube-prometheus-stack ======================"
-helmfile apply -f helmfile-kube-prometheus-stack.yaml
+echo "================ Install postgresql ======================"
+helmfile apply -f helmfile-postgresql.yaml -log-level debug
 
 
 
