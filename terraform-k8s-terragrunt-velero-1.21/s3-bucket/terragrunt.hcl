@@ -7,5 +7,6 @@ include {
 }
 
 inputs = {
-  bucket = "velero"
+  bucket               = "velero-apatsev"
+  service_account_name = "s3-velero-apatsev"
 }
