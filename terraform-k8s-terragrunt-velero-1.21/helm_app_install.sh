@@ -13,15 +13,10 @@ echo "$cluster_id"
 cd ..
 yc managed-kubernetes cluster get-credentials --id "$cluster_id" --external --force
 
-cd vpc-address
-export external_ipv4_address=$(terragrunt output --raw external_ipv4_address)
-echo "$external_ipv4_address"
-cd ..
-
 
 echo "================ Install postgresql ======================"
-helmfile apply -f helmfile-postgresql.yaml
-
+#helmfile apply -f helmfile-postgresql.yaml
+helmfile apply -f helmfile-nginx.yaml
 
 end_time=$(date +%s)
 date2=$(date +"%s")

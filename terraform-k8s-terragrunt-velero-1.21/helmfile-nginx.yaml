@@ -1,0 +1,25 @@
+helmDefaults:
+  wait: true
+
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
+releases:
+  - name: nginx
+    namespace: nginx
+    createNamespace: true
+    chart: bitnami/nginx
+    version: 13.2.27
+    set:
+      - name: serverBlock
+        value: |-
+          server {
+            listen 0.0.0.0:8080;
+            server_name _;
+
+            location /bitnami {
+              proxy_pass https://charts.bitnami.com/bitnami;
+              proxy_set_header Host charts.bitnami.com;
+            }
+          }

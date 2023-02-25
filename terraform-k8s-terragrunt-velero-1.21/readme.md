@@ -40,6 +40,8 @@ SELECT SUM(num1) AS sum_num1,
 FROM large_test;
 ```
 
+Устанавливаем бинарник velero 1.8.1
+
 ```bash
 kubectl label volumesnapshotclasses.snapshot.storage.k8s.io yc-csi-snapclass \
 velero.io/csi-volumesnapshot-class="true" && \
@@ -51,6 +53,6 @@ velero install \
   --secret-file ./credentials \
   --features=EnableCSI \
   --use-volume-snapshots=true \
-  --snapshot-location-config region=ru-central1
+  --snapshot-location-config region=ru-central1 \
   --use-restic
 ```
