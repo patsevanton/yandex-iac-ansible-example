@@ -20,8 +20,7 @@ cd ..
 
 
 echo "================ Install postgresql ======================"
-helmfile apply -f helmfile-postgresql.yaml -log-level debug
-
+helmfile apply -f helmfile-postgresql.yaml
 
 
 end_time=$(date +%s)

@@ -1,9 +1,9 @@
 helmDefaults:
   wait: true
 
-#repositories:
-#  - name: bitnami
-#    url: https://charts.bitnami.com/bitnami
+repositories:
+  - name: bitnami
+    url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 
 releases:
   - name: postgresql

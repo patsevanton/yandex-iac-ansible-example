@@ -12,6 +12,35 @@ Create credentials
 Change bucket to bucket name from terraform-k8s-terragrunt-velero-s3
 
 ```bash
+helm_app_install.sh
+```
+
+```bash
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace postgresql postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+```
+
+```bash
+kubectl run postgresql-client --rm --tty -i --restart='Never' --namespace postgresql --image docker.io/bitnami/postgresql:15.2.0-debian-11-r2 --env="PGPASSWORD=$POSTGRES_PASSWORD" \
+--command -- psql --host postgresql -U postgres -d postgres -p 5432
+```
+
+```SQL
+CREATE TABLE large_test (num1 bigint, num2 bigint, num3 bigint);
+
+INSERT INTO large_test (num1, num2, num3)
+SELECT round(random()*10), round(random()*10), round(random()*10)
+FROM generate_series(1, 20000000) s(i);
+```
+
+
+```SQL
+SELECT SUM(num1) AS sum_num1,
+       SUM(num2) AS sum_num2,
+       SUM(num3) AS sum_num3
+FROM large_test;
+```
+
+```bash
 kubectl label volumesnapshotclasses.snapshot.storage.k8s.io yc-csi-snapclass \
 velero.io/csi-volumesnapshot-class="true" && \
 velero install \
