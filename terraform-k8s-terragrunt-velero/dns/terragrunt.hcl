@@ -8,6 +8,10 @@ include {
 
 dependency "vpc-address" {
   config_path = "../vpc-address"
+  mock_outputs_allowed_terraform_commands = [ "init", "validate", "plan" ]  # only allow mocks  for validate command
+  mock_outputs = {
+    external_ipv4_address = "fake_external_ipv4_address"
+  }
 }
 
 inputs = {

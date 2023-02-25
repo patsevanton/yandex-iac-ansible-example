@@ -9,13 +9,17 @@ include {
 
 dependency "master" {
   config_path = "../master"
+  mock_outputs_allowed_terraform_commands = [ "init", "validate", "plan" ]
+  mock_outputs = {
+    cluster_id = "fake_cluster_id"
+  }
 }
 
 inputs = {
 
   cluster_id  = dependency.master.outputs.cluster_id
   pool_name   = "test-node-a"
-  k8s_version = "1.23"
+  k8s_version = "1.21"
   nat         = false
   num         = 1
   max_num     = 1
