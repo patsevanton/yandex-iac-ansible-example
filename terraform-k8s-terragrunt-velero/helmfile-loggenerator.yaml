@@ -1,0 +1,11 @@
+helmDefaults:
+  wait: true
+
+releases:
+  - name: loggenerator
+    namespace: loki
+    createNamespace: true
+    chart: ./loggenerator
+    set:
+      - name: replicaCount
+        value: 1
