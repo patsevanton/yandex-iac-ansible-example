@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com:patsevanton/terraform-yandex-storage-bucket.git//.?ref=main"
+  source = "github.com/patsevanton/terraform-yandex-storage-bucket.git//.?ref=main"
 }
 
 include {
