@@ -56,3 +56,12 @@ velero install \
   --snapshot-location-config region=ru-central1 \
   --use-restic
 ```
+
+```bash
+helm_app_remove.sh
+```
+
+```bash
+velero backup create postgresql --include-resources pvc,pv --selector app.kubernetes.io/name=postgresql --include-namespaces postgresql
+velero backup describe postgresql --details
+```
