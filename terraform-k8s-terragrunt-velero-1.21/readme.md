@@ -1,6 +1,7 @@
 Create S3 by terraform-k8s-terragrunt-velero-s3
 
-Download and install https://github.com/vmware-tanzu/velero/releases/download/v1.9.6/velero-v1.9.6-linux-amd64.tar.gz
+Устанавливаем бинарник velero 1.8.1
+Download and install https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
 
 Create credentials
 ```ini
@@ -39,8 +40,6 @@ SELECT SUM(num1) AS sum_num1,
        SUM(num3) AS sum_num3
 FROM large_test;
 ```
-
-Устанавливаем бинарник velero 1.8.1
 
 ```bash
 kubectl label volumesnapshotclasses.snapshot.storage.k8s.io yc-csi-snapclass \
