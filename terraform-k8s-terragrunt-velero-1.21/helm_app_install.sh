@@ -15,7 +15,7 @@ yc managed-kubernetes cluster get-credentials --id "$cluster_id" --external --fo
 
 
 echo "================ Install postgresql ======================"
-helmfile apply -f helmfile-postgresql.yaml
+helmfile apply --skip-deps -f helmfile-postgresql.yaml
 #helmfile apply -f helmfile-nginx.yaml
 
 end_time=$(date +%s)
