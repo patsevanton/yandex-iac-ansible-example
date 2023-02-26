@@ -8,6 +8,9 @@ Create credentials
   aws_secret_access_key= from terraform-k8s-terragrunt-velero-s3
 ```
 
+```bash
+kubectx yc-test-1-22
+```
 
 ```bash
 kubectl label volumesnapshotclasses.snapshot.storage.k8s.io yc-csi-snapclass \

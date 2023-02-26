@@ -13,7 +13,11 @@ Create credentials
 Change bucket to bucket name from terraform-k8s-terragrunt-velero-s3
 
 ```bash
-helm_app_install.sh
+change_context.sh
+```
+
+```bash
+helmfile apply --skip-deps -f helmfile-postgresql.yaml
 ```
 
 ```bash
