@@ -26,7 +26,7 @@ velero install \
 
 
 ```bash
-#velero backup create postgresql --include-resources pvc,pv --selector app.kubernetes.io/name=postgresql --include-namespaces postgresql
-#velero restore create postgresql --exclude-namespaces velero --from-backup postgresql
-velero restore create postgresql --exclude-namespaces velero --include-resources=pv,pvc --from-backup postgresql
+velero restore get
+velero restore create postgresql --exclude-namespaces velero --include-resources=pv,pvc --from-backup postgresql --include-namespaces postgresql
+velero restore describe postgresql --details
 ```

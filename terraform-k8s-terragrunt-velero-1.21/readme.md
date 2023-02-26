@@ -62,5 +62,6 @@ helm_app_remove.sh
 
 ```bash
 velero backup create postgresql --include-resources pvc,pv --selector app.kubernetes.io/name=postgresql --include-namespaces postgresql
+velero backup get
 velero backup describe postgresql --details
 ```
