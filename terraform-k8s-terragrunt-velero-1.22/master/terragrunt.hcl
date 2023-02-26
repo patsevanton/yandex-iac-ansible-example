@@ -8,7 +8,7 @@ include {
 }
 
 inputs = {
-  cluster_name             = "test"
+  cluster_name             = "test-1-22"
   cluster_ipv4_range       = "10.2.0.0/16"
   service_ipv4_range       = "10.3.0.0/16"
   node_ipv4_cidr_mask_size = "25"
