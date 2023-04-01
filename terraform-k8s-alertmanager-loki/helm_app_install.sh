@@ -39,14 +39,6 @@ helm repo update
 kubectl create namespace promtail || true
 helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.9.3 -f values-promtail.yaml  --debug
 
-
-echo ""
-echo "Install loggenerator"
-kubectl create namespace loggenerator || true
-helm upgrade --install --wait loggenerator -n loggenerator ./loggenerator --set replicaCount=1  --debug
-
-
-
 end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
