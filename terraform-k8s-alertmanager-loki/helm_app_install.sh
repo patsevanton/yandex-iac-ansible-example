@@ -26,9 +26,9 @@ export secret_access_key
 bucket=$(terraform output --raw yandex_storage_bucket_loki_bucket)
 export bucket
 helm upgrade --install --wait loki grafana/loki-distributed -n loki \
-    --set "loki.storageConfig.aws.access_key_id=$access_key_id"  \
-    --set "loki.storageConfig.aws.secret_access_key=$secret_access_key"  \
-    --set "loki.storageConfig.aws.bucketnames=$bucket"  \
+#    --set "loki.storageConfig.aws.access_key_id=$access_key_id"  \
+#    --set "loki.storageConfig.aws.secret_access_key=$secret_access_key"  \
+#    --set "loki.storageConfig.aws.bucketnames=$bucket"  \
     -f value-loki-distributed.yaml  --debug --version 0.69.9
 
 

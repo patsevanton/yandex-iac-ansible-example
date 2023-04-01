@@ -1,9 +1,9 @@
 config:
   clients:
     - url: http://loki-loki-distributed-gateway.loki/loki/api/v1/push
-  snippets:
-    pipelineStages:
-      - cri: {}
+#  snippets:
+#    pipelineStages:
+#      - cri: {}
 #      - labeldrop:
 #          - filename
 #          - pod

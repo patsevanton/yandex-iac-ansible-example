@@ -6,12 +6,22 @@ grafana:
     hosts:
       - promgrafana.apatsev.org.ru
     path: /
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki-loki-distributed-gateway.loki
+      jsonData:
+        maxLines: 1000
+
 
 prometheus:
   prometheusSpec:
     podMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
+    logFormat: json
 
 alertmanager:
   alertmanagerSpec:
     logFormat: json
+
