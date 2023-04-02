@@ -8,6 +8,7 @@ echo "helm uninstall Kube-Prometheus-Stack"
 helm uninstall -n redis redis || true
 helm uninstall -n kube-prometheus-stack kube-prometheus-stack || true
 helm uninstall -n prometheus kube-prometheus-stack || true
+helm uninstall ingress-nginx ingress-nginx/ingress-nginx || true
 kubectl delete namespace redis || true
 kubectl delete namespace kube-prometheus-stack || true
 kubectl delete namespace prometheus || true

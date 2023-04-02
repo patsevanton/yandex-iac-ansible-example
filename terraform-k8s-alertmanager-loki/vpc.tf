@@ -20,3 +20,9 @@ resource "yandex_vpc_address" "promgrafana_address" {
     zone_id = "ru-central1-a"
   }
 }
+
+# Promgrafana_LoadBalancerIP
+output "Promgrafana_LoadBalancerIP" {
+  description = "Public IP address for docker"
+  value       = yandex_vpc_address.promgrafana_address.external_ipv4_address[0].address
+}

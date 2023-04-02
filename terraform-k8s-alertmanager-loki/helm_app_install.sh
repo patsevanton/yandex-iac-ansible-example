@@ -5,6 +5,14 @@ set -eu pipefail
 start_time=$(date +%s)
 date1=$(date +"%s")
 
+
+export Promgrafana_LoadBalancerIP=$(terraform output --raw Promgrafana_LoadBalancerIP)
+echo "Promgrafana_LoadBalancerIP=$Promgrafana_LoadBalancerIP"
+helm upgrade --install --wait ingress-nginx ingress-nginx/ingress-nginx \
+    --set controller.service.loadBalancerIP="$Promgrafana_LoadBalancerIP" \
+    --version 4.6.0 # -f value-ingress-nginx.yaml
+
+
 echo ""
 echo "Install Kube-Prometheus-Stack"
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -26,7 +34,7 @@ export secret_access_key
 bucket=$(terraform output --raw yandex_storage_bucket_loki_bucket)
 export bucket
 helm upgrade --install --wait loki grafana/loki-distributed -n loki \
-    -f value-loki-distributed.yaml  --debug --version 0.69.9
+    -f value-loki-distributed.yaml --version 0.69.9
 #    --set "loki.storageConfig.aws.access_key_id=$access_key_id"  \
 #    --set "loki.storageConfig.aws.secret_access_key=$secret_access_key"  \
 #    --set "loki.storageConfig.aws.bucketnames=$bucket"  \
@@ -36,7 +44,7 @@ echo "Install Promtail"
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 kubectl create namespace promtail || true
-helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.9.3 -f values-promtail.yaml  --debug
+helm upgrade --install --wait promtail grafana/promtail -n promtail --set "loki.serviceName=loki" --version 6.9.3 -f values-promtail.yaml
 
 end_time=$(date +%s)
 date2=$(date +"%s")
