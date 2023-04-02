@@ -4,7 +4,7 @@ resource "yandex_iam_service_account" "sa-storage-admin" {
   name      = "sa-storage-admin"
 }
 
-## Grant permissions 
+## Grant permissions
 resource "yandex_resourcemanager_folder_iam_member" "sa-storage-admin" {
   folder_id = var.yc_folder_id
   role      = "storage.admin"
