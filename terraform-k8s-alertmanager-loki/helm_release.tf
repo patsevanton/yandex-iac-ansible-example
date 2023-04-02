@@ -30,5 +30,10 @@ resource "helm_release" "ingress_nginx" {
     value = true
   }
 
+  set {
+    name  = "controller.config.log-format-upstream"
+    value = "{\"time\": \"$time_iso8601\", \"remote_addr\": \"$proxy_protocol_addr\"}"
+  }
+
 }
 
