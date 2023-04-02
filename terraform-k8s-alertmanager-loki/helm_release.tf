@@ -25,5 +25,10 @@ resource "helm_release" "ingress_nginx" {
     value = yandex_vpc_address.promgrafana_address.external_ipv4_address[0].address
   }
 
+  set {
+    name  = "controller.config.log-format-escape-json"
+    value = true
+  }
+
 }
 
