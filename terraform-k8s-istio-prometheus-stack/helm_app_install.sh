@@ -17,20 +17,12 @@ helm install -n istio-system --set auth.strategy="anonymous" \
   --repo https://kiali.org/helm-charts \
   kiali-server kiali-server
 
-export Promgrafana_LoadBalancerIP=$(terraform output --raw Promgrafana_LoadBalancerIP)
-#echo "Promgrafana_LoadBalancerIP=$Promgrafana_LoadBalancerIP"
-#helm upgrade --install --wait ingress-nginx ingress-nginx/ingress-nginx \
-#    --set controller.service.loadBalancerIP="$Promgrafana_LoadBalancerIP" \
-#    --version 4.6.0 # -f value-ingress-nginx.yaml
-
-
-#echo ""
-#echo "Install Kube-Prometheus-Stack"
-#helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-##helm repo update
-#kubectl create namespace prometheus || true
-#helm upgrade --install --wait -n prometheus kube-prometheus-stack prometheus-community/kube-prometheus-stack -f values-kube-prometheus-stack.yaml
-#
+echo ""
+echo "Install Kube-Prometheus-Stack"
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#helm repo update
+kubectl create namespace prometheus || true
+helm upgrade --install --wait -n prometheus kube-prometheus-stack prometheus-community/kube-prometheus-stack
 
 end_time=$(date +%s)
 date2=$(date +"%s")
