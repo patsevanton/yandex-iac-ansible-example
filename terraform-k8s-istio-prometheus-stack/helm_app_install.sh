@@ -22,7 +22,11 @@ echo "Install Kube-Prometheus-Stack"
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 #helm repo update
 kubectl create namespace prometheus || true
+kubectl label namespace prometheus istio-injection=enabled
 helm upgrade --install --wait -n prometheus kube-prometheus-stack prometheus-community/kube-prometheus-stack
+
+kubectl apply -f gateway-grafana.yaml
+kubectl apply -f virtualservice-grafana.yaml
 
 end_time=$(date +%s)
 date2=$(date +"%s")
