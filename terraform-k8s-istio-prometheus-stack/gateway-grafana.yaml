@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: httpbin-gateway
+  name: grafana-gateway
 spec:
   # The selector matches the ingress gateway pod labels.
   # If you installed Istio using Helm following the standard documentation, this would be "istio=ingress"
@@ -13,4 +13,4 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - "httpbin.example.com"
+        - "promgrafana.apatsev.org.ru"
