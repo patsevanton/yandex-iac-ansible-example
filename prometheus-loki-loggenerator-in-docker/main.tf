@@ -1,5 +1,5 @@
 module "lokiindocker" {
-  source             = "../terraform-yandex-compute"
+  source             = "git::https://github.com/patsevanton/terraform-yandex-compute.git?ref=v1.16.0"
   image_family       = var.family_images_linux
   subnet_id          = data.yandex_vpc_subnet.default-ru-central1-a.id
   zone               = data.yandex_vpc_subnet.default-ru-central1-a.zone
