@@ -21,7 +21,7 @@ resource "yandex_vpc_subnet" "subnet-pdc-01" {
 }
 
 module "pdc" {
-  source           = "git::https://github.com/patsevanton/terraform-yandex-compute.git?ref=v1.16.0"
+  source           = "git::https://github.com/patsevanton/terraform-yandex-compute.git?ref=v1.23.0"
   image_family     = var.family_images_windows
   memory           = var.memory
   subnet_id        = yandex_vpc_subnet.subnet-pdc-01.id
