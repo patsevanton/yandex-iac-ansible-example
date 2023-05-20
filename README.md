@@ -26,7 +26,7 @@ compute-default-zone: ru-central1-b
 
 # Terraform
 ## Set up terraform
-### Download terraform_1.2.4_linux_amd64.zip from https://github.com/hashicorp/terraform/actions/runs/2584901387
+### Download terraform https://hashicorp-releases.yandexcloud.net/terraform/
 ```
 unzip terraform_1.2.4_linux_amd64.zip
 sudo mv terraform /usr/local/bin/
