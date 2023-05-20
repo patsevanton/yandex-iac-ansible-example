@@ -1,5 +1,5 @@
 module "squid" {
-  source        = "../terraform-yandex-compute"
+  source        = "git::https://github.com/patsevanton/terraform-yandex-compute.git?ref=v1.16.0"
   image_family  = "ubuntu-2004-lts"
   subnet_id     = yandex_vpc_subnet.subnet-1.id
   zone          = var.yc_zone

@@ -38,7 +38,7 @@ module "pdc" {
 }
 
 module "freeipa" {
-  source        = "../terraform-yandex-compute"
+  source        = "git::https://github.com/patsevanton/terraform-yandex-compute.git?ref=v1.16.0"
   image_family  = var.family_images_linux
   subnet_id     = yandex_vpc_subnet.subnet-1.id
   zone          = var.yc_zone
