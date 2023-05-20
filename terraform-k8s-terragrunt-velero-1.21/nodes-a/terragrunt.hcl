@@ -8,8 +8,8 @@ include {
 
 
 dependency "master" {
-  config_path = "../master"
-  mock_outputs_allowed_terraform_commands = [ "init", "validate", "plan" ]
+  config_path                             = "../master"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
   mock_outputs = {
     cluster_id = "fake_cluster_id"
   }
@@ -28,7 +28,7 @@ inputs = {
   disk        = 100
   disk_type   = "network-ssd"
   k8s_zone    = ["ru-central1-a"]
-  subnet_id   = [
+  subnet_id = [
     "e9bca15oo9ji5vgnh8kv", # ru-central1-a
   ]
 }

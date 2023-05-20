@@ -12,9 +12,9 @@ dependency "vpc-address" {
 
 inputs = {
   description = "grafana"
-  zone = "apatsev.org.ru."
-  name = "apatsev-org-ru"
-  public = true
+  zone        = "apatsev.org.ru."
+  name        = "apatsev-org-ru"
+  public      = true
   recordset = [
     {
       name = "grafana.apatsev.org.ru."

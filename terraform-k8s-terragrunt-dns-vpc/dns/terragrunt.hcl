@@ -11,8 +11,8 @@ dependency "time-sleep" {
 }
 
 dependency "vpc-address" {
-  config_path = "../vpc-address"
-  mock_outputs_allowed_terraform_commands = [ "init", "validate", "plan" ]  # only allow mocks  for validate command
+  config_path                             = "../vpc-address"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"] # only allow mocks  for validate command
   mock_outputs = {
     external_ipv4_address = "fake_external_ipv4_address"
   }
@@ -20,9 +20,9 @@ dependency "vpc-address" {
 
 inputs = {
   description = "grafana"
-  zone = "apatsev.org.ru."
-  name = "apatsev-org-ru"
-  public = true
+  zone        = "apatsev.org.ru."
+  name        = "apatsev-org-ru"
+  public      = true
   recordset = [
     {
       name = "grafana.apatsev.org.ru."

@@ -8,15 +8,15 @@ storage "file" {
 
 # HTTP listener
 listener "tcp" {
-  tls_disable = 1
-  address = "[::]:8200"
+  tls_disable     = 1
+  address         = "[::]:8200"
   cluster_address = "[::]:8201"
 }
 
 seal "transit" {
-  address = "http://<ip adress of the host where the first vault server is running>:8200"
+  address         = "http://<ip adress of the host where the first vault server is running>:8200"
   disable_renewal = "false"
-  key_name = "autounseal"
-  mount_path = "transit/"
+  key_name        = "autounseal"
+  mount_path      = "transit/"
   tls_skip_verify = "true"
 }
