@@ -15,7 +15,7 @@ data "template_file" "userdata_win" {
 }
 
 module "pdc" {
-  source           = "../terraform-yandex-compute"
+  source           = "git::https://github.com/patsevanton/terraform-yandex-compute.git?ref=v1.16.0"
   image_family     = var.family_images_windows
   memory           = 4
   subnet_id        = yandex_vpc_subnet.subnet-1.id
