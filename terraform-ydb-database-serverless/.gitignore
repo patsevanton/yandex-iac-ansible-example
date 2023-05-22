@@ -1,0 +1,24 @@
+### Terraform files
+**/.*.lock.hcl
+**/*.tfstate
+**/*.tfstate.backup
+**/.terraform/*
+**/.*.tfstate.lock.info
+**/*.tfvars
+**/inventory
+*/host.ini
+*/inventory.yml
+*/opensearch-cluster/opensearch-project
+*/clickhouse-zookeeper-cluster/ansible-clickhouse-dp
+*/clickhouse-zookeeper-cluster/ansible-clickhouse-deploy
+*/postgresql-cluster/postgresql_cluster
+*/freeipa/ansible-freeipa
+*/kubespray/kubespray
+/.idea/
+**/terraform.log
+**/acme-issuer.yaml
+**/ClusterIssuer.yaml
+**/*.iml
+**/credentials
+**/env.hcl
+**/.terragrunt-cache/*
