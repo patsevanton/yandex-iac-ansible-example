@@ -15,8 +15,8 @@ resource "yandex_storage_bucket" "ydb" {
 resource "local_file" "credentials" {
   content = templatefile("credentials.tpl",
     {
-      access_key = yandex_storage_bucket.ydb.access_key
-      secret_key = yandex_storage_bucket.ydb.secret_key
+      access_key = yandex_iam_service_account_static_access_key.ydb-sa-static-key.access_key
+      secret_key = yandex_iam_service_account_static_access_key.ydb-sa-static-key.secret_key
     }
   )
   depends_on = [
