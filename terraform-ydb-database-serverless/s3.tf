@@ -13,7 +13,7 @@ resource "yandex_storage_bucket" "ydb" {
 }
 
 resource "local_file" "credentials" {
-  content = templatefile("credentials.tpl",
+  content = templatefile("credentials.tftpl",
     {
       access_key = yandex_iam_service_account_static_access_key.ydb-sa-static-key.access_key
       secret_key = yandex_iam_service_account_static_access_key.ydb-sa-static-key.secret_key
