@@ -24,7 +24,7 @@ resource "local_file" "credentials" {
       secret_key = yandex_iam_service_account_static_access_key.ydb-sa-static-key.secret_key
     }
   )
-  filename = "credentials"
+  filename = "~/.aws/credentials"
 }
 
 output "yandex_storage_bucket_ydb_access_key" {
