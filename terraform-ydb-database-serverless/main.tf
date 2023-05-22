@@ -1,27 +1,29 @@
-resource "yandex_ydb_database_serverless" "database1" {
-  name = "test-ydb-serverless"
+resource "yandex_ydb_database_serverless" "sections" {
+  name = "sections"
+}
 
-  serverless_database {
-    enable_throttling_rcu_limit = false
-    provisioned_rcu_limit       = 10
-    storage_size_limit          = 50
-    throttling_rcu_limit        = 0
+provider "aws" {
+  access_key                  = yandex_iam_service_account_static_access_key.ydb-sa-static-key.access_key
+  secret_key                  = yandex_iam_service_account_static_access_key.ydb-sa-static-key.secret_key
+  region                      = "ru-central1"
+  skip_credentials_validation = true
+  skip_metadata_api_check     = true
+  skip_requesting_account_id  = true
+  skip_region_validation      = true
+
+  endpoints {
+    dynamodb = yandex_ydb_database_serverless.sections.document_api_endpoint
   }
+
 }
 
+resource "aws_dynamodb_table" "sections_news" {
+  name         = "sections/news"
+  hash_key     = "PostId"
+  billing_mode = "PAY_PER_REQUEST"
 
-data "yandex_vpc_network" "default" {
-  name = "default"
-}
-
-data "yandex_vpc_subnet" "default-ru-central1-a" {
-  name = "default-ru-central1-a"
-}
-
-data "yandex_vpc_subnet" "default-ru-central1-b" {
-  name = "default-ru-central1-b"
-}
-
-data "yandex_vpc_subnet" "default-ru-central1-c" {
-  name = "default-ru-central1-c"
+  attribute {
+    name = "PostId"
+    type = "S"
+  }
 }
