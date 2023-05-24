@@ -18,23 +18,21 @@ resource "yandex_mdb_postgresql_cluster" "test" {
   }
 
   host {
-    name      = "test"
     zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
     subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
     assign_public_ip = true
   }
   host {
-    name      = "test"
     zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
     subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
     assign_public_ip = true
   }
   host {
-    name      = "test"
-    zone      = data.yandex_vpc_subnet.default-ru-central1-a.zone
-    subnet_id = data.yandex_vpc_subnet.default-ru-central1-a.id
+    zone      = data.yandex_vpc_subnet.default-ru-central1-b.zone
+    subnet_id = data.yandex_vpc_subnet.default-ru-central1-b.id
     assign_public_ip = true
   }
+
 }
 
 resource "yandex_mdb_postgresql_database" "test" {
