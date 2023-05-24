@@ -4,9 +4,9 @@ resource "yandex_mdb_postgresql_cluster" "test" {
   network_id          = "enprkje8ae9b74e0himb"
 
   config {
-    version = "14"
+    version = "15"
     resources {
-      resource_preset_id = "s3-c2-m8"
+      resource_preset_id = "c3-c2-m4"
       disk_type_id       = "network-ssd"
       disk_size          = 20
     }
