@@ -19,7 +19,7 @@ inputs = {
 
   cluster_id  = dependency.master.outputs.cluster_id
   pool_name   = "test-node-a"
-  k8s_version = "1.22"
+  k8s_version = "1.23"
   nat         = false
   num         = 4
   max_num     = 4
