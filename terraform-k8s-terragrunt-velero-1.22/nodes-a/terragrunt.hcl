@@ -19,12 +19,12 @@ inputs = {
 
   cluster_id  = dependency.master.outputs.cluster_id
   pool_name   = "test-node-a"
-  k8s_version = "1.23"
+  k8s_version = "1.22"
   nat         = false
-  num         = 4
-  max_num     = 4
-  cpu         = 2
-  memory      = 4
+  num         = 2
+  max_num     = 2
+  cpu         = 4
+  memory      = 8
   disk        = 50
   disk_type   = "network-ssd"
   k8s_zone    = ["ru-central1-a"]
