@@ -1,9 +1,9 @@
-Устанавливаем бинарник velero 1.8.1
+Устанавливаем бинарник velero 1.10.3
 https://github.com/vmware-tanzu/velero
 Download and install
 https://github.com/vmware-tanzu/velero/releases/download/v1.10.3/velero-v1.10.3-linux-amd64.tar.gz
 
-Create credentials
+Create file "credentials"
 ```ini
 [default]
   aws_access_key_id= from terraform-k8s-terragrunt-velero-s3
@@ -25,13 +25,12 @@ velero install \
   --secret-file ./credentials \
   --features=EnableCSI \
   --use-volume-snapshots=true \
-  --snapshot-location-config region=ru-central1 \
-  --use-restic
+  --snapshot-location-config region=ru-central1
 ```
 
 
 ```bash
 velero restore get
-velero restore create postgresql --exclude-namespaces velero --include-resources=pv,pvc --from-backup postgresql --include-namespaces postgresql
+velero restore create my-restore --exclude-namespaces velero --from-backup my-backup
 velero restore describe postgresql --details
 ```
