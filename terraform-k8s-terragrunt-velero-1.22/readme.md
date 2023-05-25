@@ -1,4 +1,5 @@
 Устанавливаем бинарник velero 1.8.1
+https://github.com/vmware-tanzu/velero
 Download and install https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
 
 Create credentials
