@@ -42,6 +42,10 @@
       ansible.builtin.file:
         path: /letsencrypt-docker-compose/vhosts/test2.evgeniy-khyst.com.conf
         state: absent
+    - name: Create a directory /letsencrypt-docker-compose/vhosts
+      ansible.builtin.file:
+        path: /letsencrypt-docker-compose/vhosts
+        state: directory
     - name: Create vhosts/{{docker_external_url}}.conf
       template:
         src: "vhosts_jenkins.conf.j2"
@@ -54,6 +58,6 @@
       docker_volume:
         name: letsencrypt_certs
     - name: Run `docker-compose up` 
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: /letsencrypt-docker-compose
         build: yes
