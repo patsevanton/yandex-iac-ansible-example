@@ -21,7 +21,7 @@ resource "yandex_ydb_database_dedicated" "database1" {
   subnet_ids = [
     data.yandex_vpc_subnet.default-ru-central1-a.id,
     data.yandex_vpc_subnet.default-ru-central1-b.id,
-    data.yandex_vpc_subnet.default-ru-central1-c.id,
+    data.yandex_vpc_subnet.default-ru-central1-d.id,
   ]
 
   resource_preset_id = "medium"
@@ -57,8 +57,8 @@ data "yandex_vpc_subnet" "default-ru-central1-b" {
   name = "default-ru-central1-b"
 }
 
-data "yandex_vpc_subnet" "default-ru-central1-c" {
-  name = "default-ru-central1-c"
+data "yandex_vpc_subnet" "default-ru-central1-d" {
+  name = "default-ru-central1-d"
 }
 
 output "external_ip_ydb_client" {

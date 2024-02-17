@@ -10,8 +10,8 @@ data "yandex_vpc_subnet" "default-ru-central1-b" {
   name = "default-ru-central1-b"
 }
 
-data "yandex_vpc_subnet" "default-ru-central1-c" {
-  name = "default-ru-central1-c"
+data "yandex_vpc_subnet" "default-ru-central1-d" {
+  name = "default-ru-central1-d"
 }
 
 resource "yandex_vpc_address" "sentry_address" {

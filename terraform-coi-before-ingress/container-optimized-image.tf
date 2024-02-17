@@ -39,7 +39,7 @@ resource "yandex_compute_instance_group" "autoscaled-ig-with-coi" {
       subnet_ids = [
         data.yandex_vpc_subnet.default-ru-central1-a.id,
         data.yandex_vpc_subnet.default-ru-central1-b.id,
-        data.yandex_vpc_subnet.default-ru-central1-c.id
+        data.yandex_vpc_subnet.default-ru-central1-d.id
       ]
       nat = true
     }

@@ -26,7 +26,7 @@ resource "yandex_mdb_redis_cluster" "myredis" {
 
 #  host {
 #    zone       = "ru-central1-c"
-#    subnet_id  = data.yandex_vpc_subnet.default-ru-central1-c.id
+#    subnet_id  = data.yandex_vpc_subnet.default-ru-central1-d.id
 #  }
 }
 
@@ -42,8 +42,8 @@ data "yandex_vpc_subnet" "default-ru-central1-b" {
   name = "default-ru-central1-b"
 }
 
-data "yandex_vpc_subnet" "default-ru-central1-c" {
-  name = "default-ru-central1-c"
+data "yandex_vpc_subnet" "default-ru-central1-d" {
+  name = "default-ru-central1-d"
 }
 
 variable "yc_token" {
