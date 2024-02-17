@@ -122,13 +122,3 @@
     - name: Debug Restart FreeIPA services
       debug:
         var: restart_freeipa_services   
-    - name: Ensure gitlab user in freeipa is present
-      community.general.ipa_user:
-        name: gitlab_ldap_sync
-        givenname: gitlab_ldap_sync
-        sn: gitlab_ldap_sync
-        state: present
-        password: "{{ ipaadmin_password }}"
-        ipa_host: "{{ ipaserver_domain }}"
-        ipa_user: admin
-        ipa_pass: "{{ipaadmin_password}}"
