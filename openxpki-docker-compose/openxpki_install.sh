@@ -6,8 +6,8 @@ start_time=$(date +%s)
 date1=$(date +"%s")
 TF_IN_AUTOMATION=1 terraform init -upgrade
 TF_IN_AUTOMATION=1 terraform apply -auto-approve
-ansible-galaxy install geerlingguy.docker
-ansible-playbook -i inventory.yml playbook.yml
+# ansible-galaxy install geerlingguy.docker
+# ansible-playbook -i inventory.yml playbook.yml
 end_time=$(date +%s)
 date2=$(date +"%s")
 echo "###############"
