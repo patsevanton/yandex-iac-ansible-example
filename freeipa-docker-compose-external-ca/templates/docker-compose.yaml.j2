@@ -22,6 +22,8 @@ services:
       IPA_SERVER_HOSTNAME: {{freeipa_fqdn}}
       TZ: "Europe/Moscow"
     command:
+      - --no-ntp
+      - --no-host-dns
       - --admin-password={{freeipa_password}}
       - --dirsrv-pin={{freeipa_password}}
       - --ds-password={{freeipa_password}}
@@ -31,6 +33,7 @@ services:
       - --http-pin={{freeipa_password}}
       - --realm={{freeipa_domain}}
       - --unattended
+      - -v
     cap_add:
       - SYS_TIME
       - NET_ADMIN
