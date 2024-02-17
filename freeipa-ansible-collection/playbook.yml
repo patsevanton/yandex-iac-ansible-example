@@ -42,6 +42,16 @@
     - name: Disable SELinux
       ansible.posix.selinux:
         state: disabled
+    - name: Retrieve hostname
+      hostname:
+      register: hostname_result
+    - debug:
+        var: hostname_result
+    - name: Retrieve domain name
+      command: "hostname -d"
+      register: domainname_output
+    - debug:
+        var: domainname_output.stdout
   roles:
     - role: freeipa.ansible_freeipa.ipaserver
       state: present
