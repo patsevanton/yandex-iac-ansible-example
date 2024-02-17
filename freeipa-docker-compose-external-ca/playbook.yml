@@ -100,6 +100,8 @@
         organization_name: "{{ organization_name }}"
         email_address: "{{ email_address }}"
         common_name: "{{ freeipa_domain }}"
+        state_or_province_name: "Moscow"
+        locality_name: "Moscow"
       register: freeipa_csr
 
 #### Use the CA to sign a certificate
