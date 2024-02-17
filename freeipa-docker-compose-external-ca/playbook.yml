@@ -20,6 +20,13 @@
         owner: "{{ ssh_user }}"
         group: "{{ ssh_user }}"
 
+    - name: Create directory /etc/docker-compose/freeipa-certificate
+      ansible.builtin.file:
+        path: /etc/docker-compose/freeipa-certificate
+        state: directory
+        owner: "{{ ssh_user }}"
+        group: "{{ ssh_user }}"
+
     - name: Create directory /etc/docker-compose/ca
       ansible.builtin.file:
         path: /etc/docker-compose/ca
@@ -27,12 +34,13 @@
         owner: "{{ ssh_user }}"
         group: "{{ ssh_user }}"
 
-    - name: Create directory /etc/docker-compose/freeiparoot
-      ansible.builtin.file:
-        path: /etc/docker-compose/freeiparoot
-        state: directory
-        owner: "{{ ssh_user }}"
-        group: "{{ ssh_user }}"
+
+    # - name: Create directory /etc/docker-compose/freeiparoot
+    #   ansible.builtin.file:
+    #     path: /etc/docker-compose/freeiparoot
+    #     state: directory
+    #     owner: "{{ ssh_user }}"
+    #     group: "{{ ssh_user }}"
 
   roles:
     - role: geerlingguy.docker
@@ -59,43 +67,47 @@
         mode: '0644'
       register: docker_compose
 
-    - name: check for /etc/docker-compose/freeiparoot/ipa.csr
-      stat: path=/etc/docker-compose/freeiparoot/ipa.csr
-      register: ipa_csr
+    # - name: check for /etc/docker-compose/freeiparoot/ipa.csr
+    #   stat: path=/etc/docker-compose/freeiparoot/ipa.csr
+    #   register: ipa_csr
 
-    - name: fail if ipa.csr not exists on host
-      fail: msg="Create certificate and run again"
-      when: not ipa_csr.stat.exists
+    # - name: fail if ipa.csr not exists on host
+    #   fail: msg="Create certificate and run again"
+    #   when: not ipa_csr.stat.exists
 
-#### Generate certificate CA
+    - name: Download CA cert file from local-ip.co
+      get_url:
+        url: "http://local-ip.co/cert/server.pem"
+        dest: "/etc/docker-compose/ca/ca.crt"
+
+    - name: Download CA key file from local-ip.co
+      get_url:
+        url: "http://local-ip.co/cert/server.key"
+        dest: "/etc/docker-compose/ca/ca.key"
+
     - name: Generate an OpenSSL private key
       community.crypto.openssl_privatekey:
-        path: "/etc/docker-compose/ca/privkey.pem"
+        path: "/etc/docker-compose/freeipa-certificate/freeipa.key"
         size: "{{ key_size }}"
         type: "{{ key_type }}"
         backup: yes
+      register: freeipa_key
+
     - name: Generate an OpenSSL Certificate Signing Request with Subject information
       community.crypto.openssl_csr:
-        path: "/etc/docker-compose/ca/request.csr"
-        privatekey_path: "/etc/docker-compose/ca/privkey.pem"
+        path: "/etc/docker-compose/freeipa-certificate/freeipa.csr"
+        privatekey_path: "/etc/docker-compose/freeipa-certificate/freeipa.key"
         country_name: "{{ country_name }}"
         organization_name: "{{ organization_name }}"
         email_address: "{{ email_address }}"
         common_name: "{{ freeipa_domain }}"
-        basic_constraints: "CA:TRUE"
-        basic_constraints_critical: yes
-    - name: Generate a Self Signed OpenSSL certificate
-      community.crypto.x509_certificate:
-        path: "/etc/docker-compose/ca/ca_cert.crt"
-        privatekey_path: "/etc/docker-compose/ca/privkey.pem"
-        csr_path: "/etc/docker-compose/ca/request.csr"
-        provider: selfsigned
+      register: freeipa_csr
 
 #### Use the CA to sign a certificate
     - name: Generate an OpenSSL certificate signed with your own CA certificate
       community.crypto.x509_certificate:
-        path: /etc/docker-compose/freeiparoot/certificate.crt
-        csr_path: /etc/docker-compose/freeiparoot/ipa.csr
-        ownca_path: /etc/docker-compose/ca/ca_cert.crt
-        ownca_privatekey_path: /etc/docker-compose/ca/privkey.pem
+        path: /etc/docker-compose/freeipa-certificate/freeipa.crt
+        csr_path: /etc/docker-compose/freeipa-certificate/freeipa.csr
+        ownca_path: /etc/docker-compose/ca/ca.crt
+        ownca_privatekey_path: /etc/docker-compose/ca/ca.key
         provider: ownca
