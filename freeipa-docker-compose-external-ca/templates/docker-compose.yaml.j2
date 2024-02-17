@@ -25,26 +25,26 @@ services:
       - --admin-password={{freeipa_password}}
       - --dirsrv-pin={{freeipa_password}}
       - --ds-password={{freeipa_password}}
+      - --external-ca
+      - --external_ca_file=/ca/ca.crt
+      - --external_cert_file=/freeipa-certificate/freeipa.crt
       - --http-pin={{freeipa_password}}
       - --realm={{freeipa_domain}}
       - --unattended
-      - --external-ca
-      - --external_cert_file=/freeipa-certificate/freeipa.crt
-      - --external_ca_file=/ca/ca.crt
     cap_add:
       - SYS_TIME
       - NET_ADMIN
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - /etc/docker-compose/freeipa-data:/data
       - /etc/docker-compose/ca:/ca
       - /etc/docker-compose/freeipa-certificate:/freeipa-certificate
+      - /etc/docker-compose/freeipa-data:/data
+      - /etc/localtime:/etc/localtime:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv6.conf.lo.disable_ipv6=0
     security_opt:
       - "seccomp:unconfined"
     tmpfs:
-    - /tmp
     - /run
+    - /tmp
