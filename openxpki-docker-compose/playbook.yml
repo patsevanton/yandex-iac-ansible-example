@@ -6,30 +6,30 @@
       when: ansible_os_family == 'Debian'
   roles:
     - role: geerlingguy.docker
-  post_tasks:
-    - name: add user ubuntu to docker group
-      ansible.builtin.user:
-        name: ubuntu
-        groups: docker
-        append: yes
-    - name: reset ssh connection to allow user changes to affect ansible user
-      ansible.builtin.meta:
-        reset_connection
-    - name: Create directory /etc/docker-compose
-      ansible.builtin.file:
-        path: /etc/docker-compose
-        state: directory
-        owner: ubuntu
-        group: ubuntu
+  # post_tasks:
+  #   - name: add user ubuntu to docker group
+  #     ansible.builtin.user:
+  #       name: ubuntu
+  #       groups: docker
+  #       append: yes
+  #   - name: reset ssh connection to allow user changes to affect ansible user
+  #     ansible.builtin.meta:
+  #       reset_connection
+  #   - name: Create directory /etc/docker-compose
+  #     ansible.builtin.file:
+  #       path: /etc/docker-compose
+  #       state: directory
+  #       owner: ubuntu
+  #       group: ubuntu
 
-    - name: Create docker-compose.yaml
-      template:
-        src: "docker-compose.yaml.j2"
-        dest: /etc/docker-compose/docker-compose.yaml
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
-      register: docker_compose
+  #   - name: Create docker-compose.yaml
+  #     template:
+  #       src: "docker-compose.yaml.j2"
+  #       dest: /etc/docker-compose/docker-compose.yaml
+  #       owner: ubuntu
+  #       group: ubuntu
+  #       mode: '0644'
+  #     register: docker_compose
 
 #    - name: Copy openxpki.service
 #      ansible.builtin.copy:
