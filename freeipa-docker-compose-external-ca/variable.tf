@@ -60,10 +60,10 @@ variable "freeipa_password" {
   description = "freeipa_password"
 }
 
-variable "freeipa_fqdn" {
-  type        = string
-  description = "freeipa_fqdn"
-}
+#variable "freeipa_fqdn" {
+#  type        = string
+#  description = "freeipa_fqdn"
+#}
 
 variable "freeipa_domain" {
   type        = string

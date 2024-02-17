@@ -20,7 +20,7 @@ resource "local_file" "inventory_yml" {
       freeipa_public_ip    = module.freeipa.external_ip[0]
       freeipa_internal_ip  = module.freeipa.internal_ip[0]
       freeipa_password     = var.freeipa_password
-      freeipa_fqdn         = var.freeipa_fqdn
+#      freeipa_fqdn         = var.freeipa_fqdn
       freeipa_domain       = var.freeipa_domain
       ssh_user             = var.ssh_user
     }
