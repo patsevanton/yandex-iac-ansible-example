@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   freeipa:
-    image: freeipa/freeipa-server:fedora-37-4.10.1
+    image: freeipa/freeipa-server:fedora-39-4.11.1
     container_name: freeipa
     restart: unless-stopped
     hostname: {{freeipa_fqdn}}
@@ -16,9 +16,6 @@ services:
       - 80:80
       - 88:88
       - 88:88/udp
-#    dns:
-#      - ns1.yandexcloud.net
-#      - 1.1.1.1
     tty: true
     stdin_open: true
     environment:
