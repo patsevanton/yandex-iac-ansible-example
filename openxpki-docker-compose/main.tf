@@ -18,13 +18,7 @@ resource "local_file" "inventory_yml" {
     {
       ssh_user          = var.ssh_user
       openxpki_public_ip = module.openxpki.external_ip[0]
-      openxpki_password  = var.openxpki_password
-      openxpki_fqdn      = var.openxpki_fqdn
-      openxpki_domain    = var.openxpki_domain
       ssh_user          = var.ssh_user
-      access_key        = access_key
-      secret_key        = secret_key
-      bucket            = bucket
     }
   )
   filename = "inventory.yml"

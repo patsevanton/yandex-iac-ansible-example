@@ -55,20 +55,20 @@ variable "disk_type" {
   default     = "network-ssd"
 }
 
-variable "openxpki_password" {
-  type        = string
-  description = "openxpki_password"
-}
+# variable "openxpki_password" {
+#   type        = string
+#   description = "openxpki_password"
+# }
 
-variable "openxpki_fqdn" {
-  type        = string
-  description = "openxpki_fqdn"
-}
+# variable "openxpki_fqdn" {
+#   type        = string
+#   description = "openxpki_fqdn"
+# }
 
-variable "openxpki_domain" {
-  type        = string
-  description = "openxpki_domain"
-}
+# variable "openxpki_domain" {
+#   type        = string
+#   description = "openxpki_domain"
+# }
 
 variable "nat_ip_address" {
   description = "Public IP address for instance to access the internet over NAT"
