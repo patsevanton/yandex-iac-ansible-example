@@ -37,8 +37,9 @@
       debug:
         var: reverse_hostname
     - name: Set hostname as ipaserver_domain
-      hostname:
+      ansible.builtin.hostname:
         name: "{{ ipaserver_domain }}"
+        use: systemd
     - name: Disable SELinux
       ansible.posix.selinux:
         state: disabled
