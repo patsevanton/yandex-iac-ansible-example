@@ -43,10 +43,10 @@
       ansible.posix.selinux:
         state: disabled
     - name: Retrieve hostname
-      hostname:
-      register: hostname_result
+      command: "hostname"
+      register: hostname_output
     - debug:
-        var: hostname_result
+        var: hostname_output.stdout
     - name: Retrieve domain name
       command: "hostname -d"
       register: domainname_output
