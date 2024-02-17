@@ -1,0 +1,7 @@
+yc_token            = ""
+yc_cloud_id         = ""
+yc_folder_id        = ""
+openxpki_password    = ""
+openxpki_fqdn        = openxpki.apatsev.org.ru
+openxpki_domain      = "apatsev.org.ru"
+nat_ip_address      = ""
