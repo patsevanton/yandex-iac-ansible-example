@@ -17,11 +17,11 @@
     #     path: '/etc/hosts'
     #     line: '{{ ipaserver_ip_addresses|first }} freeipa.{{ ipaserver_domain }} freeipa'
     #     insertbefore: BOF
+    # - name: Set hostname
+    #   ansible.builtin.hostname:
+    #     name: "freeipa.{{ ipaserver_domain }}"
+    #   become: yes
     - name: Set hostname
-      ansible.builtin.hostname:
-        name: "freeipa.{{ ipaserver_domain }}"
-      become: yes
-    - name: Set domainname
       ansible.builtin.command:
         cmd: hostnamectl set-hostname --static "freeipa.{{ ipaserver_domain }}"
       become: yes
