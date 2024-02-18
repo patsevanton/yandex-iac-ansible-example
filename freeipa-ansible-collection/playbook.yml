@@ -12,19 +12,18 @@
         path: /etc/hosts
         state: absent
         regexp: '^127.0.1.1'
-    # - name: 'Add association between external ip and ipa domain into etc/hosts'
-    #   lineinfile:
-    #     path: '/etc/hosts'
-    #     line: '{{ ipaserver_ip_addresses|first }} freeipa.{{ ipaserver_domain }} freeipa'
-    #     insertbefore: BOF
-    # - name: Set hostname
-    #   ansible.builtin.hostname:
-    #     name: "freeipa.{{ ipaserver_domain }}"
-    #   become: yes
+    - name: 'Add association between external ip and ipa domain into etc/hosts'
+      lineinfile:
+        path: '/etc/hosts'
+        line: '{{ ipaserver_ip_addresses|first }} freeipa.{{ ipaserver_domain }} freeipa'
+        insertbefore: BOF
     - name: Set hostname
       ansible.builtin.command:
         cmd: hostnamectl set-hostname --static "freeipa.{{ ipaserver_domain }}"
       become: yes
+    - name: Reboot machine and send a message
+      ansible.builtin.reboot:
+        msg: "Rebooting machine in 5 seconds"
     - name: Install packages bind-utils git nano epel-release
       become: true
       package:
@@ -59,6 +58,9 @@
     - name: Display hostname
       debug:
         msg: "Hostname is {{ hostname_output.stdout }}"
+    - name: Reboot machine and send a message
+      ansible.builtin.reboot:
+        msg: "Rebooting machine in 5 seconds"
   roles:
     - role: freeipa.ansible_freeipa.ipaserver
       state: present
@@ -121,7 +123,7 @@
         name: httpd
         state: started
     - name: Add Lets Encrypt SSL certificates to for use in FreeIPA Web UI
-      shell: ipa-server-certinstall -w -d /etc/letsencrypt/live/{{ ipaserver_domain }}/privkey.pem /etc/letsencrypt/live/{{ ipaserver_domain }}/cert.pem -p '{{ ipadm_password }}' --pin=''
+      shell: ipa-server-certinstall -w -d /etc/letsencrypt/live/freeipa.{{ ipaserver_domain }}/privkey.pem /etc/letsencrypt/live/freeipa.{{ ipaserver_domain }}/cert.pem -p '{{ ipadm_password }}' --pin=''
       register: add_lets_encrypt_ssl_certificates_to_freeipa
     - name: Debug Add Lets Encrypt SSL certificates to for use in FreeIPA Web UI
       debug:
