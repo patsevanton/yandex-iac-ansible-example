@@ -27,13 +27,10 @@ services:
       - --admin-password={{freeipa_password}}
       - --dirsrv-pin={{freeipa_password}}
       - --ds-password={{freeipa_password}}
-      #- --external-ca
-      #- --ca-cert-file=/ca/ca.crt
-      - --external-cert-file=/freeipa-certificate/freeipa.crt
+      - --external-ca
       - --http-pin={{freeipa_password}}
       - --realm={{freeipa_domain}}
       - --unattended
-      - -v
     cap_add:
       - SYS_TIME
       - NET_ADMIN

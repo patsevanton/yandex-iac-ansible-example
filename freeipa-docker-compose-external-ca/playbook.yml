@@ -71,30 +71,55 @@
         url: "http://local-ip.co/cert/server.key"
         dest: "/etc/docker-compose/ca/ca.key"
 
-    - name: Generate an OpenSSL private key
-      community.crypto.openssl_privatekey:
-        path: "/etc/docker-compose/freeipa-certificate/freeipa.key"
-        size: "{{ key_size }}"
-        type: "{{ key_type }}"
-        backup: yes
-      register: freeipa_key
+    - name: Download lets-encrypt-r3.pem file from local-ip.co
+      get_url:
+        url: "https://letsencrypt.org/certs/lets-encrypt-r3.pem"
+        dest: "/etc/docker-compose/ca/lets-encrypt-r3.pem"
 
-    - name: Generate an OpenSSL Certificate Signing Request with Subject information
-      community.crypto.openssl_csr:
-        path: "/etc/docker-compose/freeipa-certificate/freeipa.csr"
-        privatekey_path: "/etc/docker-compose/freeipa-certificate/freeipa.key"
-        country_name: "{{ country_name }}"
-        organization_name: "{{ organization_name }}"
-        email_address: "{{ email_address }}"
-        common_name: "{{ freeipa_domain }}"
-        state_or_province_name: "Moscow"
-        locality_name: "Moscow"
-      register: freeipa_csr
+    - name: Create and start services
+      community.docker.docker_compose_v2:
+        project_src: /etc/docker-compose
+      register: docker_compose_output
+      ignore_errors: true
+
+    - name: Pause for 5 minutes to start services docker-compose
+      ansible.builtin.pause:
+        minutes: 5
 
     - name: Generate an OpenSSL certificate signed with your own CA certificate
       community.crypto.x509_certificate:
         path: /etc/docker-compose/freeipa-certificate/freeipa.crt
-        csr_path: /etc/docker-compose/freeipa-certificate/freeipa.csr
+        csr_path: /etc/docker-compose/freeipa-data/ipa.csr
         ownca_path: /etc/docker-compose/ca/ca.crt
         ownca_privatekey_path: /etc/docker-compose/ca/ca.key
         provider: ownca
+
+    - name: Remove external-ca from /etc/hosts
+      lineinfile:
+        path: /etc/docker-compose/docker-compose.yaml
+        state: absent
+        regexp: 'external-ca'
+
+    - name: 'Add external-cert-file=/freeipa-certificate/freeipa.crt to docker-compose.yaml'
+      lineinfile:
+        path: '/etc/docker-compose/docker-compose.yaml'
+        line: '      - --external-cert-file=/freeipa-certificate/freeipa.crt'
+        insertbefore: "unattended"
+
+    - name: 'Add external-cert-file=/ca/chain.crt to docker-compose.yaml'
+      lineinfile:
+        path: '/etc/docker-compose/docker-compose.yaml'
+        line: '      - --external-cert-file=/ca/chain.crt'
+        insertbefore: "unattended"
+
+    - name: 'Add external-cert-file=/ca/ca.crt to docker-compose.yaml'
+      lineinfile:
+        path: '/etc/docker-compose/docker-compose.yaml'
+        line: '      - --external-cert-file=/ca/ca.crt'
+        insertbefore: "unattended"
+
+    - name: 'Add external-cert-file=/ca/lets-encrypt-r3.pem to docker-compose.yaml'
+      lineinfile:
+        path: '/etc/docker-compose/docker-compose.yaml'
+        line: '      - --external-cert-file=/ca/lets-encrypt-r3.pem'
+        insertbefore: "unattended"

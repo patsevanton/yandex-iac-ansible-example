@@ -8,7 +8,7 @@ module "freeipa" {
   memory        = "4"
   is_nat        = true
   preemptible   = true
-  core_fraction = 50
+  core_fraction = 100
   user          = var.ssh_user
   nat_ip_address = var.nat_ip_address
 }
