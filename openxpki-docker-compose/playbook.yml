@@ -15,21 +15,10 @@
     - name: reset ssh connection to allow user changes to affect ansible user
       ansible.builtin.meta:
         reset_connection
-    # - name: Create directory /etc/docker-compose
-    #   ansible.builtin.file:
-    #     path: /etc/docker-compose
-    #     state: directory
-    #     owner: ubuntu
-    #     group: ubuntu
-
-    # - name: Create docker-compose.yaml
-    #   template:
-    #     src: "docker-compose.yaml.j2"
-    #     dest: /etc/docker-compose/docker-compose.yaml
-    #     owner: ubuntu
-    #     group: ubuntu
-    #     mode: '0644'
-    #   register: docker_compose
+    - name: git clone repo openxpki-docker
+      ansible.builtin.git:
+        repo: 'https://github.com/openxpki/openxpki-docker.git'
+        dest: /openxpki-docker
 
 #    - name: Copy openxpki.service
 #      ansible.builtin.copy:
