@@ -55,76 +55,76 @@
     - name: Display hostname
       debug:
         msg: "Hostname is {{ hostname_output.stdout }}"
-  roles:
-    - role: freeipa.ansible_freeipa.ipaserver
-      state: present
-  post_tasks:
-    - name: Create a directory 
-      ansible.builtin.file:
-        path: freeipa-certs
-        state: directory
-        mode: '0755'
-    - name: Download Let is Encrypt CA certificates
-      get_url:
-        url: "{{ item }}"
-        dest: freeipa-certs
-      loop:
-        - https://letsencrypt.org/certs/isrgrootx1.pem
-        - https://letsencrypt.org/certs/isrg-root-x2.pem
-        - https://letsencrypt.org/certs/lets-encrypt-r3.pem
-        - https://letsencrypt.org/certs/lets-encrypt-e1.pem
-        - https://letsencrypt.org/certs/lets-encrypt-r4.pem
-        - https://letsencrypt.org/certs/lets-encrypt-e2.pem
-    - name: Install Let is Encrypt CA certificates into FreeIPA certificate store
-      shell: "ipa-cacert-manage install {{ item }}"
-      loop:
-        - freeipa-certs/isrgrootx1.pem
-        - freeipa-certs/isrg-root-x2.pem
-        - freeipa-certs/lets-encrypt-r3.pem
-        - freeipa-certs/lets-encrypt-e1.pem
-        - freeipa-certs/lets-encrypt-r4.pem
-        - freeipa-certs/lets-encrypt-e2.pem
-      register: ipa_cacert_manage_install
-    - name: Debug ipa-cacert-manage install
-      debug:
-        var: ipa_cacert_manage_install
-    - name: Update local IPA certificate databases with certificates from the server
-      shell: "ipa-certupdate"
-      register: ipa_certupdate
-    - name: Debug ipa-certupdate
-      debug:
-        var: ipa_certupdate
-    - name: Install packages certbot
-      become: yes
-      package:
-        name:
-          - certbot
-        state: present
-    - name: Stop service httpd, if started
-      ansible.builtin.service:
-        name: httpd
-        state: stopped
-    - name: Create letsencrypt certificate
-      shell: certbot certonly --standalone --preferred-challenges http --agree-tos -n -d {{ ipaserver_domain }} --register-unsafely-without-email
-      args:
-        creates: /etc/letsencrypt/live/{{ ipaserver_domain }}
-      register: create_letsencrypt_certificate
-    - name: Debug Create letsencrypt certificate
-      debug:
-        var: create_letsencrypt_certificate
-    - name: Start service httpd, if not started
-      ansible.builtin.service:
-        name: httpd
-        state: started
-    - name: Add Lets Encrypt SSL certificates to for use in FreeIPA Web UI
-      shell: ipa-server-certinstall -w -d /etc/letsencrypt/live/{{ ipaserver_domain }}/privkey.pem /etc/letsencrypt/live/{{ ipaserver_domain }}/cert.pem -p '{{ ipadm_password }}' --pin=''
-      register: add_lets_encrypt_ssl_certificates_to_freeipa
-    - name: Debug Add Lets Encrypt SSL certificates to for use in FreeIPA Web UI
-      debug:
-        var: add_lets_encrypt_ssl_certificates_to_freeipa      
-    - name: Restart FreeIPA services
-      shell: ipactl restart
-      register: restart_freeipa_services
-    - name: Debug Restart FreeIPA services
-      debug:
-        var: restart_freeipa_services   
+  # roles:
+  #   - role: freeipa.ansible_freeipa.ipaserver
+  #     state: present
+  # post_tasks:
+  #   - name: Create a directory 
+  #     ansible.builtin.file:
+  #       path: freeipa-certs
+  #       state: directory
+  #       mode: '0755'
+  #   - name: Download Let is Encrypt CA certificates
+  #     get_url:
+  #       url: "{{ item }}"
+  #       dest: freeipa-certs
+  #     loop:
+  #       - https://letsencrypt.org/certs/isrgrootx1.pem
+  #       - https://letsencrypt.org/certs/isrg-root-x2.pem
+  #       - https://letsencrypt.org/certs/lets-encrypt-r3.pem
+  #       - https://letsencrypt.org/certs/lets-encrypt-e1.pem
+  #       - https://letsencrypt.org/certs/lets-encrypt-r4.pem
+  #       - https://letsencrypt.org/certs/lets-encrypt-e2.pem
+  #   - name: Install Let is Encrypt CA certificates into FreeIPA certificate store
+  #     shell: "ipa-cacert-manage install {{ item }}"
+  #     loop:
+  #       - freeipa-certs/isrgrootx1.pem
+  #       - freeipa-certs/isrg-root-x2.pem
+  #       - freeipa-certs/lets-encrypt-r3.pem
+  #       - freeipa-certs/lets-encrypt-e1.pem
+  #       - freeipa-certs/lets-encrypt-r4.pem
+  #       - freeipa-certs/lets-encrypt-e2.pem
+  #     register: ipa_cacert_manage_install
+  #   - name: Debug ipa-cacert-manage install
+  #     debug:
+  #       var: ipa_cacert_manage_install
+  #   - name: Update local IPA certificate databases with certificates from the server
+  #     shell: "ipa-certupdate"
+  #     register: ipa_certupdate
+  #   - name: Debug ipa-certupdate
+  #     debug:
+  #       var: ipa_certupdate
+  #   - name: Install packages certbot
+  #     become: yes
+  #     package:
+  #       name:
+  #         - certbot
+  #       state: present
+  #   - name: Stop service httpd, if started
+  #     ansible.builtin.service:
+  #       name: httpd
+  #       state: stopped
+  #   - name: Create letsencrypt certificate
+  #     shell: certbot certonly --standalone --preferred-challenges http --agree-tos -n -d {{ ipaserver_domain }} --register-unsafely-without-email
+  #     args:
+  #       creates: /etc/letsencrypt/live/{{ ipaserver_domain }}
+  #     register: create_letsencrypt_certificate
+  #   - name: Debug Create letsencrypt certificate
+  #     debug:
+  #       var: create_letsencrypt_certificate
+  #   - name: Start service httpd, if not started
+  #     ansible.builtin.service:
+  #       name: httpd
+  #       state: started
+  #   - name: Add Lets Encrypt SSL certificates to for use in FreeIPA Web UI
+  #     shell: ipa-server-certinstall -w -d /etc/letsencrypt/live/{{ ipaserver_domain }}/privkey.pem /etc/letsencrypt/live/{{ ipaserver_domain }}/cert.pem -p '{{ ipadm_password }}' --pin=''
+  #     register: add_lets_encrypt_ssl_certificates_to_freeipa
+  #   - name: Debug Add Lets Encrypt SSL certificates to for use in FreeIPA Web UI
+  #     debug:
+  #       var: add_lets_encrypt_ssl_certificates_to_freeipa      
+  #   - name: Restart FreeIPA services
+  #     shell: ipactl restart
+  #     register: restart_freeipa_services
+  #   - name: Debug Restart FreeIPA services
+  #     debug:
+  #       var: restart_freeipa_services   
