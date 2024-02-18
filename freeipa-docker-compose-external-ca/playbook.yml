@@ -61,6 +61,11 @@
         url: "http://local-ip.co/cert/server.pem"
         dest: "/etc/docker-compose/ca/ca.crt"
 
+    - name: Download intermediate cert file from local-ip.co
+      get_url:
+        url: "http://local-ip.co/cert/chain.pem"
+        dest: "/etc/docker-compose/ca/chain.crt"
+
     - name: Download CA key file from local-ip.co
       get_url:
         url: "http://local-ip.co/cert/server.key"
