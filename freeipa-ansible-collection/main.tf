@@ -7,7 +7,7 @@ module "freeipa" {
   hostname      = "freeipa"
   memory        = "4"
   is_nat        = true
-  preemptible   = true
+  preemptible   = false
   core_fraction = 50
   user          = var.ssh_user
 }

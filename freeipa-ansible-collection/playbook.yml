@@ -15,7 +15,7 @@
     - name: 'Add association between external ip and ipa domain into etc/hosts'
       lineinfile:
         path: '/etc/hosts'
-        line: '{{ ipaserver_ip_addresses|first }} {{ ipaserver_domain }}'
+        line: '{{ ipaserver_ip_addresses|first }} freeipa.{{ ipaserver_domain }} freeipa'
         insertbefore: BOF
     - name: Install packages bind-utils git nano epel-release
       become: true
