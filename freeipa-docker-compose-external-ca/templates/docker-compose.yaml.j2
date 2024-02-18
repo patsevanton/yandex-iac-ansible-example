@@ -28,8 +28,8 @@ services:
       - --dirsrv-pin={{freeipa_password}}
       - --ds-password={{freeipa_password}}
       - --external-ca
-      - --external_ca_file=/ca/ca.crt
-      - --external_cert_file=/freeipa-certificate/freeipa.crt
+      - --ca-cert-file=/ca/ca.crt
+      - --external-cert-file=/freeipa-certificate/freeipa.crt
       - --http-pin={{freeipa_password}}
       - --realm={{freeipa_domain}}
       - --unattended

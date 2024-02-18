@@ -33,19 +33,9 @@
         owner: "{{ ssh_user }}"
         group: "{{ ssh_user }}"
 
-
-    # - name: Create directory /etc/docker-compose/freeiparoot
-    #   ansible.builtin.file:
-    #     path: /etc/docker-compose/freeiparoot
-    #     state: directory
-    #     owner: "{{ ssh_user }}"
-    #     group: "{{ ssh_user }}"
-
   roles:
     - role: geerlingguy.docker
   post_tasks:
-
-    #### Create docker-compose freeipa
 
     - name: add user ubuntu to docker group
       ansible.builtin.user:
@@ -65,14 +55,6 @@
         group: "{{ ssh_user }}"
         mode: '0644'
       register: docker_compose
-
-    # - name: check for /etc/docker-compose/freeiparoot/ipa.csr
-    #   stat: path=/etc/docker-compose/freeiparoot/ipa.csr
-    #   register: ipa_csr
-
-    # - name: fail if ipa.csr not exists on host
-    #   fail: msg="Create certificate and run again"
-    #   when: not ipa_csr.stat.exists
 
     - name: Download CA cert file from local-ip.co
       get_url:
@@ -104,7 +86,6 @@
         locality_name: "Moscow"
       register: freeipa_csr
 
-#### Use the CA to sign a certificate
     - name: Generate an OpenSSL certificate signed with your own CA certificate
       community.crypto.x509_certificate:
         path: /etc/docker-compose/freeipa-certificate/freeipa.crt
