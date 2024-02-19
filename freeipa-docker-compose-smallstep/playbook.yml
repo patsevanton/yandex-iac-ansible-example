@@ -1,27 +1,29 @@
 - hosts: ipaserver
   become: true
   vars:
-    - key_size: 4096
-    - key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
-    - country_name: RU
-    - email_address: admin@apatsev.org.ru
-    - organization_name: APATSEV
-
+    github_user: "smallstep"
+    github_repo: "certificates"
+    download_dir: "/home/ubuntu"
   pre_tasks:
-    - name: Get step-ca latest tag 
-      community.general.github_release:
-        user: step-ca
-        repo: step-ca
-        action: latest_release
-      register: step_ca_latest 
+    - name: Get latest release information
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/{{ github_user }}/{{ github_repo }}/releases/latest"
+        return_content: true
+      register: latest_release
 
-    - name: Grab step-ca latest binaries 
-      unarchive: 
-        src: "https://github.com/step-ca/step-ca/releases/download/{{ step_ca_latest['tag'] }}/step-ca_{{ step_ca_latest['tag'] | regex_replace('^v','') }}_linux_amd64.zip"
-        dest: /usr/local/bin
+    - name: Extract download URL for the latest release
+      ansible.builtin.set_fact:
+        download_url: "{{ latest_release.json.assets[0].browser_download_url }}"
+
+    - name: Download latest binary release
+      ansible.builtin.get_url:
+        url: "{{ download_url }}"
+        dest: "{{ download_dir }}/{{ github_repo }}.tar.gz"
+        mode: '0644'
+
+    - name: Extract tar.gz archive
+      ansible.builtin.unarchive:
+        src: "{{ download_dir }}/{{ github_repo }}.tar.gz"
+        dest: "/usr/local/bin"
         remote_src: true
-
-    - name: Set permissions for the step-ca
-      ansible.builtin.file:
-        path: /usr/local/bin/step-ca
-        mode: 'u+x,g+x'
+        # creates: "/usr/local/bin/step-ca"
