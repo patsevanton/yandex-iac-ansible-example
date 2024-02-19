@@ -2,28 +2,35 @@
   become: true
   vars:
     github_user: "smallstep"
-    github_repo: "certificates"
+    github_repo: "cli"
     download_dir: "/home/ubuntu"
+    step_ca_version: "0.25.2"
   pre_tasks:
-    - name: Get latest release information
+    - name: Get URL of latest Step CLI
       ansible.builtin.uri:
-        url: "https://api.github.com/repos/{{ github_user }}/{{ github_repo }}/releases/latest"
+        url: https://api.github.com/repos/{{ github_user }}/{{ github_repo }}/releases/latest
+        body_format: json
         return_content: true
-      register: latest_release
-
-    - name: Extract download URL for the latest release
-      ansible.builtin.set_fact:
-        download_url: "{{ latest_release.json.assets[0].browser_download_url }}"
-
-    - name: Download latest binary release
-      ansible.builtin.get_url:
-        url: "{{ download_url }}"
-        dest: "{{ download_dir }}/{{ github_repo }}.tar.gz"
-        mode: '0644'
-
-    - name: Extract tar.gz archive
-      ansible.builtin.unarchive:
-        src: "{{ download_dir }}/{{ github_repo }}.tar.gz"
-        dest: "/usr/local/bin"
         remote_src: true
-        # creates: "/usr/local/bin/step-ca"
+      register: json_response
+
+    - name: Debug json_response
+      ansible.builtin.debug:
+        msg: "{{ (json_response.json.assets | selectattr('browser_download_url', 'search', 'step_linux_amd64.tar.gz') | list | first).browser_download_url }}"
+
+    - name: Get latest release of Step CLI
+      ansible.builtin.unarchive:
+        src: "{{ (json_response.json.assets | selectattr('browser_download_url', 'search', 'step_linux_amd64.tar.gz') | list | first).browser_download_url }}"
+        dest: /usr/local/bin
+        remote_src: true
+        extra_opts: [--strip-components=2]
+        creates: /usr/local/bin/step
+
+    - name: Remove files of Step CLI
+      ansible.builtin.file:
+        state: "absent"
+        path: "{{ item }}"
+      with_items:
+        - /usr/local/bin/bash_autocomplete
+        - /usr/local/bin/README.md
+        - /usr/local/bin/zsh_autocomplete
