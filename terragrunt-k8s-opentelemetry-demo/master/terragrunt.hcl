@@ -3,8 +3,8 @@ terraform {
   source = "github.com/patsevanton/terraform-yandex-kubernetes-cluster.git//.?ref=main"
 }
 
-include {
-  path = find_in_parent_folders()
+include "root" {
+  path = "${get_path_to_repo_root()}/terragrunt.hcl"
 }
 
 inputs = {
